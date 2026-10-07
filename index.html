@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v111</title>
+<title>Philip's Finance Hub v112</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -314,7 +314,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v111</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v112</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -3772,6 +3772,20 @@ renderNotice();
 <script>
 // v111: installable app. Registers the offline file. Does not touch any saved data.
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(function(){});});}
+// v112: Install App button. Shows only when Chrome allows installing, hides once installed.
+(function(){
+  var standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
+  var deferred=null;
+  window.addEventListener('beforeinstallprompt',function(e){
+    e.preventDefault();deferred=e;
+    if(standalone||document.getElementById('fhInstallBtn'))return;
+    var b=document.createElement('button');b.id='fhInstallBtn';b.type='button';b.textContent='\u2B07 Install Finance Hub';
+    b.style.cssText='position:fixed;right:14px;bottom:96px;z-index:9999;border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:11px 16px;background:#FFD700;color:#000;font:800 13px Outfit,system-ui,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.45)';
+    b.addEventListener('click',function(){if(!deferred)return;deferred.prompt();deferred.userChoice.then(function(){deferred=null;b.remove();});});
+    document.body.appendChild(b);
+  });
+  window.addEventListener('appinstalled',function(){deferred=null;var b=document.getElementById('fhInstallBtn');if(b)b.remove();});
+})();
 </script>
 </body>
 </html>
