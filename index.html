@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v113</title>
+<title>Philip's Finance Hub v114</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#F1F9FB">
 <meta name="mobile-web-app-capable" content="yes">
@@ -639,6 +639,16 @@ input:focus,.modal-input:focus,.form-input:focus,.custom-input:focus,.wn-input:f
   .fh-quick-text{font-size:14px !important;}
 }
 
+
+/* v114: restore solid action fills after the global palette remap */
+button[style*="background"][style*="#30D158"]{background:var(--fh-green) !important;color:#fff !important;}
+button[style*="background"][style*="#32ADE6"]{background:var(--fh-teal) !important;color:#17363B !important;}
+button[style*="background"][style*="#FFD60A"],button[style*="background"][style*="#FFD700"]{background:var(--fh-gold) !important;color:var(--fh-purple) !important;}
+button[style*="background"][style*="#FF9F0A"]{background:var(--fh-orange) !important;color:#fff !important;}
+button[style*="background"][style*="#FF453A"]{background:var(--fh-red) !important;color:#fff !important;}
+button[style*="background"][style*="#BF5AF2"]{background:var(--fh-purple-2) !important;color:#fff !important;}
+button[style*="background"][style*="#5E5CE6"]{background:#765FB0 !important;color:#fff !important;}
+
 </style>
 </head>
 <body>
@@ -665,7 +675,7 @@ input:focus,.modal-input:focus,.form-input:focus,.custom-input:focus,.wn-input:f
   <button class="fh-bell" type="button" aria-label="Notifications" onclick="showToast('No new notifications','#411B4A')">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </button>
-  <div class="fh-version">v113</div>
+  <div class="fh-version">v114</div>
 </div>
 
 <div class="toast" id="toast"></div>
