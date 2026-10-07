@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v112</title>
+<title>Philip's Finance Hub v113</title>
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#F1F9FB">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Finance Hub">
@@ -293,6 +293,352 @@
   .custom-log-input:focus { outline: none; border-color: #E5E5E5; }
   .btn-log-custom { padding: 10px 16px; border-radius: 10px; background: linear-gradient(135deg,#E5E5E5,#B0B0B0); border: none; color: #0A0A0A; font-size: 13px; font-weight: 800; cursor: pointer; font-family: 'Outfit', sans-serif; }
   #dragGhost { position: fixed; z-index: 9998; pointer-events: none; opacity: 0.85; border: 2px solid #E5E5E5; border-radius: 14px; background: #1E1E1E; padding: 12px 16px; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 700; color: #fff; display: none; max-width: 280px; box-shadow: 0 8px 30px rgba(229,229,229,0.3); }
+
+/* v113: Affinity-inspired full interface theme. Data model and workflows remain unchanged. */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+:root{
+  --fh-bg:#F1F9FB;
+  --fh-card:#FFFFFF;
+  --fh-purple:#411B4A;
+  --fh-purple-2:#6F3C78;
+  --fh-teal:#73C6D2;
+  --fh-gold:#E5A522;
+  --fh-green:#15966A;
+  --fh-orange:#EA8A16;
+  --fh-red:#D9555F;
+  --fh-text:#242228;
+  --fh-muted:#6F7276;
+  --fh-soft:#F5F6FA;
+  --fh-border:#DDECF0;
+  --fh-shadow:0 10px 26px rgba(65,27,74,.08);
+}
+*{font-family:'Nunito',system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif !important;}
+html{background:var(--fh-bg) !important;}
+body{
+  background:var(--fh-bg) !important;
+  color:var(--fh-text) !important;
+  max-width:480px !important;
+  padding-bottom:104px !important;
+  overflow-x:hidden !important;
+}
+button,input,select,textarea{font-family:'Nunito',system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif !important;}
+.app-header{
+  height:202px !important;
+  padding:0 !important;
+  margin:0 0 10px !important;
+  position:relative !important;
+  overflow:hidden !important;
+  background:#F1F9FB !important;
+  border:1px solid #DCEEF2 !important;
+  border-top:0 !important;
+  border-radius:0 0 30px 30px !important;
+  text-align:left !important;
+}
+.app-header .sub{display:none !important;}
+.app-header h1{display:none !important;}
+.fh-greeting{
+  position:absolute !important;
+  left:48px !important;
+  top:91px !important;
+  z-index:5 !important;
+  color:var(--fh-purple) !important;
+  font-size:36px !important;
+  line-height:1.08 !important;
+  font-weight:700 !important;
+  letter-spacing:-1.3px !important;
+}
+.fh-greeting span{font-weight:700 !important;}
+.fh-bell{
+  position:absolute !important;
+  top:79px !important;
+  right:47px !important;
+  z-index:8 !important;
+  width:66px !important;
+  height:66px !important;
+  border:0 !important;
+  border-radius:50% !important;
+  background:#FFFFFF !important;
+  color:var(--fh-purple) !important;
+  box-shadow:0 6px 18px rgba(65,27,74,.06) !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+.fh-bell svg{width:34px !important;height:34px !important;}
+.fh-version{
+  position:absolute !important;
+  right:14px !important;
+  bottom:11px !important;
+  z-index:9 !important;
+  color:var(--fh-gold) !important;
+  font-size:10px !important;
+  font-weight:900 !important;
+  letter-spacing:.5px !important;
+  background:#FFF8E8 !important;
+  border:1px solid #F0D99C !important;
+  padding:4px 7px !important;
+  border-radius:999px !important;
+}
+.fh-orb{position:absolute !important;border-radius:50% !important;filter:saturate(105%) !important;pointer-events:none !important;}
+.fh-orb-a{
+  width:210px !important;height:210px !important;right:-32px !important;top:-70px !important;
+  background:radial-gradient(circle at 35% 35%,#FFF08A 0,#FFB81E 35%,#F97C08 61%,#E6452D 100%) !important;
+}
+.fh-orb-b{
+  width:168px !important;height:168px !important;right:-28px !important;top:54px !important;
+  background:radial-gradient(circle at 33% 28%,#FFD94A 0,#F4A20A 48%,#EB5A17 100%) !important;
+  opacity:.96 !important;
+}
+.page{padding:8px 16px 20px !important;}
+.page.active{animation:pageIn .22s ease both !important;}
+#fhNotice{padding:0 16px !important;}
+.bottom-nav{
+  position:fixed !important;
+  bottom:0 !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+  width:100% !important;
+  max-width:480px !important;
+  min-height:104px !important;
+  padding:4px 5px calc(4px + env(safe-area-inset-bottom)) !important;
+  background:rgba(255,255,255,.97) !important;
+  border-top:1px solid #E1E7EA !important;
+  box-shadow:0 -8px 20px rgba(44,38,48,.04) !important;
+  backdrop-filter:blur(12px) !important;
+  z-index:100 !important;
+  gap:0 !important;
+}
+.nav-btn{
+  min-width:0 !important;
+  flex:1 1 0 !important;
+  padding:10px 1px 6px !important;
+  color:#342F36 !important;
+  font-size:10px !important;
+  font-weight:700 !important;
+  letter-spacing:.05px !important;
+  gap:5px !important;
+  border-radius:14px !important;
+  background:transparent !important;
+}
+.nav-btn::before{
+  top:-4px !important;
+  left:25% !important;
+  right:25% !important;
+  height:4px !important;
+  background:var(--fh-teal) !important;
+  border-radius:0 0 4px 4px !important;
+}
+.nav-btn.active{color:var(--fh-teal) !important;background:#F5FCFD !important;}
+.nav-icon{width:28px !important;height:28px !important;display:flex !important;align-items:center !important;justify-content:center !important;}
+.nav-icon svg{width:27px !important;height:27px !important;display:block !important;}
+#nav-debt,#nav-savings,#nav-money,#nav-budget,#nav-wn,#nav-backup{--tab:var(--fh-teal) !important;}
+
+.card,.backup-card,.history-card,.spend-big,.summary-box,.cat-big-box,.sav-sum-box,.sav-streak-box,.wn-box,.wn-add-form,.add-entry-form,.spend-log-form,.reorder-hint,.custom-log-wrap,.goal-card,.savings-goal-card,.wn-item{
+  background:var(--fh-card) !important;
+  color:var(--fh-text) !important;
+  border:1px solid var(--fh-border) !important;
+  border-radius:20px !important;
+  box-shadow:var(--fh-shadow) !important;
+}
+.card{padding:18px 20px !important;margin-bottom:14px !important;}
+.section-title,.form-title,.backup-title,.goal-name,.wn-item-name,.entry-desc,.modal-title,.cat-modal-title{color:var(--fh-purple) !important;}
+.label-sm,.val-muted,.val-gold,.entry-meta,.goal-person,.goal-person,.empty-msg{color:var(--fh-muted) !important;}
+.val-green,.val-green *{color:var(--fh-green) !important;}
+.row{gap:8px !important;}
+.bar-wrap{background:#EEF3F4 !important;height:9px !important;}
+.bar-fill{box-shadow:none !important;}
+.entry-item,.log-entry{border-bottom:1px solid #EDEFF1 !important;}
+.entry-amt{font-weight:900 !important;}
+.deadline-badge{border-radius:999px !important;font-weight:800 !important;}
+.dl-green{background:#E8F8F1 !important;color:var(--fh-green) !important;border-color:#CDEBDD !important;}
+.dl-yellow{background:#FFF5DA !important;color:#AA7417 !important;border-color:#F2D99B !important;}
+.dl-red{background:#FFEDEE !important;color:var(--fh-red) !important;border-color:#F4C9CD !important;}
+
+.spend-period-tabs,.spend-period-tabs-2,.wn-tabs{gap:6px !important;background:#FFFFFF !important;border:1px solid var(--fh-border) !important;border-radius:15px !important;padding:4px !important;box-shadow:none !important;}
+.spend-period-tab,.wn-tab{
+  background:transparent !important;
+  border:0 !important;
+  color:var(--fh-muted) !important;
+  border-radius:11px !important;
+  font-size:12px !important;
+  font-weight:800 !important;
+  padding:11px 7px !important;
+}
+.spend-period-tab.active{background:#EAF7F9 !important;color:var(--fh-purple) !important;border:0 !important;}
+.wn-tab.active-want,.wn-tab.active-need{background:#EAF7F9 !important;color:var(--fh-purple) !important;}
+.cat-big-grid{gap:10px !important;}
+.cat-big-box{min-height:120px !important;display:flex !important;flex-direction:column !important;justify-content:center !important;}
+.cat-big-box .cbb-label{color:var(--fh-muted) !important;font-weight:800 !important;}
+.cat-big-box .cbb-amt{color:var(--fh-purple) !important;font-weight:900 !important;}
+.cat-big-box .cbb-del{color:#B3B5B8 !important;}
+.sav-streak-grid{gap:9px !important;}
+.sav-streak-box{padding:13px 8px !important;background:#FFFFFF !important;border-radius:18px !important;}
+.ssb-val{font-weight:900 !important;}
+.wn-summary{gap:10px !important;}
+.wn-box{min-height:112px !important;}
+.wn-label{color:var(--fh-muted) !important;}
+.wn-val{color:var(--fh-purple) !important;}
+
+input,.modal-input,.form-input,.custom-input,.wn-input,.wn-price-input,.spend-log-input,.spend-cat-select,.cat-modal-input{
+  background:#FFFFFF !important;
+  color:var(--fh-text) !important;
+  border:1px solid #D6E7EB !important;
+  border-radius:14px !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9) !important;
+  padding:12px 14px !important;
+}
+input::placeholder,.modal-input::placeholder,.form-input::placeholder,.custom-input::placeholder,.wn-input::placeholder{color:#9B9DA0 !important;}
+input:focus,.modal-input:focus,.form-input:focus,.custom-input:focus,.wn-input:focus,.spend-log-input:focus,.spend-cat-select:focus,.cat-modal-input:focus{outline:none !important;border-color:var(--fh-teal) !important;box-shadow:0 0 0 3px #73C6D226 !important;}
+.btn-primary,.btn-modal-save,.btn-add-entry,.btn-export{
+  background:var(--fh-purple) !important;
+  color:#FFFFFF !important;
+  border:0 !important;
+  border-radius:14px !important;
+  box-shadow:0 6px 16px rgba(65,27,74,.18) !important;
+}
+.btn-primary{padding:15px !important;}
+.btn-ghost,.btn-cancel,.btn-footer,.btn-modal-cancel,.btn-import,.btn-delete-goal,.btn-sm,.add-debt-btn,.add-savings-btn{
+  border-radius:13px !important;
+}
+.btn-ghost,.btn-cancel,.btn-footer,.btn-modal-cancel{
+  background:#F5F6F8 !important;
+  color:var(--fh-purple) !important;
+  border:1px solid #E1E5E8 !important;
+}
+.btn-danger,.btn-delete-goal{background:#FFF1F2 !important;color:var(--fh-red) !important;border-color:#F2CED2 !important;}
+.btn-sm{background:var(--fh-teal) !important;color:#16353A !important;border:0 !important;}
+.add-debt-btn,.add-savings-btn{background:#F8FCFD !important;color:var(--fh-purple) !important;border:1px dashed #A8DCE2 !important;}
+.backup-card{padding:18px 20px !important;}
+.backup-title{font-size:15px !important;font-weight:900 !important;}
+.btn-export,.btn-import{width:100% !important;padding:13px 15px !important;}
+.backup-btns{gap:10px !important;}
+
+.modal-overlay,.cat-modal,.sheet-wrap{background:rgba(65,27,74,.22) !important;backdrop-filter:blur(5px) !important;}
+.modal-box,.cat-modal-box,.sheet-panel{
+  background:#FFFFFF !important;
+  color:var(--fh-text) !important;
+  border:0 !important;
+  border-top:1px solid #DDECEF !important;
+  border-radius:28px 28px 0 0 !important;
+  box-shadow:0 -10px 30px rgba(65,27,74,.12) !important;
+}
+.modal-box,.cat-modal-box,.sheet-panel{padding:22px 20px calc(30px + env(safe-area-inset-bottom)) !important;}
+.modal-label{color:var(--fh-muted) !important;font-weight:800 !important;}
+.color-dot{border:2px solid transparent !important;}
+.color-dot.selected,.cat-color-dot.sel{border-color:var(--fh-purple) !important;box-shadow:0 0 0 3px #73C6D24D !important;}
+.toast{
+  background:var(--fh-purple) !important;
+  color:#FFFFFF !important;
+  border-radius:14px !important;
+  box-shadow:0 12px 28px rgba(65,27,74,.22) !important;
+}
+
+.goal-card,.savings-goal-card{padding:16px 18px !important;overflow:hidden !important;}
+.goal-card.focus-card,.savings-goal-card.focus-card{background:#F6FCFD !important;border:2px solid var(--fh-teal) !important;}
+.goal-card.done,.savings-goal-card.done{background:#F4FAF7 !important;border-color:#CAE8DA !important;opacity:.88 !important;}
+.focus-tag{background:#EAF7F9 !important;color:var(--fh-purple) !important;border-color:#B8E1E5 !important;}
+.drag-handle{color:#9DA4A8 !important;}
+.goal-actions{margin:-16px -18px -16px 8px !important;}
+.btn-edit-goal{background:#F0FAFB !important;border:1px solid #BFE3E7 !important;color:var(--fh-teal) !important;}
+.btn-delete-goal{background:#FFF1F2 !important;border:1px solid #F2CED2 !important;color:var(--fh-red) !important;}
+.custom-input{font-size:13px !important;}
+
+.fh-balance-card{
+  position:relative !important;
+  min-height:154px !important;
+  padding:26px 22px !important;
+  margin:4px 0 22px !important;
+  background:linear-gradient(115deg,#DFF5F8 0%,#F4F7F6 55%,#F2DFCD 100%) !important;
+  border:1px solid #C9E7EB !important;
+  border-radius:28px !important;
+  box-shadow:var(--fh-shadow) !important;
+  overflow:hidden !important;
+}
+.fh-balance-card::after{
+  content:"" !important;
+  position:absolute !important;
+  width:130px !important;height:130px !important;right:-32px !important;top:-28px !important;
+  border-radius:50% !important;background:radial-gradient(circle,#FFF2B7 0,#F1A222 58%,#EA5D21 100%) !important;opacity:.52 !important;
+}
+.fh-balance-copy{position:relative !important;z-index:2 !important;max-width:78% !important;}
+.fh-balance-label{font-size:16px !important;font-weight:800 !important;color:var(--fh-purple) !important;}
+.fh-balance-value{font-size:34px !important;line-height:1.12 !important;font-weight:700 !important;letter-spacing:-1px !important;color:var(--fh-purple) !important;margin-top:6px !important;}
+.fh-balance-note{font-size:11px !important;line-height:1.45 !important;color:var(--fh-muted) !important;margin-top:6px !important;}
+.fh-balance-icon{position:absolute !important;right:18px !important;bottom:18px !important;width:52px !important;height:52px !important;border-radius:50% !important;background:#FFFFFFB8 !important;color:var(--fh-purple) !important;display:flex !important;align-items:center !important;justify-content:center !important;z-index:3 !important;}
+.fh-balance-icon svg{width:30px !important;height:30px !important;}
+
+.fh-section-row{display:flex !important;align-items:center !important;justify-content:space-between !important;margin:0 0 11px !important;padding:0 2px !important;}
+.fh-section-title{font-size:25px !important;line-height:1.1 !important;font-weight:800 !important;color:var(--fh-purple) !important;letter-spacing:-.6px !important;}
+.fh-add-link{border:0 !important;background:transparent !important;color:var(--fh-gold) !important;font-size:14px !important;font-weight:800 !important;padding:4px !important;}
+.fh-quick-grid{display:grid !important;grid-template-columns:repeat(3,minmax(0,1fr)) !important;gap:10px !important;margin-bottom:17px !important;}
+.fh-quick{
+  min-height:150px !important;
+  border:0 !important;
+  border-radius:22px !important;
+  padding:18px 15px !important;
+  display:flex !important;flex-direction:column !important;align-items:flex-start !important;justify-content:flex-start !important;
+  text-align:left !important;position:relative !important;
+  box-shadow:none !important;
+}
+.fh-quick-income{background:#EEF7FC !important;color:#2E6A79 !important;}
+.fh-quick-spend{background:#FFF2DA !important;color:#8B5A13 !important;}
+.fh-quick-save{background:#E6FDF5 !important;color:#13835E !important;}
+.fh-quick-icon{width:52px !important;height:52px !important;border-radius:50% !important;background:rgba(255,255,255,.55) !important;display:flex !important;align-items:center !important;justify-content:center !important;margin-bottom:14px !important;}
+.fh-quick-icon svg{width:28px !important;height:28px !important;}
+.fh-quick-text{font-size:15px !important;line-height:1.12 !important;font-weight:800 !important;color:var(--fh-purple) !important;max-width:84px !important;}
+.fh-quick-arrow{position:absolute !important;right:12px !important;bottom:12px !important;font-size:30px !important;line-height:1 !important;color:var(--fh-purple) !important;font-weight:400 !important;}
+.fh-dashboard-card{
+  position:relative !important;
+  width:100% !important;
+  min-height:148px !important;
+  border:0 !important;
+  border-radius:24px !important;
+  background:#F5F6FA !important;
+  color:var(--fh-purple) !important;
+  padding:20px 19px 20px 20px !important;
+  text-align:left !important;
+  display:grid !important;
+  grid-template-columns:54px 1fr 20px !important;
+  grid-template-rows:auto auto !important;
+  align-items:start !important;
+  column-gap:14px !important;
+  box-shadow:none !important;
+  margin-bottom:16px !important;
+}
+.fh-dashboard-icon{grid-row:1/3 !important;width:54px !important;height:54px !important;border-radius:50% !important;background:#E9EEF3 !important;color:var(--fh-purple) !important;display:flex !important;align-items:center !important;justify-content:center !important;}
+.fh-dashboard-icon svg{width:31px !important;height:31px !important;}
+.fh-dashboard-copy{display:flex !important;flex-direction:column !important;gap:6px !important;min-width:0 !important;}
+.fh-dashboard-copy b{font-size:17px !important;line-height:1.1 !important;font-weight:800 !important;color:var(--fh-purple) !important;}
+.fh-dashboard-copy small{font-size:12px !important;line-height:1.45 !important;color:var(--fh-muted) !important;}
+.fh-dashboard-arrow{font-size:33px !important;line-height:.8 !important;color:var(--fh-purple) !important;text-align:right !important;}
+.fh-mini-stats{grid-column:1/4 !important;display:flex !important;gap:7px !important;margin-top:11px !important;overflow:auto !important;scrollbar-width:none !important;}
+.fh-mini-stats::-webkit-scrollbar{display:none !important;}
+.fh-mini-stats span{background:#FFFFFFB8 !important;border-radius:11px !important;padding:7px 9px !important;display:flex !important;flex-direction:column !important;gap:2px !important;min-width:96px !important;color:var(--fh-muted) !important;font-size:10px !important;}
+.fh-mini-stats b{color:var(--fh-purple) !important;font-size:10px !important;}
+
+#page-money .card[style*="#161616"],#page-money .card[style*="#101010"],#page-money .card[style*="#0A0A0A"],
+#page-savings .card[style*="#161616"],#page-savings .card[style*="#101010"],#page-savings .card[style*="#0A0A0A"],
+#page-budget .card[style*="#161616"],#page-budget .card[style*="#101010"],#page-budget .card[style*="#0A0A0A"],
+#page-wn .card[style*="#161616"],#page-wn .card[style*="#101010"],#page-wn .card[style*="#0A0A0A"]{background:#FFFFFF !important;}
+[style*="#161616"]{background:#FFFFFF !important;}
+[style*="#101010"],[style*="#0A0A0A"],[style*="#141414"],[style*="#1A1A1A"],[style*="#1E1E1E"],[style*="#222"],[style*="#0D0D0D"]{background:#F6F7F9 !important;}
+[style*="#333333"],[style*="#333333"]{border-color:#E1E6E9 !important;}
+[style*="#30D158"]{color:var(--fh-green) !important;border-color:#CBEADB !important;background-color:transparent !important;}
+[style*="#32ADE6"]{color:var(--fh-teal) !important;border-color:#BFE5E9 !important;background-color:transparent !important;}
+[style*="#FFD60A"],[style*="#FFD700"]{color:var(--fh-gold) !important;border-color:#F0D99C !important;background-color:transparent !important;}
+[style*="#BF5AF2"]{color:var(--fh-purple-2) !important;border-color:#DCCDE0 !important;background-color:transparent !important;}
+[style*="#FF9F0A"]{color:var(--fh-orange) !important;border-color:#F5DBAE !important;background-color:transparent !important;}
+[style*="#FF453A"]{color:var(--fh-red) !important;border-color:#F2CBD0 !important;background-color:transparent !important;}
+[style*="#FF6B35"]{color:#D97A2A !important;border-color:#F3D3B5 !important;background-color:transparent !important;}
+[style*="#5E5CE6"]{color:#765FB0 !important;border-color:#D8D1E7 !important;background-color:transparent !important;}
+@media(max-width:380px){
+  .fh-greeting{left:28px !important;font-size:31px !important;}
+  .fh-bell{right:26px !important;width:60px !important;height:60px !important;}
+  .fh-quick{min-height:140px !important;padding:15px 12px !important;}
+  .fh-quick-text{font-size:14px !important;}
+}
+
 </style>
 </head>
 <body>
@@ -313,8 +659,13 @@
   <div class="sheet-panel" id="fhSheetBody"></div>
 </div>
 <div class="app-header">
-  <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v112</span></h1>
+  <div class="fh-orb fh-orb-a"></div>
+  <div class="fh-orb fh-orb-b"></div>
+  <div class="fh-greeting">Hello,<br><span>Philip</span></div>
+  <button class="fh-bell" type="button" aria-label="Notifications" onclick="showToast('No new notifications','#411B4A')">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <div class="fh-version">v113</div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -471,12 +822,24 @@
 <div class="page" id="page-backup"></div>
 
 <div class="bottom-nav">
-  <button class="nav-btn active" onclick="switchTab('money')" id="nav-money"><span class="nav-icon">💰</span>Money</button>
-  <button class="nav-btn" onclick="switchTab('debt')" id="nav-debt"><span class="nav-icon">💳</span>Plans</button>
-  <button class="nav-btn" onclick="switchTab('savings')" id="nav-savings"><span class="nav-icon">🏦</span>Savings</button>
-  <button class="nav-btn" onclick="switchTab('budget')" id="nav-budget"><span class="nav-icon">🗓️</span>Budget</button>
-  <button class="nav-btn" onclick="switchTab('wn')" id="nav-wn"><span class="nav-icon">🛍️</span>Lists</button>
-  <button class="nav-btn" onclick="switchTab('backup')" id="nav-backup"><span class="nav-icon">⚙️</span>Settings</button>
+  <button class="nav-btn active" onclick="switchTab('money')" id="nav-money">
+    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5v8.5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 20v-5h8v5M9 10h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>Money
+  </button>
+  <button class="nav-btn" onclick="switchTab('debt')" id="nav-debt">
+    <span class="nav-icon"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2.4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 9h8M8 13h5M8 16h3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>Plans
+  </button>
+  <button class="nav-btn" onclick="switchTab('savings')" id="nav-savings">
+    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 4c-4 0-7 2-7 6v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7c0-4-3-6-7-6Z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9 4.5c0-1.1.8-2 1.8-2h2.4c1 0 1.8.9 1.8 2M8 12h8M9 15h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>Savings
+  </button>
+  <button class="nav-btn" onclick="switchTab('budget')" id="nav-budget">
+    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M5 20V11M12 20V6M19 20V3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>Budget
+  </button>
+  <button class="nav-btn" onclick="switchTab('wn')" id="nav-wn">
+    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M5 6h14l-1.2 13H6.2L5 6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 6c.2-2 1.1-3 3-3s2.8 1 3 3M8.5 10.5h7M9 14h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>Lists
+  </button>
+  <button class="nav-btn" onclick="switchTab('backup')" id="nav-backup">
+    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>Settings
+  </button>
 </div>
 
 <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)"/>
@@ -2597,6 +2960,47 @@ function saveIncomeEntry(){
   showToast(`GH₵${Math.round(amt).toLocaleString()} in · ${Math.round(e.build).toLocaleString()} saved to ${getSource(e.src).name}, ${Math.round(e.live).toLocaleString()} to spend`);
   renderSavings();
 }
+
+function financeDashboardHTML(){
+  const p=pots();
+  const available=Math.max(0,p.live||0);
+  const from=TODAY.slice(0,7)+"-01";
+  const monthIncome=incomeTotal(from,"");
+  const monthSpend=(spendData.entries||[]).filter(e=>inRange(e.date,from,"")).reduce((a,e)=>a+(e.amount||0),0);
+  const monthSaved=(incomeData.entries||[]).filter(e=>inRange(e.date,from,"")).reduce((a,e)=>a+(e.build||0),0);
+  return `
+    <section class="fh-balance-card">
+      <div class="fh-balance-copy">
+        <div class="fh-balance-label">Available to spend</div>
+        <div class="fh-balance-value">GH₵ ${available.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
+        <div class="fh-balance-note">Recorded cash left after your saved amount and logged spending</div>
+      </div>
+      <div class="fh-balance-icon"><svg viewBox="0 0 24 24"><path d="M3.5 7.5A2.5 2.5 0 0 1 6 5h11.5A3.5 3.5 0 0 1 21 8.5V17a2 2 0 0 1-2 2H6a2.5 2.5 0 0 1-2.5-2.5z" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M4 8.5h13a2 2 0 0 1 0 4H15a2 2 0 0 1 0-4h4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></div>
+    </section>
+    <div class="fh-section-row"><div class="fh-section-title">Quick actions</div><button class="fh-add-link" type="button" onclick="switchTab('backup')">+ Money settings</button></div>
+    <div class="fh-quick-grid">
+      <button class="fh-quick fh-quick-income" type="button" onclick="setMoneySide('income')">
+        <span class="fh-quick-icon"><svg viewBox="0 0 24 24"><path d="M12 18V5M7.5 9 12 4.5 16.5 9M5 19.5h14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="fh-quick-text">Log income</span><span class="fh-quick-arrow">›</span>
+      </button>
+      <button class="fh-quick fh-quick-spend" type="button" onclick="setMoneySide('spend')">
+        <span class="fh-quick-icon"><svg viewBox="0 0 24 24"><path d="M5 7h14M7 4h10l1 4H6l1-4ZM6.5 11h11M9 15h6M8 19h8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="fh-quick-text">Log spending</span><span class="fh-quick-arrow">›</span>
+      </button>
+      <button class="fh-quick fh-quick-save" type="button" onclick="switchTab('savings')">
+        <span class="fh-quick-icon"><svg viewBox="0 0 24 24"><path d="M4 9.5C4 6.5 7.6 4 12 4s8 2.5 8 5.5v7C20 19 16.4 21 12 21s-8-2-8-4.5z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 9h8M9 13h6M10 16h4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+        <span class="fh-quick-text">Save money</span><span class="fh-quick-arrow">›</span>
+      </button>
+    </div>
+    <button class="fh-dashboard-card" type="button" onclick="switchTab('budget')">
+      <span class="fh-dashboard-icon"><svg viewBox="0 0 24 24"><path d="M5 19V12M11 19V7M17 19V4M20 19V3" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></span>
+      <span class="fh-dashboard-copy"><b>Personal dashboard</b><small>Monthly insights on your savings and spending</small></span>
+      <span class="fh-dashboard-arrow">›</span>
+      <span class="fh-mini-stats"><span><b>Income</b> GH₵ ${monthIncome.toLocaleString()}</span><span><b>Spent</b> GH₵ ${monthSpend.toLocaleString()}</span><span><b>Saved</b> GH₵ ${monthSaved.toLocaleString()}</span></span>
+    </button>
+  `;
+}
+
 function renderMoney(){
   if(moneySide==="income"){ renderIncome(); return; }
   return renderSpendMoney();
@@ -2612,7 +3016,7 @@ function renderSpendMoney(){
   const isViewOnly=spendPeriod==="year"||spendPeriod==="lifetime";
   const accentColor=isViewOnly?"#5E5CE6":"#FF6B35";
 
-  document.getElementById("page-money").innerHTML=moneyToggleHTML()+`
+  document.getElementById("page-money").innerHTML=financeDashboardHTML()+moneyToggleHTML()+`
     <div style="margin-top:10px">
 
     <div class="spend-period-tabs">
