@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v13.3</title>
+<title>Philip's Finance Hub v13.4</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -319,7 +319,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v13.3</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v13.4</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -2846,6 +2846,7 @@ function renderSavings(){
 
   document.getElementById("page-savings").innerHTML=`
     <div style="margin-top:10px">
+    ${periodSelectHTML(isavPeriod,"setISavPeriod","#32ADE6")}
     ${savToggleHTML()}
     ${dailyTargetHTML()}
 
