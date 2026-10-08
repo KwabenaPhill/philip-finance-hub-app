@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v112</title>
+<title>Philip's Finance Hub v113</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -159,10 +159,15 @@
   .btn-del { background: none; border: none; color: #333; font-size: 14px; cursor: pointer; padding: 2px 4px; }
 
   /* SPENDING TRACKER */
-  .spend-period-tabs { display: flex; gap: 8px; margin-bottom: 8px; }
-  .spend-period-tabs-2 { display: flex; gap: 8px; margin-bottom: 14px; }
-  .spend-period-tab { flex: 1; padding: 10px; border-radius: 12px; background: #161616; border: 1px solid #333333; color: #C9C9C9; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; text-align: center; }
-  .spend-period-tab.active { background: #1E1E1E; border-color: #E5E5E5; color: #E5E5E5; }
+  .period-select-wrap { margin: 10px 0 14px; position: relative; }
+  .period-select {
+    width: 100%; padding: 12px 42px 12px 14px; border-radius: 12px;
+    background: #161616; border: 1px solid var(--period-accent, #333333);
+    color: #E5E5E5; font-size: 13px; font-weight: 800; cursor: pointer;
+    font-family: 'Outfit', sans-serif; color-scheme: dark;
+    appearance: auto;
+  }
+  .period-select:focus { outline: none; border-color: var(--period-accent, #E5E5E5); }
   .spend-big { text-align: center; padding: 20px; background: #161616; border-radius: 16px; margin-bottom: 12px; border: 1px solid #333333; }
   .spend-big-label { font-size: 11px; color: #C9C9C9; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 6px; }
   .spend-big-amt { font-size: 36px; font-weight: 900; color: #fff; }
@@ -314,7 +319,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v112</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v113</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -2509,10 +2514,31 @@ function periodRange(){
   d.setUTCDate(d.getUTCDate()-back);
   return {from:d.toISOString().split("T")[0], to:"", label};
 }
+const PERIOD_OPTIONS=[
+  {id:"week",label:"📅 This Week"},
+  {id:"month",label:"🗓️ This Month"},
+  {id:"year",label:"📆 This Year"},
+  {id:"lifetime",label:"♾️ Lifetime"}
+];
+function periodSelectHTML(value,handler,accent="#333333"){
+  return `<div class="period-select-wrap" style="--period-accent:${accent}">
+    <select class="period-select" aria-label="Select time period" onchange="${handler}(this.value)">
+      ${PERIOD_OPTIONS.map(o=>`<option value="${o.id}" ${value===o.id?'selected':''}>${o.label}</option>`).join("")}
+    </select>
+  </div>`;
+}
+function setSpendPeriod(value){
+  if(!PERIOD_OPTIONS.some(o=>o.id===value)) return;
+  spendPeriod=value;
+  renderMoney();
+}
+function setISavPeriod(value){
+  if(!PERIOD_OPTIONS.some(o=>o.id===value)) return;
+  isavPeriod=value;
+  renderSavings();
+}
 function periodBarHTML(){
-  const b=(id,lab)=>`<button class="spend-period-tab ${spendPeriod===id?'active':''}" onclick="spendPeriod='${id}';renderMoney()">${lab}</button>`;
-  return `<div style="margin-top:10px"><div class="spend-period-tabs">${b('week','📅 This Week')}${b('month','🗓️ This Month')}</div>
-    <div class="spend-period-tabs-2">${b('year','📆 This Year')}${b('lifetime','♾️ Lifetime')}</div></div>`;
+  return periodSelectHTML(spendPeriod,"setSpendPeriod","#333333");
 }
 let moneySide="spend";
 function setMoneySide(x){ moneySide=x; renderMoney(); }
@@ -2614,15 +2640,7 @@ function renderSpendMoney(){
 
   document.getElementById("page-money").innerHTML=moneyToggleHTML()+`
     <div style="margin-top:10px">
-
-    <div class="spend-period-tabs">
-      <button class="spend-period-tab ${spendPeriod==='week'?'active':''}" onclick="spendPeriod='week';renderMoney()">📅 This Week</button>
-      <button class="spend-period-tab ${spendPeriod==='month'?'active':''}" onclick="spendPeriod='month';renderMoney()">🗓️ This Month</button>
-    </div>
-    <div class="spend-period-tabs-2">
-      <button class="spend-period-tab ${spendPeriod==='year'?'active':''}" onclick="spendPeriod='year';renderMoney()" style="border-color:#5E5CE644;${spendPeriod==='year'?'background:#120A2A;color:#5E5CE6;':'color:#5E5CE6;'}">📆 This Year</button>
-      <button class="spend-period-tab ${spendPeriod==='lifetime'?'active':''}" onclick="spendPeriod='lifetime';renderMoney()" style="border-color:#BF5AF244;${spendPeriod==='lifetime'?'background:#1A0A2A;color:#BF5AF2;':'color:#BF5AF2;'}">♾️ Lifetime</button>
-    </div>
+      ${periodSelectHTML(spendPeriod,"setSpendPeriod",accentColor)}
     <div class="spend-big" style="border-color:${accentColor}33">
       <div class="spend-big-label" style="color:${accentColor}">💸 Total Spent — ${periodLabel}</div>
       <div class="spend-big-amt" style="color:${accentColor}">GH₵ ${total.toLocaleString()}</div>
@@ -3415,7 +3433,6 @@ function renderIncomeSavings(){
   const net=T.saved-T.out;
   const life=potRows("","");
   const inPots=life.reduce((a,r)=>a+r.net,0);
-  const pb=(id,lab)=>`<button class="spend-period-tab ${isavPeriod===id?'active':''}" onclick="isavPeriod='${id}';renderSavings()">${lab}</button>`;
   const box=(lab,val,col,bg)=>`<div style="background:${bg};border:1px solid ${col}33;border-radius:12px;padding:10px"><div style="font-size:10px;color:${col};font-weight:700;letter-spacing:.6px;opacity:.85">${lab}</div><div style="font-size:16px;font-weight:800;color:${col};margin-top:2px">${fmtC(val)}</div></div>`;
   const active=life.filter(r=>r.n||r.carry||r.outs).sort((a,b)=>b.net-a.net);
   const idle=life.filter(r=>!(r.n||r.carry||r.outs));
@@ -3439,8 +3456,7 @@ function renderIncomeSavings(){
       <div style="font-size:31px;font-weight:900;color:#32ADE6;margin:4px 0 2px;letter-spacing:-1px">${fmtC(inPots)}</div>
       <div style="font-size:12px;color:#8A8A8A">Every payment's save share lands here by itself</div>
     </div>
-    <div style="margin-top:4px"><div class="spend-period-tabs">${pb('week','📅 This Week')}${pb('month','🗓️ This Month')}</div>
-      <div class="spend-period-tabs-2">${pb('year','📆 This Year')}${pb('lifetime','♾️ Lifetime')}</div></div>
+    ${periodSelectHTML(isavPeriod,"setISavPeriod","#32ADE6")}
     <div class="card">
       <div style="font-size:11px;color:#8A8A8A;font-weight:700">Net saved · ${labels[isavPeriod]}</div>
       <div style="font-size:26px;font-weight:900;color:${net>=0?'#30D158':'#FF453A'};margin:3px 0 10px">${fmtC(net)}</div>
@@ -3772,7 +3788,7 @@ renderNotice();
 <script>
 // v111: installable app. Registers the offline file. Does not touch any saved data.
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(function(){});});}
-// v112: Install App button. Shows only when Chrome allows installing, hides once installed.
+// v113: Install App button. Shows only when Chrome allows installing, hides once installed.
 (function(){
   var standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
   var deferred=null;
