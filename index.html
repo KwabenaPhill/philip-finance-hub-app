@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v113</title>
+<title>Philip's Finance Hub v114</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -319,7 +319,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v113</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v114</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -3450,13 +3450,12 @@ function renderIncomeSavings(){
       </div></div>`;
   };
   document.getElementById("page-savings").innerHTML=`<div style="margin-top:10px">
-    ${savToggleHTML()}
+    ${periodSelectHTML(isavPeriod,"setISavPeriod","#32ADE6")}
     <div class="card" style="border-color:#32ADE655">
       <div style="font-size:11px;color:#8A8A8A;font-weight:700">In your income pots now</div>
       <div style="font-size:31px;font-weight:900;color:#32ADE6;margin:4px 0 2px;letter-spacing:-1px">${fmtC(inPots)}</div>
       <div style="font-size:12px;color:#8A8A8A">Every payment's save share lands here by itself</div>
     </div>
-    ${periodSelectHTML(isavPeriod,"setISavPeriod","#32ADE6")}
     <div class="card">
       <div style="font-size:11px;color:#8A8A8A;font-weight:700">Net saved · ${labels[isavPeriod]}</div>
       <div style="font-size:26px;font-weight:900;color:${net>=0?'#30D158':'#FF453A'};margin:3px 0 10px">${fmtC(net)}</div>
