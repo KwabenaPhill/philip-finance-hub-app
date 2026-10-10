@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v14.1</title>
+<title>Philip's Finance Hub v14.2</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -975,6 +975,7 @@ body{font-feature-settings:"tnum" 1,"cv11" 1;color:var(--t1)!important;-webkit-f
 .fh-btn{width:100%;padding:13px;border-radius:13px;border:none;background:var(--acc);color:var(--onAcc);font-size:15px;font-weight:700;cursor:pointer;margin-top:4px}
 .toast{border-radius:14px!important}
 .dh-fh{font-size:13px;color:var(--t2);font-weight:600;margin:14px 2px 8px}
+.fh-seg button.on{background:var(--acc)!important;color:var(--onAcc)!important}.wn-tab.active-want,.wn-tab.active-need{background:var(--acc)!important;border-color:var(--acc)!important;color:var(--onAcc)!important}.fh-prow{display:flex;align-items:center;justify-content:space-between;margin:0 2px 12px}.fh-period{position:relative;display:inline-flex;align-items:center}.fh-period select{appearance:none;-webkit-appearance:none;background:var(--card);border:1px solid #26262A;color:var(--t1);font:600 14px Inter,sans-serif;padding:9px 38px 9px 14px;border-radius:12px;cursor:pointer}.fh-period .fh-ic{position:absolute;right:12px;pointer-events:none;color:var(--acc);transform:rotate(90deg)}.fh-dt{padding:14px 16px!important}.fh-dt-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.fh-dt-grid{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:8px}.fh-dt-grid b{display:block;font-size:16px;font-weight:700;color:var(--t1)}.fh-dt-grid small{font-size:12px;color:var(--t2)}.fh-st.good{color:var(--acc)!important}.fh-st.bad{color:#FF453A!important}.fh-link{background:var(--accSoft);border:1px solid var(--accLine);color:var(--acc);font:600 13px Inter,sans-serif;padding:6px 14px;border-radius:10px;cursor:pointer}.fh-soft-green{background:var(--accSoft)!important;border:1px solid var(--accLine)!important;color:var(--acc)!important;border-radius:12px!important;padding:11px!important;font:600 14px Inter,sans-serif!important;cursor:pointer}.fh-soft-red{background:rgba(255,69,58,.14)!important;border:1px solid rgba(255,69,58,.5)!important;color:#FF6B61!important;border-radius:12px!important;padding:11px!important;font:600 14px Inter,sans-serif!important;cursor:pointer}.fh-amt.out{color:#FF453A!important}.fh-red{color:#FF453A!important}.week-nav-btn{background:var(--accSoft)!important;color:var(--acc)!important;border:1px solid var(--accLine)!important}
 .nav-btn::before,.nav-btn::after{display:none!important}
 .streak-box{background:var(--card)!important;border:1px solid #17171A!important;border-radius:16px!important;text-align:left!important;padding:12px!important}
 .streak-box .sb-icon{display:none!important}
@@ -2045,28 +2046,6 @@ function dtSaveRate(){
   renderDebt();
   showToast(`🎯 Daily target set to GH₵ ${Math.round(n).toLocaleString()}`);
 }
-function dailyTargetHTML(){
-  const d=dtStats();
-  const balColor=d.behind>0?"#FF453A":d.ahead>0?"#30D158":"#A0A0A0";
-  const balVal=d.behind>0?`-${d.behind} Day${d.behind!==1?'s':''}`:d.ahead>0?`+${d.ahead} Day${d.ahead!==1?'s':''}`:"On track";
-  const clear=dtDaysToClear();
-  return `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:#161616;border:1px solid #FFD70033;border-radius:12px;padding:9px 12px;margin-bottom:10px;cursor:pointer" onclick="dtOpenEdit()">
-      <span style="font-size:12px;font-weight:800;color:#FFD700;white-space:nowrap">🎯 ${d.rate.toLocaleString()}/day</span>
-      <span style="font-size:12px;color:#A0A0A0;white-space:nowrap">${d.todayGot.toLocaleString()} today</span>
-      <span style="font-size:13px;font-weight:800;color:${balColor};white-space:nowrap">${balVal}</span>
-      <span style="font-size:12px;color:#E5E5E5;white-space:nowrap">${clear>0?clear+"d to clear":"all clear"}</span>
-      <span style="font-size:11px;color:#6f6f6f">✏️</span>
-    </div>
-    <div id="dtEditWrap" style="display:none;margin-bottom:10px">
-      <div style="display:flex;gap:8px">
-        <input class="custom-log-input" type="number" id="dtRateInput" placeholder="New daily amount"/>
-        <button class="btn-log-custom" style="background:linear-gradient(135deg,#FFD700,#FF9F0A);color:#000" onclick="dtSaveRate()">Set</button>
-      </div>
-      <div style="font-size:11px;color:#A0A0A0;margin-top:6px">Applies from today. Days already counted keep their old amount.</div>
-      <button onclick="dtRestart()" style="width:100%;margin-top:8px;padding:10px;border-radius:10px;background:#161616;border:1px solid #FF453A55;color:#FF453A;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">🔄 Restart count from today</button>
-      <div style="font-size:11px;color:#6f6f6f;margin-top:5px">Clears the +/- and the streak only. Plans and payments stay.</div>
-    </div>`;
-}
 
 // ===== INCOME, SOURCES AND THE TWO POTS =====
 const INC_KEY="pfhub_income_v1", SRC_KEY="pfhub_sources_v1", SPLIT_KEY="pfhub_split_v1";
@@ -2341,7 +2320,7 @@ function mergeBarHTML(side){
   const total=picks.reduce((s,p)=>s+(p.amount||0),0);
   const c=side==='buy'?'#BF5AF2':'#FF453A';
   if(mergeMode!==side){
-    return `<button onclick="toggleMergeMode('${side}')" style="width:100%;padding:11px;border-radius:12px;background:#161616;border:1px solid #2A2A2A;color:#E5E5E5;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;margin-bottom:12px">📦 Merge ${side==='buy'?'buy plans':'debts'} into one</button>`;
+    return `<button onclick="toggleMergeMode('${side}')" style="width:100%;padding:11px;border-radius:12px;background:#161616;border:1px solid #2A2A2A;color:#E5E5E5;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;margin-bottom:12px">Merge ${side==='buy'?'buy plans':'debts'} into one</button>`;
   }
   return `<div class="card" style="border-color:${c}44;margin-bottom:12px">
     <div style="font-size:12px;color:#E5E5E5;margin-bottom:8px">Tap the cards you want joined, then name the new one.</div>
@@ -2349,7 +2328,7 @@ function mergeBarHTML(side){
     <div class="row" style="margin-bottom:10px"><span class="label-sm">${picks.length} picked</span><span style="color:${c};font-weight:800;font-size:14px">GH₵ ${total.toLocaleString()}</span></div>
     <div style="display:flex;gap:8px">
       <button onclick="toggleMergeMode('${side}')" class="btn-modal-cancel" style="padding:10px 14px;border-radius:10px">Cancel</button>
-      <button onclick="mergeGo('${side}')" style="flex:1;padding:11px;border-radius:10px;background:${c};border:none;color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">📦 Merge into one</button>
+      <button onclick="mergeGo('${side}')" style="flex:1;padding:11px;border-radius:10px;background:${c};border:none;color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">Merge into one</button>
     </div>
   </div>`;
 }
@@ -2789,14 +2768,14 @@ function planCardHTML(side,p){
       ${!done?`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:11px;color:#A0A0A0">${schedLine}</span>${_pi.text?`<span style="font-size:12px;font-weight:800;color:${_pi.color}">${_pi.text}</span>`:''}</div>
       ${(inlineLogSide===side&&inlineLogId===p.id)?`<div style="display:flex;gap:6px;align-items:center">${inlineRow(p.color)}</div>`:`<div style="display:flex;gap:6px;flex-wrap:wrap">
         <button onclick="startInlineLog('${side}','${p.id}')" style="flex:1;min-width:70px;padding:8px;border-radius:9px;background:${p.color};border:none;color:#0A0A0A;font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">＋ Log</button>
-        <button onclick="${side==='buy'?`openBuyModal('${p.id}')`:`openEditModal('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #333;color:#E5E5E5;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">✏️</button>
-        <button onclick="setFocus('${side}','${p.id}')" title="Focus on this one" style="padding:8px 11px;border-radius:9px;background:${_foc?p.color+'22':'#161616'};border:1px solid ${_foc?p.color:'#333'};color:${_foc?p.color:'#A0A0A0'};font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">🎯</button>
-        <button onclick="closePlan('${side}','${p.id}')" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #FF9F0A55;color:#FF9F0A;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">⏸</button>
-        <button onclick="${side==='buy'?`deleteBuyPlan('${p.id}')`:`deleteDebt('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #FF453A55;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">🗑</button>
+        <button onclick="${side==='buy'?`openBuyModal('${p.id}')`:`openEditModal('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #333;color:#E5E5E5;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">${fhIc('edit',16)}</button>
+        <button onclick="setFocus('${side}','${p.id}')" title="Focus on this one" style="padding:8px 11px;border-radius:9px;background:${_foc?p.color+'22':'#161616'};border:1px solid ${_foc?p.color:'#333'};color:${_foc?p.color:'#A0A0A0'};font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">${fhIc('target',16)}</button>
+        <button onclick="closePlan('${side}','${p.id}')" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #FF9F0A55;color:#FF9F0A;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">${fhIc('pause',16)}</button>
+        <button onclick="${side==='buy'?`deleteBuyPlan('${p.id}')`:`deleteDebt('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #FF453A55;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">${fhIc('trash',16)}</button>
       </div>`}`:`<div style="display:flex;gap:6px;margin-top:8px">
-        <button onclick="${side==='buy'?`openBuyModal('${p.id}')`:`openEditModal('${p.id}')`}" style="flex:1;padding:8px;border-radius:9px;background:#161616;border:1px solid #333;color:#E5E5E5;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">✏️ Edit</button>
-        <button onclick="${side==='buy'?`addAgainBuy('${p.id}')`:`addAgainDebt('${p.id}')`}" style="flex:1;padding:8px;border-radius:9px;background:#161616;border:1px solid #30D15855;color:#30D158;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">🔁 Add Again</button>
-        <button onclick="${side==='buy'?`deleteBuyPlan('${p.id}')`:`deleteDebt('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #FF453A55;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">🗑</button>
+        <button onclick="${side==='buy'?`openBuyModal('${p.id}')`:`openEditModal('${p.id}')`}" style="flex:1;padding:8px;border-radius:9px;background:#161616;border:1px solid #333;color:#E5E5E5;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">Edit</button>
+        <button onclick="${side==='buy'?`addAgainBuy('${p.id}')`:`addAgainDebt('${p.id}')`}" style="flex:1;padding:8px;border-radius:9px;background:#161616;border:1px solid #30D15855;color:#30D158;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">Add again</button>
+        <button onclick="${side==='buy'?`deleteBuyPlan('${p.id}')`:`deleteDebt('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #FF453A55;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">${fhIc('trash',16)}</button>
       </div>`}
     </div>
   </div>`;
@@ -2826,8 +2805,8 @@ function pendingCardHTML(side,p){
       <div style="display:flex;gap:6px;flex-wrap:wrap">
         <button class="settle-pulse" onclick="clearPlan('${side}','${p.id}')" style="flex:1;min-width:70px;padding:8px;border-radius:9px;background:#30D158;border:none;color:#0A0A0A;font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">✓ Settled</button>
         <button onclick="restartPlan('${side}','${p.id}')" title="Start a fresh round" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #FF9F0A55;color:#FF9F0A;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">🔄</button>
-        <button onclick="${side==='buy'?`openBuyModal('${p.id}')`:`openEditModal('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #333;color:#E5E5E5;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">✏️</button>
-        <button onclick="${side==='buy'?`deleteBuyPlan('${p.id}')`:`deleteDebt('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #FF453A55;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">🗑</button>
+        <button onclick="${side==='buy'?`openBuyModal('${p.id}')`:`openEditModal('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #333;color:#E5E5E5;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">${fhIc('edit',16)}</button>
+        <button onclick="${side==='buy'?`deleteBuyPlan('${p.id}')`:`deleteDebt('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #FF453A55;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">${fhIc('trash',16)}</button>
       </div>
     </div>
   </div>`;
@@ -2841,7 +2820,7 @@ function inactiveCardHTML(side,p){
         <div style="font-size:11px;color:#A0A0A0">GH₵ ${pc.paid.toLocaleString()} / ${p.amount.toLocaleString()} · paused</div></div>
         <div style="display:flex;gap:6px">
           <button onclick="askReopen('${side}','${p.id}')" style="padding:8px 12px;border-radius:9px;background:#161616;border:1px solid #30D15855;color:#30D158;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">↩ Reopen</button>
-          <button onclick="${side==='buy'?`deleteBuyPlan('${p.id}')`:`deleteDebt('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #FF453A55;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">🗑</button>
+          <button onclick="${side==='buy'?`deleteBuyPlan('${p.id}')`:`deleteDebt('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #FF453A55;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">${fhIc('trash',16)}</button>
         </div>
       </div>
       ${_reopenAsk[p.id]?`<div style="margin-top:10px;padding-top:10px;border-top:1px solid #2A2A2A;width:100%;box-sizing:border-box">
@@ -2877,7 +2856,7 @@ function trackerHTML(side){
       <div class="row" style="margin-top:8px"><span class="val-green">GH₵ ${t.paid.toLocaleString()} ${side==='buy'?'saved':'paid'}</span><span style="color:#FF453A;font-size:13px;font-weight:700">GH₵ ${remaining.toLocaleString()} left</span></div>
     </div>
     ${t.activeCount>0?`<div class="custom-log-wrap">
-      <div class="custom-log-title">💰 Enter amount, then pick a plan to log to</div>
+      <div class="custom-log-title">Enter an amount, then pick a plan</div>
       <div class="custom-log-row">
         <input class="custom-log-input" type="number" id="${side==='buy'?'buyLogInput':'customLogInput'}" placeholder="Enter amount (GH₵)"/>
         <button class="btn-log-custom" style="background:linear-gradient(135deg,${accent},#5E5CE6);color:#fff" onclick="logMore('${side}')">Log</button>
@@ -2896,7 +2875,7 @@ function renderPlanSide(side){
     <button onclick="setPlanSide('debt')" style="flex:1;padding:13px;border-radius:14px;border:1.5px solid ${planSide==='debt'?'#FF453A':'#333333'};background:${planSide==='debt'?'#2A0D0D':'#161616'};color:${planSide==='debt'?'#FF453A':'#E5E5E5'};font-size:14px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">💳 Debt</button>
     </div>`;
   let html=trackerHTML(side)+mergeBarHTML(side);
-  html+=`<button class="add-debt-btn" style="border-color:${accent}66;color:${accent}" onclick="${isBuy?'openBuyModal()':'openAddModal()'}">${isBuy?'➕ Add Buy Plan':'➕ Add New Debt'}</button>`;
+  html+=`<button class="add-debt-btn" style="border-color:${accent}66;color:${accent}" onclick="${isBuy?'openBuyModal()':'openAddModal()'}">${isBuy?'+ Add buy plan':'+ Add debt'}</button>`;
   const total=isBuy?buyPlans.length:debtGoals.length;
   if(total===0){ html+=`<div class="empty-msg" style="padding:24px 0">No ${isBuy?'buy plans':'debts'} yet. Add one above.</div>`; }
   html+=active.map(pp=>planCardHTML(side,pp)).join("");
@@ -3011,8 +2990,8 @@ function wnItemHTML(item){
     </div>
     <div class="wn-item-btns">
       ${item.price>0&&!item.bought&&!item.pendingBuy?`<button class="wn-btn-edit" title="Add to Buy Plan" style="color:#BF5AF2;border-color:#BF5AF255" onclick="addToBuyFromListById('${item.id}')">🛒</button>`:''}
-      <button class="wn-btn-edit" onclick="wnOpenEdit('${item.id}')">✏️</button>
-      <button class="wn-btn-del" onclick="wnDelete('${item.id}')">🗑</button>
+      <button class="wn-btn-edit" onclick="wnOpenEdit('${item.id}')">${fhIc('edit',16)}</button>
+      <button class="wn-btn-del" onclick="wnDelete('${item.id}')">${fhIc('trash',16)}</button>
     </div>
   </div>`;
 }
@@ -3044,7 +3023,7 @@ function renderWN(){
       </div>
     </div>
     <button onclick="wnOpenAdd()" style="width:100%;padding:12px;border-radius:12px;background:#161616;border:1px dashed ${color}66;color:${color};font-size:13px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;margin-bottom:8px">➕ Add to ${label}</button>
-    <button onclick="wnToggleCombine()" style="width:100%;padding:11px;border-radius:12px;background:${wnCombineMode?'#1A0A2E':'#161616'};border:1px solid ${wnCombineMode?'#BF5AF2':'#2A2A2A'};color:${wnCombineMode?'#BF5AF2':'#E5E5E5'};font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;margin-bottom:12px">${wnCombineMode?'✕ Cancel combining':'📦 Combine items into one Buy plan'}</button>
+    <button onclick="wnToggleCombine()" style="width:100%;padding:11px;border-radius:12px;background:${wnCombineMode?'#1A0A2E':'#161616'};border:1px solid ${wnCombineMode?'#BF5AF2':'#2A2A2A'};color:${wnCombineMode?'#BF5AF2':'#E5E5E5'};font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;margin-bottom:12px">${wnCombineMode?'✕ Cancel combining':'Combine items into one buy plan'}</button>
     ${wnCombineMode?`<div class="card" style="border-color:#BF5AF244;margin-bottom:12px">
       <div style="font-size:12px;color:#E5E5E5;margin-bottom:8px">Tap the items you want together, then name the plan.</div>
       <input class="wn-input" id="wnCombineName" placeholder="Name it, e.g. Weekend Shopping" style="width:100%;margin-bottom:8px"/>
@@ -3206,11 +3185,6 @@ const PERIOD_OPTIONS=[
   {id:"year",label:"📆 This Year"},
   {id:"lifetime",label:"♾️ Lifetime"}
 ];
-function periodSelectHTML(value,handler,accent="#333333"){
-  // v14.0: tap chips instead of a dropdown, same periods
-  const short={week:"Week",month:"Month",year:"Year",lifetime:"All"};
-  return `<div class="fh-chips">${PERIOD_OPTIONS.map(o=>`<button class="${value===o.id?'on':''}" onclick="${handler}('${o.id}')">${short[o.id]||o.label}</button>`).join("")}</div>`;
-}
 function setSpendPeriod(value){
   if(!PERIOD_OPTIONS.some(o=>o.id===value)) return;
   spendPeriod=value;
@@ -3364,7 +3338,7 @@ function renderSpendMoney(){
         </div>
         <div class="entry-right" style="flex-shrink:0">
           <span class="entry-amt">−${e.amount.toLocaleString()}</span>
-          ${!e.auto?`<button class="btn-del" onclick="deleteSpendEntry('${e.id}')">🗑</button>`:`<span style="width:22px"></span>`}
+          ${!e.auto?`<button class="btn-del" onclick="deleteSpendEntry('${e.id}')">${fhIc('trash',16)}</button>`:`<span style="width:22px"></span>`}
         </div>
       </div>`;
     }).join("")}
@@ -3553,7 +3527,7 @@ function renderSavings(){
     </div>`:''}
 
     ${savActiveGoals().length>0?`<div class="custom-log-wrap">
-      <div class="custom-log-title">💰 Enter amount, then pick a goal to log to</div>
+      <div class="custom-log-title">Enter an amount, then pick a goal</div>
       <div class="custom-log-row">
         <input class="custom-log-input" type="number" id="savLogInput" placeholder="Enter amount (GH₵)"/>
         <button class="btn-log-custom" style="background:linear-gradient(135deg,#32ADE6,#5E5CE6);color:#fff" onclick="logMore('sav')">Log</button>
@@ -3595,10 +3569,10 @@ function renderSavings(){
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:11px;color:#A0A0A0">GH₵ ${Math.round(Math.min(goal.planAmt||sdaily, Math.max(goal.target-goal.saved,1))).toLocaleString()}/${goal.planFreq||'day'} · <b style="color:${sDInfo.color}">${sDInfo.text}</b>${goal.deadline?` · Due ${shortDate(goal.deadline)}`:''}</span>${sPInfo.text?`<span style="font-size:12px;font-weight:800;color:${sPInfo.color}">${sPInfo.text}</span>`:''}</div>
           <div style="display:flex;gap:6px;flex-wrap:wrap">
             ${(inlineLogSide==='sav'&&inlineLogId===goal.id)?inlineRow(color)+`<span style="display:none"></span>` : `<button onclick="startInlineLog('sav','${goal.id}')" style="flex:1;min-width:70px;padding:8px;border-radius:9px;background:${color};border:none;color:#0A0A0A;font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">＋ Log</button>
-            <button onclick="openSavModal('${goal.id}')" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #333;color:#E5E5E5;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">✏️</button>
-            <button onclick="setFocus('sav','${goal.id}')" title="Focus on this one" style="padding:8px 11px;border-radius:9px;background:${sFoc?color+'22':'#161616'};border:1px solid ${sFoc?color:'#333'};color:${sFoc?color:'#A0A0A0'};font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">🎯</button>
+            <button onclick="openSavModal('${goal.id}')" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #333;color:#E5E5E5;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">${fhIc('edit',16)}</button>
+            <button onclick="setFocus('sav','${goal.id}')" title="Focus on this one" style="padding:8px 11px;border-radius:9px;background:${sFoc?color+'22':'#161616'};border:1px solid ${sFoc?color:'#333'};color:${sFoc?color:'#A0A0A0'};font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">${fhIc('target',16)}</button>
             <button onclick="completeSavGoal('${goal.id}')" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #30D15855;color:#30D158;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">✓</button>
-            <button onclick="deleteSavGoal('${goal.id}')" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #FF453A55;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">🗑</button>`}
+            <button onclick="deleteSavGoal('${goal.id}')" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #FF453A55;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">${fhIc('trash',16)}</button>`}
           </div>
         </div>
       </div>`;
@@ -3631,10 +3605,10 @@ function renderSavings(){
         <div style="display:flex;gap:6px;flex-wrap:wrap">
           <button class="settle-pulse" onclick="clearSavGoal('${goal.id}')" style="flex:1;min-width:70px;padding:8px;border-radius:9px;background:#30D158;border:none;color:#0A0A0A;font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">✓ Settled</button>
           <button onclick="restartSavGoal('${goal.id}')" title="Start a fresh round" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #FF9F0A55;color:#FF9F0A;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">🔄</button>
-          <button onclick="openSavModal('${goal.id}')" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #333;color:#E5E5E5;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">✏️</button>
+          <button onclick="openSavModal('${goal.id}')" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #333;color:#E5E5E5;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">${fhIc('edit',16)}</button>
         </div>
       </div>
-      <div class="goal-actions"><button class="btn-delete-goal" onclick="deleteSavGoal('${goal.id}')">🗑</button></div>
+      <div class="goal-actions"><button class="btn-delete-goal" onclick="deleteSavGoal('${goal.id}')">${fhIc('trash',16)}</button></div>
     </div>`).join("")}`:''}
 
     ${savDone.length>0?`
@@ -3673,7 +3647,7 @@ function renderSavings(){
           <div class="bar-wrap" style="margin-top:8px"><div class="bar-fill" style="width:${pct}%;background:${sc}"></div></div>
         </div>
         <div class="goal-actions">
-          <button class="btn-delete-goal" onclick="deleteSavGoal('${goal.id}')">🗑</button>
+          <button class="btn-delete-goal" onclick="deleteSavGoal('${goal.id}')">${fhIc('trash',16)}</button>
         </div>
       </div>`;
     }).join("")}`:''}
@@ -3800,12 +3774,12 @@ function renderBudget(){
     </div>
 
     <div class="card" style="border-color:#E5E5E522">
-      <div class="row" style="margin-bottom:6px"><span class="label-sm">Planned</span><span style="color:#30D158;font-weight:800;font-size:13px">GH₵ ${planned.toLocaleString()}</span></div>
-      <div class="row" style="margin-bottom:${(subsM>0&&ym===TODAY.slice(0,7))?2:8}px"><span class="label-sm">Spent</span><span style="color:#FF453A;font-weight:800;font-size:13px">GH₵ ${spent.toLocaleString()}</span></div>
-      ${(subsM>0&&ym===TODAY.slice(0,7))?`<div style="font-size:10px;color:#E5E5E5;text-align:right;margin-bottom:8px">includes GH₵ ${subsM.toLocaleString()} subscriptions</div>`:''}
+      <div class="row" style="margin-bottom:6px"><span class="label-sm">Planned</span><span style="color:var(--acc);font-weight:700;font-size:15px">GH₵ ${planned.toLocaleString()}</span></div>
+      <div class="row" style="margin-bottom:${(subsM>0&&ym===TODAY.slice(0,7))?2:8}px"><span class="label-sm">Spent</span><span style="color:#F5F5F7;font-weight:700;font-size:15px">GH₵ ${spent.toLocaleString()}</span></div>
+      ${(subsM>0&&ym===TODAY.slice(0,7))?`<div style="font-size:12px;color:var(--acc);text-align:right;margin-bottom:8px">includes GH₵ ${subsM.toLocaleString()} subscriptions</div>`:''}
       <div class="bar-wrap"><div class="bar-fill" style="width:${planned>0?Math.min((spent/planned)*100,100):0}%;background:${spent>planned&&planned>0?'#FF453A':'linear-gradient(90deg,#E5E5E5,#30D158)'}"></div></div>
-      <div class="row" style="margin-top:8px"><span class="val-muted">${planned>0?(spent>planned?'Over plan':'On plan'):'No plan set'}</span><span style="color:${left<0?'#FF453A':'#30D158'};font-weight:700;font-size:13px">GH₵ ${left.toLocaleString()} left</span></div>
-      <button onclick="setMonthlyPlan()" style="width:100%;margin-top:12px;padding:10px;border-radius:10px;background:#1E1E1E;border:1px solid #E5E5E544;color:#E5E5E5;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">${planned>0?'✏️ Edit Monthly Plan':'➕ Set Monthly Plan'}</button>
+      <div class="row" style="margin-top:8px"><span class="val-muted">${planned>0?(spent>planned?'Over plan':'On plan'):'No plan set'}</span><span style="color:${left<0?'#FF453A':'var(--acc)'};font-weight:700;font-size:15px">${left<0?`GH₵ ${Math.abs(left).toLocaleString()} over plan`:`GH₵ ${left.toLocaleString()} left`}</span></div>
+      <button class="fh-soft-green" style="width:100%;margin-top:12px" onclick="setMonthlyPlan()">${planned>0?'Edit monthly plan':'Set monthly plan'}</button>
     </div>
 
     <div class="section-title">Categories</div>
@@ -3829,7 +3803,7 @@ function renderBudget(){
             ${budgetAddingId===cat.id
               ?`<button class="btn-cancel" onclick="budgetAddingId=null;renderBudget()">✕</button>`
               :`<button class="btn-sm" style="background:${cat.color}" onclick="budgetAddingId='${cat.id}';budgetExpandedId='${cat.id}';renderBudget()">+ Log</button>`}
-            ${!cat.fixed?`<button class="btn-cancel" onclick="deleteCat('${cat.id}')" style="padding:6px 8px">🗑</button>`:''}
+            ${!cat.fixed?`<button class="btn-cancel" onclick="deleteCat('${cat.id}')" style="padding:6px 8px">${fhIc('trash',16)}</button>`:''}
           </div>
         </div>
         ${(function(){const moneyIn=catMoneyIn(cat.id,ym); if(!moneyIn) return ''; const left=moneyIn-t;
@@ -3848,7 +3822,7 @@ function renderBudget(){
             <span style="font-size:10.5px;color:#6E6E6E">GH₵ ${t.toLocaleString()} this month</span></div>
         </div>`:''}
         ${open&&ents.length?`<div class="log-section visible" style="margin-top:10px">
-          ${[...ents].sort((a,b)=>b.date.localeCompare(a.date)).map(e=>`<div class="log-entry"><span style="color:#E5E5E5">${e.desc} · <span style="color:#E5E5E5">${e.date}</span></span><span style="display:flex;gap:8px;align-items:center"><span style="color:${cat.color};font-weight:700">GH₵ ${e.amount.toLocaleString()}</span><button class="btn-del" onclick="deleteSpendEntry('${e.id}')">🗑</button></span></div>`).join("")}
+          ${[...ents].sort((a,b)=>b.date.localeCompare(a.date)).map(e=>`<div class="log-entry"><span style="color:#E5E5E5">${e.desc} · <span style="color:#E5E5E5">${e.date}</span></span><span style="display:flex;gap:8px;align-items:center"><span style="color:${cat.color};font-weight:700">GH₵ ${e.amount.toLocaleString()}</span><button class="btn-del" onclick="deleteSpendEntry('${e.id}')">${fhIc('trash',16)}</button></span></div>`).join("")}
         </div>`:''}
         ${open&&!ents.length?`<div style="font-size:11px;color:#444;margin-top:10px">No entries this month yet.</div>`:''}
       </div>`;
@@ -3857,7 +3831,7 @@ function renderBudget(){
     <button onclick="openCatModal()" style="width:100%;padding:12px;border-radius:12px;background:#161616;border:1px dashed #E5E5E566;color:#E5E5E5;font-size:13px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;margin-bottom:18px">➕ Add Category</button>
 
     <div class="wn-section-header">
-      <span class="section-title" style="margin-bottom:0;color:#5E5CE6">🔁 Active Subscriptions</span>
+      <span class="section-title" style="margin-bottom:0;color:#5E5CE6">Active subscriptions</span>
       <span class="wn-section-total" style="color:#5E5CE6">GH₵ ${subsTotalMonthly().toLocaleString()}/mo</span>
     </div>
     ${subs.filter(s=>!s.cancelled).length===0?`<div class="empty-msg" style="padding:14px 0">No active subscriptions.<br>Add YouTube, ElevenLabs, CapCut…</div>`:''}
@@ -3873,13 +3847,13 @@ function renderBudget(){
             ${badge}
           </div>
           <div class="wn-item-btns">
-            <button class="wn-btn-edit" onclick="openSubModal('${s.id}')">✏️</button>
-            <button class="wn-btn-del" onclick="deleteSub('${s.id}')">🗑</button>
+            <button class="wn-btn-edit" onclick="openSubModal('${s.id}')">${fhIc('edit',16)}</button>
+            <button class="wn-btn-del" onclick="deleteSub('${s.id}')">${fhIc('trash',16)}</button>
           </div>
         </div>
         <div style="display:flex;gap:8px;margin-top:10px">
-          ${isDue?`<button onclick="openSubDate('${s.id}','renew')" style="flex:1;padding:9px;border-radius:10px;background:#0D2A0D;border:1px solid #30D15855;color:#30D158;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">🔁 Renew</button>`:''}
-          <button onclick="cancelSub('${s.id}')" style="flex:1;padding:9px;border-radius:10px;background:#161616;border:1px solid #FF453A55;color:#FF453A;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">✕ Cancel</button>
+          ${isDue?`<button onclick="openSubDate('${s.id}','renew')" style="flex:1;padding:9px;border-radius:10px;background:#0D2A0D;border:1px solid #30D15855;color:#30D158;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">Renew</button>`:''}
+          <button class="fh-soft-red" style="flex:1;padding:9px!important" onclick="cancelSub('${s.id}')">Cancel subscription</button>
         </div>
       </div>`;
     }).join("")}
@@ -3894,7 +3868,7 @@ function renderBudget(){
           <div style="font-size:14px;font-weight:700;color:#E5E5E5">${s.name}</div>
           <div style="font-size:11px;color:#E5E5E5;margin-top:2px">GH₵ ${s.amount.toLocaleString()}/mo · cancelled</div>
         </div>
-        <button class="wn-btn-del" onclick="deleteSub('${s.id}')">🗑</button>
+        <button class="wn-btn-del" onclick="deleteSub('${s.id}')">${fhIc('trash',16)}</button>
       </div>
       <button onclick="openSubDate('${s.id}','reactivate')" style="width:100%;margin-top:10px;padding:9px;border-radius:10px;background:#161616;border:1px solid #5E5CE655;color:#5E5CE6;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">↩ Renew / Reactivate</button>
     </div>`).join("")}`:''}
@@ -3970,43 +3944,6 @@ function lastExportHTML(){
   const days=Math.max(0,daysBetween(d,TODAY));
   const c=days<=1?"#30D158":days<=6?"#FF9F0A":"#FF453A";
   return `<div style="font-size:11px;color:${c};font-weight:700;margin-top:10px">Last export ${days===0?"today":days===1?"yesterday":days+" days ago"}</div>`;
-}
-function renderBackup(){
-  const g=destGoal();
-  document.getElementById("page-backup").innerHTML=`
-    <div style="margin-top:10px">
-      <div class="backup-card">
-        <div class="backup-title">💾 Backup</div>
-        <div class="backup-btns">
-          <button class="btn-export" onclick="exportData()">⬇ Export Backup</button>
-          <button class="btn-import" onclick="triggerImport()">⬆ Restore Backup</button>
-        </div>
-        ${lastExportHTML()}
-      </div>
-      <div class="backup-card" onclick="openSettings()" style="cursor:pointer;border-color:#30D15844">
-        <div class="row">
-          <span style="font-size:14px;font-weight:800;color:#E5E5E5">💰 Income settings</span>
-          <span style="font-size:18px;color:#30D158;font-weight:800">›</span>
-        </div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">
-          <span style="font-size:11px;font-weight:700;padding:5px 9px;border-radius:8px;background:#30D1581A;color:#30D158">${splitPct}% save</span>
-          <span style="font-size:11px;font-weight:700;padding:5px 9px;border-radius:8px;background:#FFD60A1A;color:#FFD60A">${100-splitPct}% spend</span>
-          <span style="font-size:11px;font-weight:700;padding:5px 9px;border-radius:8px;background:#FFD60A1A;color:#FFD60A">🎯 ${dtRateToday().toLocaleString()}/day</span>
-          <span style="font-size:11px;font-weight:700;padding:5px 9px;border-radius:8px;background:#2A2A2A;color:#C9C9C9">${sources.length} source${sources.length!==1?'s':''}</span>
-        </div>
-      </div>
-      <div class="backup-card" onclick="openHistory()" style="cursor:pointer;border-color:#FFD60A44">
-        <div class="row">
-          <span style="font-size:14px;font-weight:800;color:#E5E5E5">📜 History</span>
-          <span style="font-size:18px;color:#FFD60A;font-weight:800">›</span>
-        </div>
-        <div style="font-size:11.5px;color:#8A8A8A;margin-top:6px">Everything you've done in the app · ${histData.length} record${histData.length!==1?'s':''}</div>
-      </div>
-      <button onclick="openResetSheet()" style="width:100%;padding:12px;border-radius:12px;background:#161616;border:1px solid #3A1A1A;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;">
-        🗑 Reset Finance Hub
-      </button>
-      <div style="font-size:10px;color:#8E8E93;text-align:center;margin-top:6px">Only clears Finance Hub. Your other apps are never touched.</div>
-    </div>`;
 }
 
 // ===== v108: WELCOME / BACKUP REMINDER =====
@@ -4130,8 +4067,8 @@ function renderIncomeSavings(){
       <div style="font-size:11px;color:#8A8A8A;margin-top:3px;line-height:1.5">Earned ${fmt(r.earned)} · saved ${fmt(r.saved)}${r.carry?` · carried ${fmt(r.carry)}`:''}${r.out?` · took out ${fmt(r.out)}`:''} · <b style="color:#32ADE6">${srcPct(r.src)}% save</b></div>
       ${bar}
       <div style="display:flex;gap:7px;margin-top:11px">
-        <button onclick="openTakeOut('${r.src}')" style="flex:1;padding:10px;border-radius:10px;background:#1A0F0F;border:1px solid #FF453A55;color:#FF6961;font-size:12.5px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">➖ Take out</button>
-        <button onclick="openHistory({r:'${r.src}'})" style="flex:1;padding:10px;border-radius:10px;background:#161616;border:1px solid #333;color:#E5E5E5;font-size:12.5px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">📜 History</button>
+        <button onclick="openTakeOut('${r.src}')" style="flex:1;padding:10px;border-radius:10px;background:#1A0F0F;border:1px solid #FF453A55;color:#FF6961;font-size:12.5px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">Take out</button>
+        <button onclick="openHistory({r:'${r.src}'})" style="flex:1;padding:10px;border-radius:10px;background:#161616;border:1px solid #333;color:#E5E5E5;font-size:12.5px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">History</button>
       </div></div>`;
   };
   document.getElementById("page-savings").innerHTML=`<div style="margin-top:10px">
@@ -4151,7 +4088,7 @@ function renderIncomeSavings(){
       </div>
       <div style="font-size:10.5px;color:#6A6A6A;margin-top:8px">Net saved = saved − taken out</div>
     </div>
-    <div style="margin:16px 0 8px"><span class="section-title" style="color:#32ADE6">📺 Your pots</span></div>
+    <div style="margin:16px 0 8px"><span class="section-title" style="color:#32ADE6">Your pots</span></div>
     ${active.map(card).join("")}
     ${active.length===0?`<div class="empty-msg" style="padding:14px 0">No money in yet. Add money you received on the Money tab and its save share lands in that source's pot. Sources, splits and new income savings are in Settings → 💰 Income settings.</div>`:''}
   </div>`;
@@ -4467,7 +4404,7 @@ if(!localStorage.getItem("pfhub_hist_seeded_v1")){ seedHistory(); try{localStora
 refreshOldPlans();
 
 // ===== v14.0: ICONS, HOME, TOP BAR, TABS =====
-const FH_VERSION="v14.1"; // the version shown at the top. Change it with the <title> and sw.js CACHE
+const FH_VERSION="v14.2"; // the version shown at the top. Change it with the <title> and sw.js CACHE
 const FH_ICONS={
 home:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
 act:'<path d="M7 4v16M7 20l-4-4M7 20l4-4M17 20V4M17 4l-4 4M17 4l4 4"/>',
@@ -4495,6 +4432,13 @@ coins:'<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-
 cal:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',
 yt:'<rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 5 3-5 3z"/>',
 target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 12h.01"/>',
+chev:'<path d="m9 6 6 6-6 6"/>',
+down:'<path d="M12 4v12M7 11l5 5 5-5M5 20h14"/>',
+up:'<path d="M12 16V4M7 9l5-5 5 5M5 20h14"/>',
+list:'<path d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01"/>',
+trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m14 6 4 4"/>',
+pause:'<path d="M9 5v14M15 5v14"/>',
 alert:'<path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17h.01"/>'
 };
 const FH_CAT_ICON={debt:'card',sav:'save',buy:'cart',wants:'bag',needs:'pin',food:'food',airtime:'phone',bundles:'wifi',transport:'car',personal:'user',bills:'bolt',subs:'rep',other:'coins',cat_1777886325794:'dice'};
@@ -4617,7 +4561,7 @@ function fhRowHTML(r,withDel){
   const tile=r.k==="out"&&r.cat?catIconHTML(r.cat):`<span class="fh-tile ${K.tile||''}">${fhIc(K.ic||'coins')}</span>`;
   const sub=r.k==="out"?(r.cat?r.cat.label:"Expense"):(r.k==="in"&&r.pot>0?`Income · ${fhMoney(r.pot)} to pot`:K.lab);
   const del=withDel&&r.del&&r.id?`<button onclick="event.stopPropagation();${r.del}('${r.id}')" style="background:none;border:none;color:var(--t3);font-size:13px;padding:4px 0 0 8px;cursor:pointer">✕</button>`:"";
-  return `<div class="fh-row" style="cursor:default">${tile}<div class="fh-mid"><b>${r.t}</b><small>${sub}${r.note?' · '+r.note:''}${withDel?'':' · '+fhDayLabel(r.date)}</small></div><div class="fh-amt ${plus?'in':''}">${plus?'+':'−'}${fhMoney(Math.abs(r.a))}</div>${del}</div>`;
+  return `<div class="fh-row" style="cursor:default">${tile}<div class="fh-mid"><b>${r.t}</b><small>${sub}${r.note?' · '+r.note:''}${withDel?'':' · '+fhDayLabel(r.date)}</small></div><div class="fh-amt ${plus?'in':'out'}">${plus?'+':'−'}${fhMoney(Math.abs(r.a))}</div>${del}</div>`;
 }
 function renderHome(){
   const el=document.getElementById("page-home"); if(!el) return;
@@ -4638,8 +4582,8 @@ function renderHome(){
     <div class="fh-qa">
       <button onclick="fhAddIncome()"><span class="c p">${fhIc('plus',24)}</span>Income</button>
       <button onclick="fhAddExpense()"><span class="c">${fhIc('minus',24)}</span>Expense</button>
-      <button onclick="planSide='debt';switchTab('debt')"><span class="c">${fhIc('card',22)}</span>Pay debt</button>
-      <button onclick="switchTab('savings')"><span class="c">${fhIc('save',22)}</span>Save</button>
+      <button onclick="fhPayDebt()"><span class="c">${fhIc('card',22)}</span>Pay debt</button>
+      <button onclick="fhSaveMoney()"><span class="c">${fhIc('save',22)}</span>Save</button>
     </div>
     <div class="fh-sh"><b>My money</b></div>
     <div class="fh-list">
@@ -4680,14 +4624,14 @@ function renderRecords(){
     if(src.length) srcHTML=`<div class="fh-sh"><b>By source</b></div><div class="fh-list">${src.map(x=>`<div class="fh-row" style="cursor:default"><span class="fh-tile a">${fhIc('yt')}</span><div class="fh-mid"><b>${x.src.name}</b><small>${x.count} payment${x.count!==1?'s':''} · ${srcPct(x.src.id)}% to pot</small></div><div class="fh-amt in">+${fhMoney(x.total)}</div></div>`).join("")}</div>`;
   }
   el.innerHTML=`${periodSelectHTML(per,"setSpendPeriod")}
-    <div class="fh-chips" style="margin-top:-4px">${f('all','All')}${f('in','In')}${f('out','Spent')}${f('saved','Saved')}${f('debt','Debts')}</div>
+    <div class="fh-seg">${f('all','All')}${f('in','In')}${f('out','Spent')}${f('saved','Saved')}${f('debt','Debts')}</div>
     <div class="card" style="padding:14px 16px!important">
       <div class="fh-lbl" style="margin-bottom:10px">Summary · ${perLab}</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 14px">
         <div><div class="fh-lbl">Money in</div><div style="font-size:19px;font-weight:700;color:var(--acc)">+${fhMoney(S.in)}</div></div>
-        <div><div class="fh-lbl">Spent</div><div style="font-size:19px;font-weight:700">${fhMoney(S.spent)}</div></div>
+        <div><div class="fh-lbl">Spent</div><div style="font-size:19px;font-weight:700;color:#FF453A">${S.spent?"−":""}${fhMoney(S.spent)}</div></div>
         <div><div class="fh-lbl">Put in savings</div><div style="font-size:19px;font-weight:700">${fhMoney(S.saved)}</div></div>
-        <div><div class="fh-lbl">Paid on debts</div><div style="font-size:19px;font-weight:700">${fhMoney(S.debt)}</div></div>
+        <div><div class="fh-lbl">Paid on debts</div><div style="font-size:19px;font-weight:700;color:#FF453A">${S.debt?"−":""}${fhMoney(S.debt)}</div></div>
       </div></div>
     ${srcHTML}
     ${rows.length?body:`<div class="fh-empty" style="padding:30px 0">No records ${perLab}.</div>`}
@@ -4752,6 +4696,36 @@ function fhDeleteAdjust(id){
   if(!confirm("Delete this balance correction?")) return;
   incomeData.adjust=(incomeData.adjust||[]).filter(x=>String(x.id)!==String(id)); saveIncome(); renderMoney(); renderHome();
 }
+
+
+function periodSelectHTML(value,handler,accent){
+ const lab={week:"This week",month:"This month",year:"This year",lifetime:"All time"};
+ return `<div class="fh-prow"><span class="fh-lbl">Period</span><label class="fh-period"><select aria-label="Choose period" onchange="${handler}(this.value)">${PERIOD_OPTIONS.map(o=>`<option value="${o.id}" ${value===o.id?'selected':''}>${lab[o.id]||o.label}</option>`).join("")}</select>${fhIc('chev',16)}</label></div>`;
+}
+function dailyTargetHTML(){
+ const d=dtStats(),st=d.behind>0?{t:`${d.behind} day${d.behind!==1?'s':''} behind`,c:'bad'}:d.ahead>0?{t:`${d.ahead} day${d.ahead!==1?'s':''} ahead`,c:'good'}:{t:'On track',c:''},clear=dtDaysToClear();
+ return `<div class="card fh-dt"><div class="fh-dt-top"><span class="fh-lbl">Daily target</span><button class="fh-link" onclick="dtOpenEdit()">Edit</button></div><div class="fh-dt-grid"><div><b>GH₵ ${d.rate.toLocaleString()}</b><small>per day</small></div><div><b>GH₵ ${d.todayGot.toLocaleString()}</b><small>paid today</small></div><div><b class="fh-st ${st.c}">${st.t}</b><small>${clear>0?`clear in ${clear} day${clear!==1?'s':''}`:'all clear'}</small></div></div></div>
+ <div id="dtEditWrap" style="display:none;margin-bottom:12px"><div style="display:flex;gap:8px"><input class="modal-input" style="margin:0" type="number" id="dtRateInput" placeholder="New daily amount"/><button class="fh-btn" style="width:auto;margin:0;padding:0 20px" onclick="dtSaveRate()">Set</button></div><div class="fh-lbl" style="font-size:12px;margin-top:6px">Applies from today. Days already counted keep their old amount.</div><button class="fh-soft-red" style="width:100%;margin-top:10px" onclick="dtRestart()">Restart count from today</button><div class="fh-lbl" style="font-size:12px;margin-top:5px">Clears the ahead or behind count and the streak only. Plans and payments stay.</div></div>`;
+}
+function renderBackup(){
+ let last=null;try{last=localStorage.getItem("pfhub_last_export_v1")}catch(e){}
+ const days=last?Math.max(0,daysBetween(last,TODAY)):null,lastTxt=last===null?'Never saved. Save one every week':`Last saved ${days===0?'today':days===1?'yesterday':days+' days ago'}`;
+ const row=(ic,tc,title,sub,go,cls)=>`<div class="fh-row" onclick="${go}" style="cursor:pointer"><span class="fh-tile ${tc}">${fhIc(ic)}</span><div class="fh-mid"><b class="${cls||''}">${title}</b><small>${sub}</small></div>${fhIc('chev',18)}</div>`;
+ document.getElementById("page-backup").innerHTML=`<div class="fh-sh"><b>Backup</b></div><div class="fh-list">${row('down','a','Save backup',lastTxt,'exportData()')}${row('up','a','Restore backup','Bring back your data from a backup file','triggerImport()')}</div><div class="fh-sh"><b>Money settings</b></div><div class="fh-list">${row('coins','a','Income settings',`${splitPct}% save · ${100-splitPct}% spend · GH₵ ${dtRateToday().toLocaleString()} a day · ${sources.length} source${sources.length!==1?'s':''}`,'openSettings()')}${row('list','a','History',`Everything you have done · ${histData.length} record${histData.length!==1?'s':''}`,'openHistory()')}</div><div class="fh-list" style="margin-top:6px">${row('trash','b','Reset Finance Hub','Only clears Finance Hub. Other apps are never touched','openResetSheet()','fh-red')}</div><div class="fh-lbl" style="text-align:center;font-size:12px;margin-top:4px">Philip's Finance Hub ${FH_VERSION}</div>`;
+}
+function fhPayDebt(){
+ const b=document.getElementById("fhSheetBody");if(!b)return;const list=pActive('debt'),head=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div style="font-size:18px;font-weight:700">Pay a debt</div><button onclick="closeFhSheet()" class="fh-gear" style="width:34px;height:34px">✕</button></div>`;
+ if(!list.length){b.innerHTML=head+`<div class="fh-empty">No debts to pay.</div><button class="fh-btn" onclick="closeFhSheet();planSide='debt';switchTab('debt')">Add a debt in Plans</button>`;openFhSheet();return;}
+ b.innerHTML=head+`<label class="modal-label">Which debt</label><select class="modal-input" id="fhPdWho" onchange="fhPdFill()">${list.map(p=>`<option value="${p.id}">${p.label} · GH₵ ${fhMoney(Math.max(p.amount-pPaid('debt',p),0))} left</option>`).join("")}</select><label class="modal-label">Amount (GH₵)</label><input class="modal-input" type="number" id="fhPdAmt"/><button class="fh-btn" onclick="fhSavePayDebt()">Record payment</button>`;openFhSheet();fhPdFill();
+}
+function fhPdFill(){const id=document.getElementById("fhPdWho").value,p=debtGoals.find(x=>String(x.id)===String(id)),a=document.getElementById("fhPdAmt");if(p&&a){const left=Math.max(p.amount-pPaid('debt',p),0);a.value=Math.min(Math.round(pDaily('debt',p)||left),left)||"";}}
+function fhSavePayDebt(){const id=document.getElementById("fhPdWho").value,amt=document.getElementById("fhPdAmt").value;if(!(parseFloat(amt)>0)){showToast("Enter an amount","#FF453A");return;}logToPlan('debt',id,amt);closeFhSheet();renderHome();}
+function fhSaveMoney(){
+ const b=document.getElementById("fhSheetBody");if(!b)return;const goals=(savGoals||[]).filter(g=>!g.completed&&g.saved<g.target),buys=pActive('buy'),head=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div style="font-size:18px;font-weight:700">Save money</div><button onclick="closeFhSheet()" class="fh-gear" style="width:34px;height:34px">✕</button></div>`;
+ if(!goals.length&&!buys.length){b.innerHTML=head+`<div class="fh-empty">No savings goal or buy plan yet.</div><button class="fh-btn" onclick="closeFhSheet();savSide='goals';switchTab('savings')">Add a savings goal</button>`;openFhSheet();return;}
+ b.innerHTML=head+`<label class="modal-label">Save into</label><select class="modal-input" id="fhSvTo">${goals.length?`<optgroup label="Savings goals">${goals.map(g=>`<option value="g|${g.id}">${g.name} · GH₵ ${fhMoney(g.target-g.saved)} to go</option>`).join("")}</optgroup>`:''}${buys.length?`<optgroup label="Buy plans">${buys.map(p=>`<option value="b|${p.id}">${p.label} · GH₵ ${fhMoney(Math.max(p.amount-pPaid('buy',p),0))} to go</option>`).join("")}</optgroup>`:''}</select><label class="modal-label">Amount (GH₵)</label><input class="modal-input" type="number" id="fhSvAmt" placeholder="e.g. 50"/><button class="fh-btn" onclick="fhSaveSaveMoney()">Save</button>`;openFhSheet();
+}
+function fhSaveSaveMoney(){const v=document.getElementById("fhSvTo").value.split("|"),amt=document.getElementById("fhSvAmt").value;if(!(parseFloat(amt)>0)){showToast("Enter an amount","#FF453A");return;}if(v[0]==='g')addToSavGoal(v[1],amt);else logToPlan('buy',v[1],amt);closeFhSheet();renderHome();}
 
 // Expense: a quick form that logs into a Budget category, exactly like + Log on Budget
 function fhAddExpense(){
