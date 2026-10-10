@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v14.0</title>
+<title>Philip's Finance Hub v14.1</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -974,6 +974,7 @@ body{font-feature-settings:"tnum" 1,"cv11" 1;color:var(--t1)!important;-webkit-f
 .fh-empty{padding:16px 0;text-align:center;color:var(--t2);font-size:13.5px}
 .fh-btn{width:100%;padding:13px;border-radius:13px;border:none;background:var(--acc);color:var(--onAcc);font-size:15px;font-weight:700;cursor:pointer;margin-top:4px}
 .toast{border-radius:14px!important}
+.dh-fh{font-size:13px;color:var(--t2);font-weight:600;margin:14px 2px 8px}
 .nav-btn::before,.nav-btn::after{display:none!important}
 .streak-box{background:var(--card)!important;border:1px solid #17171A!important;border-radius:16px!important;text-align:left!important;padding:12px!important}
 .streak-box .sb-icon{display:none!important}
@@ -1160,10 +1161,10 @@ body{font-feature-settings:"tnum" 1,"cv11" 1;color:var(--t1)!important;-webkit-f
 
 <div class="bottom-nav">
   <button class="nav-btn active" onclick="switchTab('home')" id="nav-home"><span class="fh-ic" style="--m:url(&quot;data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.8%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%22M3%2010.5%2012%203l9%207.5V20a1%201%200%200%201-1%201h-5v-6H9v6H4a1%201%200%200%201-1-1z%22%2F%3E%3C%2Fsvg%3E&quot;)"></span>Home</button>
-  <button class="nav-btn" onclick="switchTab('money')" id="nav-money"><span class="fh-ic" style="--m:url(&quot;data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.8%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%22M7%204v16M7%2020l-4-4M7%2020l4-4M17%2020V4M17%204l-4%204M17%204l4%204%22%2F%3E%3C%2Fsvg%3E&quot;)"></span>Activity</button>
-  <button class="nav-btn" onclick="switchTab('budget')" id="nav-budget"><span class="fh-ic" style="--m:url(&quot;data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.8%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%22M12%203v9h9%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%229%22%2F%3E%3C%2Fsvg%3E&quot;)"></span>Budget</button>
-  <button class="nav-btn" onclick="switchTab('debt')" id="nav-debt"><span class="fh-ic" style="--m:url(&quot;data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.8%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%229%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%225%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%221%22%2F%3E%3C%2Fsvg%3E&quot;)"></span>Plans</button>
   <button class="nav-btn" onclick="switchTab('savings')" id="nav-savings"><span class="fh-ic" style="--m:url(&quot;data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.8%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%223%22%20y%3D%225%22%20width%3D%2218%22%20height%3D%2215%22%20rx%3D%223%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212.5%22%20r%3D%223.5%22%2F%3E%3Cpath%20d%3D%22M12%209v1M7%2020v1.5M17%2020v1.5%22%2F%3E%3C%2Fsvg%3E&quot;)"></span>Savings</button>
+  <button class="nav-btn" onclick="switchTab('debt')" id="nav-debt"><span class="fh-ic" style="--m:url(&quot;data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.8%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%229%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%225%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%221%22%2F%3E%3C%2Fsvg%3E&quot;)"></span>Plans</button>
+  <button class="nav-btn" onclick="switchTab('budget')" id="nav-budget"><span class="fh-ic" style="--m:url(&quot;data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.8%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%22M12%203v9h9%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%229%22%2F%3E%3C%2Fsvg%3E&quot;)"></span>Budget</button>
+  <button class="nav-btn" onclick="switchTab('money')" id="nav-money"><span class="fh-ic" style="--m:url(&quot;data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.8%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%22M7%204v16M7%2020l-4-4M7%2020l4-4M17%2020V4M17%204l-4%204M17%204l4%204%22%2F%3E%3C%2Fsvg%3E&quot;)"></span>Records</button>
 </div>
 
 <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)"/>
@@ -1494,7 +1495,7 @@ function switchTab(tab){
   // v14.0: Lists sits inside Plans, Settings opens from the top button
   const navOf={home:"home",money:"money",debt:"debt",wn:"debt",savings:"savings",budget:"budget"};
   TABS.forEach(t=>{ const p=document.getElementById("page-"+t); if(p) p.classList.toggle("active",t===tab); });
-  ["home","money","budget","debt","savings"].forEach(n=>{ const b=document.getElementById("nav-"+n); if(b) b.classList.toggle("active",navOf[tab]===n); });
+  ["home","savings","debt","budget","money"].forEach(n=>{ const b=document.getElementById("nav-"+n); if(b) b.classList.toggle("active",navOf[tab]===n); });
   const gear=document.getElementById("fhGear"); if(gear) gear.classList.toggle("on",tab==="backup");
   fhPageTitle(tab);
   if(tab==="home")    renderHome();
@@ -1654,7 +1655,7 @@ function saveDebtModal(){
     debtGoals.unshift({ id:newId, label:name, person, amount, color:selectedColor, deadline, planDaily, planAmt:_dg.planAmt, planFreq:_dg.planFreq, planStart:TODAY, planBase:Math.min(paid,amount), planVer:PLAN_VER });
     goalOrder.unshift(newId);
     D().paid[newId]=Math.min(paid,amount);
-    if(paid>0) D().log.push({date:TODAY,goalId:newId,amount:Math.min(paid,amount),label:name});
+    if(paid>0) D().log.push({date:TODAY,goalId:newId,amount:Math.min(paid,amount),label:name,seed:true});
     showToast(debtAgainFrom?"🔁 Added again. Old one kept in records":"✅ New debt added!");
   }
   saveGoals(); saveOrder(); saveAll();
@@ -3114,7 +3115,7 @@ let spendCats=loadSpendCats(); saveSpendCats(); // Save repaired cats immediatel
 function loadSpend(){ try{const r=localStorage.getItem(SPEND_KEY);if(r)return JSON.parse(r);}catch(e){} return{entries:[]}; }
 function saveSpend(){ localStorage.setItem(SPEND_KEY,JSON.stringify(spendData)); }
 let spendData=loadSpend();
-let spendPeriod="week";
+let spendPeriod="month";
 let catModalSelEmoji="💸", catModalSelColor="#FF6B35";
 
 function getWeekRange(){ const now=new Date(),day=now.getDay(); const monday=new Date(now); monday.setDate(now.getDate()-((day+6)%7)); const sunday=new Date(monday); sunday.setDate(monday.getDate()+6); return{start:monday.toISOString().split("T")[0],end:sunday.toISOString().split("T")[0]}; }
@@ -3307,8 +3308,8 @@ function saveIncomeEntry(){
   renderSavings();
 }
 function renderMoney(){
-  if(moneySide==="income"){ renderIncome(); return; }
-  return renderSpendMoney();
+  // v14.1: the Records page lists every money in and out. The old Income and Spending views stay below, unused.
+  return renderRecords();
 }
 function renderSpendMoney(){
   const all=getPeriodEntries();
@@ -4466,7 +4467,7 @@ if(!localStorage.getItem("pfhub_hist_seeded_v1")){ seedHistory(); try{localStora
 refreshOldPlans();
 
 // ===== v14.0: ICONS, HOME, TOP BAR, TABS =====
-const FH_VERSION="v14.0"; // the version shown at the top. Change it with the <title> and sw.js CACHE
+const FH_VERSION="v14.1"; // the version shown at the top. Change it with the <title> and sw.js CACHE
 const FH_ICONS={
 home:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
 act:'<path d="M7 4v16M7 20l-4-4M7 20l4-4M17 20V4M17 4l-4 4M17 4l4 4"/>',
@@ -4493,6 +4494,7 @@ dice:'<rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="9" cy="9" r="
 coins:'<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/>',
 cal:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',
 yt:'<rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 5 3-5 3z"/>',
+target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 12h.01"/>',
 alert:'<path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17h.01"/>'
 };
 const FH_CAT_ICON={debt:'card',sav:'save',buy:'cart',wants:'bag',needs:'pin',food:'food',airtime:'phone',bundles:'wifi',transport:'car',personal:'user',bills:'bolt',subs:'rep',other:'coins',cat_1777886325794:'dice'};
@@ -4517,7 +4519,7 @@ function fhDayLabel(ds){
   return shortDate(ds);
 }
 function fhPageTitle(tab){
-  const t={money:"Activity",debt:"Plans",wn:"Plans",savings:"Savings",budget:"Budget",backup:"Settings"}[tab];
+  const t={money:"Records",debt:"Plans",wn:"Plans",savings:"Savings",budget:"Budget",backup:"Settings"}[tab];
   const el=document.getElementById("fhTop"); if(!el) return;
   if(!t){
     const h=new Date().getHours();
@@ -4528,11 +4530,6 @@ function fhPageTitle(tab){
 function planSegHTML(on){
   const b=(id,lab,go)=>`<button class="${on===id?'on':''}" onclick="${go}">${lab}</button>`;
   return `<div class="fh-seg">${b('debt','Debts',"planSide='debt';switchTab('debt')")}${b('buy','Buy',"planSide='buy';switchTab('debt')")}${b('wn','Lists',"switchTab('wn')")}</div>`;
-}
-function fhTotalSaved(){
-  let pots=0; try{ pots=potRows("","").reduce((a,r)=>a+(r.net||0),0); }catch(e){}
-  const goals=(savGoals||[]).filter(g=>!g.completed).reduce((a,g)=>a+(g.saved||0),0);
-  return {pots, goals, total:pots+goals};
 }
 function fhMonthRange(){ const r=getMonthRange(); return {from:r.start,to:r.end}; }
 function fhSpentIn(from,to){
@@ -4558,46 +4555,204 @@ function fhComingUp(){
   }
   return rows.sort((x,y)=>x.d-y.d);
 }
-function fhRecent(n){
-  const inc=(incomeData.entries||[]).map(e=>({date:e.date||"",t:getSource(e.src).name,s:'Money in',a:e.amount,inc:true,o:1}));
-  const sp=(spendData.entries||[]).map((e,i)=>({date:e.date||"",t:e.desc||getCat(e.cat).label,s:getCat(e.cat).label,a:e.amount,cat:getCat(e.cat),o:i}));
-  return [...inc,...sp].sort((x,y)=>(y.date.localeCompare(x.date))||((y.o||0)-(x.o||0))).slice(0,n);
+// ===== v14.1: ONE MONEY MODEL =====
+// Money on me = money you can spend now.
+//   + the spend share of every income (the save share goes into its pot)
+//   + money taken out of a pot
+//   + balance corrections
+//   - expenses, bought list items, debt payments, money put on buy plans and savings goals
+// Opening amounts ("already saved", "already paid") never count.
+// Saved = income pots + savings goals (not finished) + buy plans (not settled).
+// Corrections live in incomeData.adjust, so they go into backups automatically.
+function fhIsDebtSeed(l){
+  if(l.seed) return true;
+  const g=debtGoals.find(x=>String(x.id)===String(l.goalId));
+  return !!(g && g.planBase>0 && l.date===g.planStart && Math.abs((l.amount||0)-g.planBase)<0.01 && (D().log||[]).find(x=>String(x.goalId)===String(l.goalId))===l);
+}
+const FH_KIND={
+  in:{lab:"Income",ic:"in",tile:"a",sign:1},
+  out:{lab:"Expense",sign:-1},
+  debt:{lab:"Debt payment",ic:"card",sign:-1},
+  save:{lab:"To savings",ic:"save",tile:"a",sign:-1},
+  buy:{lab:"To buy plan",ic:"cart",sign:-1},
+  from:{lab:"From savings",ic:"save",tile:"a",sign:1},
+  adj:{lab:"Balance corrected",ic:"rep",sign:1}
+};
+function fhLedger(){
+  const L=[];
+  (incomeData.entries||[]).forEach(e=>L.push({k:"in",id:e.id,date:e.date||"",t:getSource(e.src).name,a:e.amount||0,on:e.live!=null?e.live:(e.amount||0),pot:e.build||0,note:e.note||"",del:"deleteIncome"}));
+  (incomeData.adjust||[]).forEach(e=>L.push({k:"adj",id:e.id,date:e.date||"",t:"Balance corrected",a:e.amount,on:e.amount,note:e.note||"",del:"fhDeleteAdjust"}));
+  (incSav.moves||[]).forEach(m=>{ if(m.kind==="out"&&!/^Adjustment from old/.test(m.note||"")) L.push({k:"from",id:m.id,date:m.d||"",t:getSource(m.src).name+" pot",a:m.a||0,on:m.a||0,note:m.note||""}); });
+  (spendData.entries||[]).forEach(e=>{
+    const k=e.cat==="debt"?"debt":e.cat==="sav"?"save":e.cat==="buy"?"buy":"out";
+    L.push({k,id:e.id,date:e.date||"",t:e.desc||getCat(e.cat).label,a:e.amount||0,on:-(e.amount||0),cat:getCat(e.cat),del:e.auto?null:"deleteSpendEntry"});
+  });
+  (D().log||[]).forEach(l=>{ if(fhIsDebtSeed(l)) return; const g=debtGoals.find(x=>String(x.id)===String(l.goalId)); L.push({k:"debt",date:l.date||"",t:l.label||(g&&g.label)||"Debt payment",a:l.amount||0,on:-(l.amount||0)}); });
+  (buyPlans||[]).forEach(p=>(p.log||[]).forEach(l=>{ if(l.seed) return; L.push({k:"buy",date:l.date||"",t:p.label,a:l.amount||0,on:-(l.amount||0)}); }));
+  (savGoals||[]).forEach(g=>(g.log||[]).forEach(l=>{ if(l.seed) return; L.push({k:"save",date:l.date||"",t:g.name,a:l.amount||0,on:-(l.amount||0)}); }));
+  [...(wnData.wants||[]),...(wnData.needs||[])].forEach(x=>{ if(x.bought&&x.price>0&&!x.buyPlanId) L.push({k:"out",date:x.boughtDate||"",t:x.name,a:x.price,on:-x.price,cat:getCat((wnData.wants||[]).includes(x)?'wants':'needs')}); });
+  L.forEach((r,i)=>r.o=i);
+  return L.sort((x,y)=>(y.date.localeCompare(x.date))||(y.o-x.o));
+}
+function fhBalances(){
+  const L=fhLedger();
+  const onMe=L.reduce((s,r)=>s+(r.on||0),0);
+  let pots=0; try{ pots=potRows("","").reduce((a,r)=>a+(r.net||0),0); }catch(e){}
+  const goals=(savGoals||[]).filter(g=>!g.completed).reduce((a,g)=>a+(g.saved||0),0);
+  const buy=(buyPlans||[]).filter(p=>!p.cleared).reduce((a,p)=>a+(p.saved||0),0);
+  const owe=(debtGoals||[]).filter(g=>!g.cleared).reduce((a,g)=>a+Math.max((g.amount||0)-(D().paid[g.id]||0),0),0);
+  return {L,onMe,pots,goals,buy,saved:pots+goals+buy,total:onMe+pots+goals+buy,owe};
+}
+function fhPeriodSums(L,from,to){
+  const S={in:0,spent:0,saved:0,debt:0};
+  L.filter(r=>inRange(r.date,from,to)).forEach(r=>{
+    if(r.k==="in") S.in+=r.a; else if(r.k==="out") S.spent+=r.a; else if(r.k==="debt") S.debt+=r.a;
+    else if(r.k==="save"||r.k==="buy") S.saved+=r.a;
+  });
+  return S;
+}
+function fhRowHTML(r,withDel){
+  const K=FH_KIND[r.k]||FH_KIND.out;
+  const plus=(r.k==="adj")?(r.a>=0):(K.sign>0);
+  const tile=r.k==="out"&&r.cat?catIconHTML(r.cat):`<span class="fh-tile ${K.tile||''}">${fhIc(K.ic||'coins')}</span>`;
+  const sub=r.k==="out"?(r.cat?r.cat.label:"Expense"):(r.k==="in"&&r.pot>0?`Income · ${fhMoney(r.pot)} to pot`:K.lab);
+  const del=withDel&&r.del&&r.id?`<button onclick="event.stopPropagation();${r.del}('${r.id}')" style="background:none;border:none;color:var(--t3);font-size:13px;padding:4px 0 0 8px;cursor:pointer">✕</button>`:"";
+  return `<div class="fh-row" style="cursor:default">${tile}<div class="fh-mid"><b>${r.t}</b><small>${sub}${r.note?' · '+r.note:''}${withDel?'':' · '+fhDayLabel(r.date)}</small></div><div class="fh-amt ${plus?'in':''}">${plus?'+':'−'}${fhMoney(Math.abs(r.a))}</div>${del}</div>`;
 }
 function renderHome(){
   const el=document.getElementById("page-home"); if(!el) return;
-  const T=fhTotalSaved();
+  const B=fhBalances();
   const {from,to}=fhMonthRange();
   const mName=new Date(TODAY).toLocaleDateString('en-GB',{month:'long'});
-  const inM=incomeTotal(from,to), outM=fhSpentIn(from,to);
+  const M=fhPeriodSums(B.L,from,to);
   const up=fhComingUp();
-  const rec=fhRecent(5);
+  const acc=(ic,tc,name,sub,amt,go,cls)=>`<div class="fh-row" onclick="${go}"><span class="fh-tile ${tc}">${fhIc(ic)}</span><div class="fh-mid"><b>${name}</b><small>${sub}</small></div><div class="fh-amt ${cls||''}">${amt}</div></div>`;
   const row=(r)=>`<div class="fh-row" onclick="${r.go}"><span class="fh-tile ${r.tc||''}">${fhIc(r.ic)}</span><div class="fh-mid"><b>${r.n}</b><small>${r.s}</small></div><div class="fh-amt">${r.a}</div></div>`;
   el.innerHTML=`
-    <div class="fh-hero"><div class="fh-lbl">Total saved</div>
-      <div class="fh-big"><span>GH₵</span>${fhMoney(T.total)}</div>
+    <div class="fh-hero"><div class="fh-lbl">Total money</div>
+      <div class="fh-big"><span>GH₵</span>${fhMoney(B.total)}</div>
       <div class="fh-pills">
-        <div class="fh-pill"><div class="fh-lbl">${fhIc('in',14)} In · ${mName}</div><b style="color:var(--acc)">+${fhMoney(inM)}</b></div>
-        <div class="fh-pill"><div class="fh-lbl">${fhIc('out',14)} Spent · ${mName}</div><b>${fhMoney(outM)}</b></div>
+        <div class="fh-pill"><div class="fh-lbl">${fhIc('in',14)} In · ${mName}</div><b style="color:var(--acc)">+${fhMoney(M.in)}</b></div>
+        <div class="fh-pill"><div class="fh-lbl">${fhIc('out',14)} Spent · ${mName}</div><b>${fhMoney(M.spent)}</b></div>
       </div></div>
     <div class="fh-qa">
       <button onclick="fhAddIncome()"><span class="c p">${fhIc('plus',24)}</span>Income</button>
       <button onclick="fhAddExpense()"><span class="c">${fhIc('minus',24)}</span>Expense</button>
-      <button onclick="planSide='debt';switchTab('debt')"><span class="c">${fhIc('card',22)}</span>Pay plan</button>
+      <button onclick="planSide='debt';switchTab('debt')"><span class="c">${fhIc('card',22)}</span>Pay debt</button>
       <button onclick="switchTab('savings')"><span class="c">${fhIc('save',22)}</span>Save</button>
     </div>
-    <div class="fh-sh"><b>Coming up</b>${up.length>3?`<a onclick="planSide='debt';switchTab('debt')">See all</a>`:''}</div>
+    <div class="fh-sh"><b>My money</b></div>
+    <div class="fh-list">
+      ${acc('coins','a','On me','Money I can spend · tap to correct',`${B.onMe<0?'−':''}${fhMoney(Math.abs(B.onMe))}`,"fhCorrectBalance()")}
+      ${acc('save','','Income pots','Savings from my income',fhMoney(B.pots),"savSide='income';switchTab('savings')")}
+      ${acc('target','','Savings goals','Money in my goals',fhMoney(B.goals),"savSide='goals';switchTab('savings')")}
+      ${acc('cart','','Buy plans','Set aside to buy things',fhMoney(B.buy),"planSide='buy';switchTab('debt')")}
+      ${acc('card','w','I owe','Debts still to pay',fhMoney(B.owe),"planSide='debt';switchTab('debt')")}
+    </div>
+    <div class="fh-sh"><b>Coming up</b></div>
     <div class="fh-list">${up.length?up.slice(0,3).map(row).join(""):`<div class="fh-empty">Nothing due in the next 2 weeks</div>`}</div>
-    <div class="fh-sh"><b>Recent</b><a onclick="switchTab('money')">See all</a></div>
-    <div class="fh-list">${rec.length?rec.map(r=>`<div class="fh-row" onclick="${r.inc?"moneySide='income';switchTab('money')":"moneySide='spend';switchTab('money')"}">
-        ${r.inc?`<span class="fh-tile a">${fhIc('in')}</span>`:catIconHTML(r.cat)}
-        <div class="fh-mid"><b>${r.t}</b><small>${r.s} · ${fhDayLabel(r.date)}</small></div>
-        <div class="fh-amt ${r.inc?'in':''}">${r.inc?'+':'−'}${fhMoney(r.a)}</div></div>`).join(""):`<div class="fh-empty">No money in or out yet. Tap Income or Expense above.</div>`}</div>`;
+    <div class="fh-sh"><b>Recent records</b><a onclick="switchTab('money')">See all</a></div>
+    <div class="fh-list">${B.L.length?B.L.slice(0,6).map(r=>fhRowHTML(r,false)).join(""):`<div class="fh-empty">No records yet. Tap Income or Expense above.</div>`}</div>`;
 }
-// Income: opens the Money in form on Activity
+// ===== RECORDS (all money in and out) =====
+let recFilter="all";
+function setRecFilter(f){ recFilter=f; renderMoney(); }
+function renderRecords(){
+  const el=document.getElementById("page-money"); if(!el) return;
+  const B=fhBalances();
+  const per=spendPeriod;
+  const r0=per==="week"?getWeekRange():per==="month"?getMonthRange():per==="year"?getYearRange():{start:"",end:""};
+  const from=r0.start, to=r0.end;
+  const S=fhPeriodSums(B.L,from,to);
+  const show={all:()=>true,in:r=>r.k==="in"||r.k==="from"||(r.k==="adj"&&r.a>=0),out:r=>r.k==="out",saved:r=>r.k==="save"||r.k==="buy"||r.k==="from",debt:r=>r.k==="debt"}[recFilter]||(()=>true);
+  const rows=B.L.filter(r=>inRange(r.date,from,to)&&show(r));
+  const f=(id,lab)=>`<button class="${recFilter===id?'on':''}" onclick="setRecFilter('${id}')">${lab}</button>`;
+  let body="", day="";
+  rows.forEach(r=>{
+    if(r.date!==day){ if(day) body+=`</div>`; day=r.date; body+=`<div class="dh-fh">${fhDayLabel(r.date)}</div><div class="fh-list">`; }
+    body+=fhRowHTML(r,true);
+  });
+  if(day) body+=`</div>`;
+  const perLab={week:"this week",month:"this month",year:"this year",lifetime:"all time"}[per]||"";
+  let srcHTML="";
+  if(recFilter==="in"){
+    const src=incomeSourceTotals(from,to);
+    if(src.length) srcHTML=`<div class="fh-sh"><b>By source</b></div><div class="fh-list">${src.map(x=>`<div class="fh-row" style="cursor:default"><span class="fh-tile a">${fhIc('yt')}</span><div class="fh-mid"><b>${x.src.name}</b><small>${x.count} payment${x.count!==1?'s':''} · ${srcPct(x.src.id)}% to pot</small></div><div class="fh-amt in">+${fhMoney(x.total)}</div></div>`).join("")}</div>`;
+  }
+  el.innerHTML=`${periodSelectHTML(per,"setSpendPeriod")}
+    <div class="fh-chips" style="margin-top:-4px">${f('all','All')}${f('in','In')}${f('out','Spent')}${f('saved','Saved')}${f('debt','Debts')}</div>
+    <div class="card" style="padding:14px 16px!important">
+      <div class="fh-lbl" style="margin-bottom:10px">Summary · ${perLab}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 14px">
+        <div><div class="fh-lbl">Money in</div><div style="font-size:19px;font-weight:700;color:var(--acc)">+${fhMoney(S.in)}</div></div>
+        <div><div class="fh-lbl">Spent</div><div style="font-size:19px;font-weight:700">${fhMoney(S.spent)}</div></div>
+        <div><div class="fh-lbl">Put in savings</div><div style="font-size:19px;font-weight:700">${fhMoney(S.saved)}</div></div>
+        <div><div class="fh-lbl">Paid on debts</div><div style="font-size:19px;font-weight:700">${fhMoney(S.debt)}</div></div>
+      </div></div>
+    ${srcHTML}
+    ${rows.length?body:`<div class="fh-empty" style="padding:30px 0">No records ${perLab}.</div>`}
+    ${spendData.entries.some(e=>!e.auto)?`<button onclick="clearManualSpend()" style="width:100%;margin-top:6px;padding:12px;border-radius:13px;background:var(--card);border:none;color:var(--t2);font-size:13px;font-weight:600;cursor:pointer">Clear all expenses I typed in</button>`:''}`;
+}
+// ===== QUICK FORMS =====
 function fhAddIncome(){
-  moneySide='income'; switchTab('money');
-  setTimeout(()=>{ const a=document.getElementById('incAmt'); if(a){ a.scrollIntoView({behavior:'smooth',block:'center'}); a.focus(); } },120);
+  const b=document.getElementById("fhSheetBody"); if(!b) return;
+  b.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div style="font-size:18px;font-weight:700">Add income</div>
+      <button onclick="closeFhSheet()" class="fh-gear" style="width:34px;height:34px">✕</button></div>
+    <label class="modal-label">Amount (GH₵)</label>
+    <input class="modal-input" type="number" id="fhInAmt" placeholder="e.g. 1000" oninput="fhInHint()"/>
+    <label class="modal-label">From</label>
+    <select class="modal-input" id="fhInSrc" onchange="fhInHint()">${sources.map(x=>`<option value="${x.id}">${x.name}</option>`).join("")}</select>
+    <div id="fhInHint" class="fh-lbl" style="margin:-4px 0 10px"></div>
+    <label class="modal-label">Date</label>
+    <input class="modal-input" type="date" id="fhInDate" value="${TODAY}"/>
+    <label class="modal-label">Note (optional)</label>
+    <input class="modal-input" id="fhInNote" placeholder="e.g. September payout"/>
+    <button class="fh-btn" onclick="fhSaveIncome()">Add income</button>`;
+  openFhSheet(); fhInHint();
+  setTimeout(()=>{ const a=document.getElementById('fhInAmt'); if(a) a.focus(); },150);
 }
+function fhInHint(){
+  const el=document.getElementById("fhInHint"); if(!el) return;
+  const src=document.getElementById("fhInSrc").value, pct=srcPct(src);
+  const amt=parseFloat(document.getElementById("fhInAmt").value)||0;
+  el.textContent=amt>0?`${pct}% to the ${getSource(src).name} pot (GH₵ ${fhMoney(Math.round(amt*pct/100))}), GH₵ ${fhMoney(amt-Math.round(amt*pct/100))} on you`:`${pct}% goes to the ${getSource(src).name} pot, the rest is on you`;
+}
+function fhSaveIncome(){
+  const amt=parseFloat(document.getElementById("fhInAmt").value);
+  if(!amt||amt<=0){ showToast("Enter an amount","#FF453A"); return; }
+  const e=addIncome(amt, document.getElementById("fhInSrc").value, document.getElementById("fhInDate").value, document.getElementById("fhInNote").value);
+  closeFhSheet(); renderHome(); renderSavings();
+  if(e) showToast(`+GH₵ ${fhMoney(amt)} · ${fhMoney(e.build)} to pot, ${fhMoney(e.live)} on you`);
+}
+function fhCorrectBalance(){
+  const b=document.getElementById("fhSheetBody"); if(!b) return;
+  const cur=fhBalances().onMe;
+  b.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div style="font-size:18px;font-weight:700">Money on me</div>
+      <button onclick="closeFhSheet()" class="fh-gear" style="width:34px;height:34px">✕</button></div>
+    <div class="fh-lbl" style="margin-bottom:14px;line-height:1.5">The app says <b style="color:var(--t1)">GH₵ ${fhMoney(cur)}</b>. If your real cash and MoMo (not counting savings) is different, type the real amount. The app adds one correction record, nothing else changes.</div>
+    <label class="modal-label">Real amount on me now (GH₵)</label>
+    <input class="modal-input" type="number" id="fhAdjAmt" value="${Math.round(cur)}"/>
+    <button class="fh-btn" onclick="fhSaveCorrect()">Save</button>`;
+  openFhSheet();
+}
+function fhSaveCorrect(){
+  const v=parseFloat(document.getElementById("fhAdjAmt").value);
+  if(isNaN(v)){ showToast("Enter an amount","#FF453A"); return; }
+  const diff=Math.round((v-fhBalances().onMe)*100)/100;
+  if(Math.abs(diff)<0.01){ closeFhSheet(); showToast("Already correct"); return; }
+  if(!incomeData.adjust) incomeData.adjust=[];
+  incomeData.adjust.push({id:uid("adj_"),date:TODAY,amount:diff,note:diff>0?"added":"removed"});
+  saveIncome();
+  try{ rec("app",`Money on me corrected to GH₵ ${fhMoney(v)} (${diff>0?'+':'−'}${fhMoney(Math.abs(diff))})`); }catch(e){}
+  closeFhSheet(); renderHome(); showToast(`Money on me is now GH₵ ${fhMoney(v)}`);
+}
+function fhDeleteAdjust(id){
+  if(!confirm("Delete this balance correction?")) return;
+  incomeData.adjust=(incomeData.adjust||[]).filter(x=>String(x.id)!==String(id)); saveIncome(); renderMoney(); renderHome();
+}
+
 // Expense: a quick form that logs into a Budget category, exactly like + Log on Budget
 function fhAddExpense(){
   const b=document.getElementById("fhSheetBody"); if(!b) return;
