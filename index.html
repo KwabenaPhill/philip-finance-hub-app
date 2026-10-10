@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v13.4</title>
+<title>Philip's Finance Hub v14.0</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -13,7 +13,6 @@
 <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap');
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: #000000; color: #fff; font-family: 'Outfit', sans-serif; min-height: 100vh; max-width: 480px; margin: 0 auto; padding-bottom: 90px; }
   .app-header { text-align: center; padding: 20px 16px 0; position: relative; }
@@ -299,6 +298,691 @@
   .btn-log-custom { padding: 10px 16px; border-radius: 10px; background: linear-gradient(135deg,#E5E5E5,#B0B0B0); border: none; color: #0A0A0A; font-size: 13px; font-weight: 800; cursor: pointer; font-family: 'Outfit', sans-serif; }
   #dragGhost { position: fixed; z-index: 9998; pointer-events: none; opacity: 0.85; border: 2px solid #E5E5E5; border-radius: 14px; background: #1E1E1E; padding: 12px 16px; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 700; color: #fff; display: none; max-width: 280px; box-shadow: 0 8px 30px rgba(229,229,229,0.3); }
 </style>
+<style id="design-emerald">
+/* v14.0 EMERALD DESIGN LAYER: visual only, no data or logic here */
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url(./fonts/inter-latin-400-normal.woff2) format('woff2')}@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url(./fonts/inter-latin-500-normal.woff2) format('woff2')}@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url(./fonts/inter-latin-600-normal.woff2) format('woff2')}@font-face{font-family:'Inter';font-style:normal;font-weight:700;font-display:swap;src:url(./fonts/inter-latin-700-normal.woff2) format('woff2')}@font-face{font-family:'Inter';font-style:normal;font-weight:800;font-display:swap;src:url(./fonts/inter-latin-800-normal.woff2) format('woff2')}
+html,body{background:#000!important}
+body,button,input,textarea,select,h1,h2,h3{font-family:'Inter',-apple-system,system-ui,'Segoe UI',Roboto,sans-serif!important;letter-spacing:-.1px}
+[style*="color:#0A84FF"]{color:var(--acc)!important}
+[style*="color: #0A84FF"]{color:var(--acc)!important}
+[style*="color:#0a84ff"]{color:var(--acc)!important}
+[style*="color: #0a84ff"]{color:var(--acc)!important}
+[style*="background:#0A84FF"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: #0A84FF"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:#0a84ff"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background-color:#0A84FF"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:linear-gradient(135deg,#0A84FF"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: linear-gradient(135deg, #0A84FF"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="border:1px solid #0A84FF"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #0A84FF"]{border-color:#2A2A2E!important}
+[style*="border-color:#0A84FF"]{border-color:#2A2A2E!important}
+[style*="border:2px solid #0A84FF"]{border-color:#2A2A2E!important}
+[style*="border-left:3px solid #0A84FF"]{border-color:#2A2A2E!important}
+[style*="border-left:4px solid #0A84FF"]{border-color:#2A2A2E!important}
+[style*="border:1px dashed #0A84FF"]{border-color:#2A2A2E!important}
+[style*="color:#28A745"]{color:var(--acc)!important}
+[style*="color: #28A745"]{color:var(--acc)!important}
+[style*="color:#28a745"]{color:var(--acc)!important}
+[style*="color: #28a745"]{color:var(--acc)!important}
+[style*="background:#28A745"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: #28A745"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:#28a745"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background-color:#28A745"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:linear-gradient(135deg,#28A745"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: linear-gradient(135deg, #28A745"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="border:1px solid #28A745"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #28A745"]{border-color:#2A2A2E!important}
+[style*="border-color:#28A745"]{border-color:#2A2A2E!important}
+[style*="border:2px solid #28A745"]{border-color:#2A2A2E!important}
+[style*="border-left:3px solid #28A745"]{border-color:#2A2A2E!important}
+[style*="border-left:4px solid #28A745"]{border-color:#2A2A2E!important}
+[style*="border:1px dashed #28A745"]{border-color:#2A2A2E!important}
+[style*="color:#30D158"]{color:var(--acc)!important}
+[style*="color: #30D158"]{color:var(--acc)!important}
+[style*="color:#30d158"]{color:var(--acc)!important}
+[style*="color: #30d158"]{color:var(--acc)!important}
+[style*="background:#30D158"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: #30D158"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:#30d158"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background-color:#30D158"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:linear-gradient(135deg,#30D158"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: linear-gradient(135deg, #30D158"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="border:1px solid #30D158"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #30D158"]{border-color:#2A2A2E!important}
+[style*="border-color:#30D158"]{border-color:#2A2A2E!important}
+[style*="border:2px solid #30D158"]{border-color:#2A2A2E!important}
+[style*="border-left:3px solid #30D158"]{border-color:#2A2A2E!important}
+[style*="border-left:4px solid #30D158"]{border-color:#2A2A2E!important}
+[style*="border:1px dashed #30D158"]{border-color:#2A2A2E!important}
+[style*="color:#32ADE6"]{color:var(--acc)!important}
+[style*="color: #32ADE6"]{color:var(--acc)!important}
+[style*="color:#32ade6"]{color:var(--acc)!important}
+[style*="color: #32ade6"]{color:var(--acc)!important}
+[style*="background:#32ADE6"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: #32ADE6"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:#32ade6"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background-color:#32ADE6"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:linear-gradient(135deg,#32ADE6"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: linear-gradient(135deg, #32ADE6"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="border:1px solid #32ADE6"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #32ADE6"]{border-color:#2A2A2E!important}
+[style*="border-color:#32ADE6"]{border-color:#2A2A2E!important}
+[style*="border:2px solid #32ADE6"]{border-color:#2A2A2E!important}
+[style*="border-left:3px solid #32ADE6"]{border-color:#2A2A2E!important}
+[style*="border-left:4px solid #32ADE6"]{border-color:#2A2A2E!important}
+[style*="border:1px dashed #32ADE6"]{border-color:#2A2A2E!important}
+[style*="color:#5E5CE6"]{color:var(--acc)!important}
+[style*="color: #5E5CE6"]{color:var(--acc)!important}
+[style*="color:#5e5ce6"]{color:var(--acc)!important}
+[style*="color: #5e5ce6"]{color:var(--acc)!important}
+[style*="background:#5E5CE6"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: #5E5CE6"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:#5e5ce6"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background-color:#5E5CE6"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:linear-gradient(135deg,#5E5CE6"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: linear-gradient(135deg, #5E5CE6"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="border:1px solid #5E5CE6"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #5E5CE6"]{border-color:#2A2A2E!important}
+[style*="border-color:#5E5CE6"]{border-color:#2A2A2E!important}
+[style*="border:2px solid #5E5CE6"]{border-color:#2A2A2E!important}
+[style*="border-left:3px solid #5E5CE6"]{border-color:#2A2A2E!important}
+[style*="border-left:4px solid #5E5CE6"]{border-color:#2A2A2E!important}
+[style*="border:1px dashed #5E5CE6"]{border-color:#2A2A2E!important}
+[style*="color:#6FBF8A"]{color:var(--acc)!important}
+[style*="color: #6FBF8A"]{color:var(--acc)!important}
+[style*="color:#6fbf8a"]{color:var(--acc)!important}
+[style*="color: #6fbf8a"]{color:var(--acc)!important}
+[style*="background:#6FBF8A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: #6FBF8A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:#6fbf8a"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background-color:#6FBF8A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:linear-gradient(135deg,#6FBF8A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: linear-gradient(135deg, #6FBF8A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="border:1px solid #6FBF8A"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #6FBF8A"]{border-color:#2A2A2E!important}
+[style*="border-color:#6FBF8A"]{border-color:#2A2A2E!important}
+[style*="border:2px solid #6FBF8A"]{border-color:#2A2A2E!important}
+[style*="border-left:3px solid #6FBF8A"]{border-color:#2A2A2E!important}
+[style*="border-left:4px solid #6FBF8A"]{border-color:#2A2A2E!important}
+[style*="border:1px dashed #6FBF8A"]{border-color:#2A2A2E!important}
+[style*="color:#8E44AD"]{color:var(--acc)!important}
+[style*="color: #8E44AD"]{color:var(--acc)!important}
+[style*="color:#8e44ad"]{color:var(--acc)!important}
+[style*="color: #8e44ad"]{color:var(--acc)!important}
+[style*="background:#8E44AD"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: #8E44AD"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:#8e44ad"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background-color:#8E44AD"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:linear-gradient(135deg,#8E44AD"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: linear-gradient(135deg, #8E44AD"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="border:1px solid #8E44AD"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #8E44AD"]{border-color:#2A2A2E!important}
+[style*="border-color:#8E44AD"]{border-color:#2A2A2E!important}
+[style*="border:2px solid #8E44AD"]{border-color:#2A2A2E!important}
+[style*="border-left:3px solid #8E44AD"]{border-color:#2A2A2E!important}
+[style*="border-left:4px solid #8E44AD"]{border-color:#2A2A2E!important}
+[style*="border:1px dashed #8E44AD"]{border-color:#2A2A2E!important}
+[style*="color:#BF5AF2"]{color:var(--acc)!important}
+[style*="color: #BF5AF2"]{color:var(--acc)!important}
+[style*="color:#bf5af2"]{color:var(--acc)!important}
+[style*="color: #bf5af2"]{color:var(--acc)!important}
+[style*="background:#BF5AF2"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: #BF5AF2"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:#bf5af2"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background-color:#BF5AF2"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:linear-gradient(135deg,#BF5AF2"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: linear-gradient(135deg, #BF5AF2"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="border:1px solid #BF5AF2"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #BF5AF2"]{border-color:#2A2A2E!important}
+[style*="border-color:#BF5AF2"]{border-color:#2A2A2E!important}
+[style*="border:2px solid #BF5AF2"]{border-color:#2A2A2E!important}
+[style*="border-left:3px solid #BF5AF2"]{border-color:#2A2A2E!important}
+[style*="border-left:4px solid #BF5AF2"]{border-color:#2A2A2E!important}
+[style*="border:1px dashed #BF5AF2"]{border-color:#2A2A2E!important}
+[style*="color:#C9B87A"]{color:var(--acc)!important}
+[style*="color: #C9B87A"]{color:var(--acc)!important}
+[style*="color:#c9b87a"]{color:var(--acc)!important}
+[style*="color: #c9b87a"]{color:var(--acc)!important}
+[style*="background:#C9B87A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: #C9B87A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:#c9b87a"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background-color:#C9B87A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:linear-gradient(135deg,#C9B87A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: linear-gradient(135deg, #C9B87A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="border:1px solid #C9B87A"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #C9B87A"]{border-color:#2A2A2E!important}
+[style*="border-color:#C9B87A"]{border-color:#2A2A2E!important}
+[style*="border:2px solid #C9B87A"]{border-color:#2A2A2E!important}
+[style*="border-left:3px solid #C9B87A"]{border-color:#2A2A2E!important}
+[style*="border-left:4px solid #C9B87A"]{border-color:#2A2A2E!important}
+[style*="border:1px dashed #C9B87A"]{border-color:#2A2A2E!important}
+[style*="color:#D4FF00"]{color:var(--acc)!important}
+[style*="color: #D4FF00"]{color:var(--acc)!important}
+[style*="color:#d4ff00"]{color:var(--acc)!important}
+[style*="color: #d4ff00"]{color:var(--acc)!important}
+[style*="background:#D4FF00"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: #D4FF00"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:#d4ff00"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background-color:#D4FF00"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:linear-gradient(135deg,#D4FF00"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: linear-gradient(135deg, #D4FF00"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="border:1px solid #D4FF00"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #D4FF00"]{border-color:#2A2A2E!important}
+[style*="border-color:#D4FF00"]{border-color:#2A2A2E!important}
+[style*="border:2px solid #D4FF00"]{border-color:#2A2A2E!important}
+[style*="border-left:3px solid #D4FF00"]{border-color:#2A2A2E!important}
+[style*="border-left:4px solid #D4FF00"]{border-color:#2A2A2E!important}
+[style*="border:1px dashed #D4FF00"]{border-color:#2A2A2E!important}
+[style*="color:#FF375F"]{color:var(--acc)!important}
+[style*="color: #FF375F"]{color:var(--acc)!important}
+[style*="color:#ff375f"]{color:var(--acc)!important}
+[style*="color: #ff375f"]{color:var(--acc)!important}
+[style*="background:#FF375F"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: #FF375F"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:#ff375f"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background-color:#FF375F"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:linear-gradient(135deg,#FF375F"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: linear-gradient(135deg, #FF375F"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="border:1px solid #FF375F"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #FF375F"]{border-color:#2A2A2E!important}
+[style*="border-color:#FF375F"]{border-color:#2A2A2E!important}
+[style*="border:2px solid #FF375F"]{border-color:#2A2A2E!important}
+[style*="border-left:3px solid #FF375F"]{border-color:#2A2A2E!important}
+[style*="border-left:4px solid #FF375F"]{border-color:#2A2A2E!important}
+[style*="border:1px dashed #FF375F"]{border-color:#2A2A2E!important}
+[style*="color:#FF453A"]{color:var(--t1)!important}
+[style*="color: #FF453A"]{color:var(--t1)!important}
+[style*="color:#ff453a"]{color:var(--t1)!important}
+[style*="color: #ff453a"]{color:var(--t1)!important}
+[style*="background:#FF453A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: #FF453A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:#ff453a"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background-color:#FF453A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:linear-gradient(135deg,#FF453A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: linear-gradient(135deg, #FF453A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="border:1px solid #FF453A"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #FF453A"]{border-color:#2A2A2E!important}
+[style*="border-color:#FF453A"]{border-color:#2A2A2E!important}
+[style*="border:2px solid #FF453A"]{border-color:#2A2A2E!important}
+[style*="border-left:3px solid #FF453A"]{border-color:#2A2A2E!important}
+[style*="border-left:4px solid #FF453A"]{border-color:#2A2A2E!important}
+[style*="border:1px dashed #FF453A"]{border-color:#2A2A2E!important}
+[style*="color:#FF5CA8"]{color:var(--acc)!important}
+[style*="color: #FF5CA8"]{color:var(--acc)!important}
+[style*="color:#ff5ca8"]{color:var(--acc)!important}
+[style*="color: #ff5ca8"]{color:var(--acc)!important}
+[style*="background:#FF5CA8"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: #FF5CA8"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:#ff5ca8"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background-color:#FF5CA8"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:linear-gradient(135deg,#FF5CA8"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: linear-gradient(135deg, #FF5CA8"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="border:1px solid #FF5CA8"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #FF5CA8"]{border-color:#2A2A2E!important}
+[style*="border-color:#FF5CA8"]{border-color:#2A2A2E!important}
+[style*="border:2px solid #FF5CA8"]{border-color:#2A2A2E!important}
+[style*="border-left:3px solid #FF5CA8"]{border-color:#2A2A2E!important}
+[style*="border-left:4px solid #FF5CA8"]{border-color:#2A2A2E!important}
+[style*="border:1px dashed #FF5CA8"]{border-color:#2A2A2E!important}
+[style*="color:#FF6961"]{color:var(--t1)!important}
+[style*="color: #FF6961"]{color:var(--t1)!important}
+[style*="color:#ff6961"]{color:var(--t1)!important}
+[style*="color: #ff6961"]{color:var(--t1)!important}
+[style*="background:#FF6961"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: #FF6961"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:#ff6961"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background-color:#FF6961"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:linear-gradient(135deg,#FF6961"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: linear-gradient(135deg, #FF6961"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="border:1px solid #FF6961"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #FF6961"]{border-color:#2A2A2E!important}
+[style*="border-color:#FF6961"]{border-color:#2A2A2E!important}
+[style*="border:2px solid #FF6961"]{border-color:#2A2A2E!important}
+[style*="border-left:3px solid #FF6961"]{border-color:#2A2A2E!important}
+[style*="border-left:4px solid #FF6961"]{border-color:#2A2A2E!important}
+[style*="border:1px dashed #FF6961"]{border-color:#2A2A2E!important}
+[style*="color:#FF6B35"]{color:var(--acc)!important}
+[style*="color: #FF6B35"]{color:var(--acc)!important}
+[style*="color:#ff6b35"]{color:var(--acc)!important}
+[style*="color: #ff6b35"]{color:var(--acc)!important}
+[style*="background:#FF6B35"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: #FF6B35"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:#ff6b35"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background-color:#FF6B35"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:linear-gradient(135deg,#FF6B35"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: linear-gradient(135deg, #FF6B35"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="border:1px solid #FF6B35"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #FF6B35"]{border-color:#2A2A2E!important}
+[style*="border-color:#FF6B35"]{border-color:#2A2A2E!important}
+[style*="border:2px solid #FF6B35"]{border-color:#2A2A2E!important}
+[style*="border-left:3px solid #FF6B35"]{border-color:#2A2A2E!important}
+[style*="border-left:4px solid #FF6B35"]{border-color:#2A2A2E!important}
+[style*="border:1px dashed #FF6B35"]{border-color:#2A2A2E!important}
+[style*="color:#FF7A00"]{color:var(--acc)!important}
+[style*="color: #FF7A00"]{color:var(--acc)!important}
+[style*="color:#ff7a00"]{color:var(--acc)!important}
+[style*="color: #ff7a00"]{color:var(--acc)!important}
+[style*="background:#FF7A00"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: #FF7A00"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:#ff7a00"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background-color:#FF7A00"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:linear-gradient(135deg,#FF7A00"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: linear-gradient(135deg, #FF7A00"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="border:1px solid #FF7A00"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #FF7A00"]{border-color:#2A2A2E!important}
+[style*="border-color:#FF7A00"]{border-color:#2A2A2E!important}
+[style*="border:2px solid #FF7A00"]{border-color:#2A2A2E!important}
+[style*="border-left:3px solid #FF7A00"]{border-color:#2A2A2E!important}
+[style*="border-left:4px solid #FF7A00"]{border-color:#2A2A2E!important}
+[style*="border:1px dashed #FF7A00"]{border-color:#2A2A2E!important}
+[style*="color:#FF9F0A"]{color:var(--acc)!important}
+[style*="color: #FF9F0A"]{color:var(--acc)!important}
+[style*="color:#ff9f0a"]{color:var(--acc)!important}
+[style*="color: #ff9f0a"]{color:var(--acc)!important}
+[style*="background:#FF9F0A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: #FF9F0A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:#ff9f0a"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background-color:#FF9F0A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:linear-gradient(135deg,#FF9F0A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: linear-gradient(135deg, #FF9F0A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="border:1px solid #FF9F0A"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #FF9F0A"]{border-color:#2A2A2E!important}
+[style*="border-color:#FF9F0A"]{border-color:#2A2A2E!important}
+[style*="border:2px solid #FF9F0A"]{border-color:#2A2A2E!important}
+[style*="border-left:3px solid #FF9F0A"]{border-color:#2A2A2E!important}
+[style*="border-left:4px solid #FF9F0A"]{border-color:#2A2A2E!important}
+[style*="border:1px dashed #FF9F0A"]{border-color:#2A2A2E!important}
+[style*="color:#FFCC00"]{color:var(--acc)!important}
+[style*="color: #FFCC00"]{color:var(--acc)!important}
+[style*="color:#ffcc00"]{color:var(--acc)!important}
+[style*="color: #ffcc00"]{color:var(--acc)!important}
+[style*="background:#FFCC00"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: #FFCC00"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:#ffcc00"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background-color:#FFCC00"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:linear-gradient(135deg,#FFCC00"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: linear-gradient(135deg, #FFCC00"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="border:1px solid #FFCC00"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #FFCC00"]{border-color:#2A2A2E!important}
+[style*="border-color:#FFCC00"]{border-color:#2A2A2E!important}
+[style*="border:2px solid #FFCC00"]{border-color:#2A2A2E!important}
+[style*="border-left:3px solid #FFCC00"]{border-color:#2A2A2E!important}
+[style*="border-left:4px solid #FFCC00"]{border-color:#2A2A2E!important}
+[style*="border:1px dashed #FFCC00"]{border-color:#2A2A2E!important}
+[style*="color:#FFD60A"]{color:var(--acc)!important}
+[style*="color: #FFD60A"]{color:var(--acc)!important}
+[style*="color:#ffd60a"]{color:var(--acc)!important}
+[style*="color: #ffd60a"]{color:var(--acc)!important}
+[style*="background:#FFD60A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: #FFD60A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:#ffd60a"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background-color:#FFD60A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:linear-gradient(135deg,#FFD60A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: linear-gradient(135deg, #FFD60A"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="border:1px solid #FFD60A"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #FFD60A"]{border-color:#2A2A2E!important}
+[style*="border-color:#FFD60A"]{border-color:#2A2A2E!important}
+[style*="border:2px solid #FFD60A"]{border-color:#2A2A2E!important}
+[style*="border-left:3px solid #FFD60A"]{border-color:#2A2A2E!important}
+[style*="border-left:4px solid #FFD60A"]{border-color:#2A2A2E!important}
+[style*="border:1px dashed #FFD60A"]{border-color:#2A2A2E!important}
+[style*="color:#FFD700"]{color:var(--acc)!important}
+[style*="color: #FFD700"]{color:var(--acc)!important}
+[style*="color:#ffd700"]{color:var(--acc)!important}
+[style*="color: #ffd700"]{color:var(--acc)!important}
+[style*="background:#FFD700"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: #FFD700"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:#ffd700"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background-color:#FFD700"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:linear-gradient(135deg,#FFD700"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: linear-gradient(135deg, #FFD700"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="border:1px solid #FFD700"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #FFD700"]{border-color:#2A2A2E!important}
+[style*="border-color:#FFD700"]{border-color:#2A2A2E!important}
+[style*="border:2px solid #FFD700"]{border-color:#2A2A2E!important}
+[style*="border-left:3px solid #FFD700"]{border-color:#2A2A2E!important}
+[style*="border-left:4px solid #FFD700"]{border-color:#2A2A2E!important}
+[style*="border:1px dashed #FFD700"]{border-color:#2A2A2E!important}
+[style*="color:#FFE033"]{color:var(--acc)!important}
+[style*="color: #FFE033"]{color:var(--acc)!important}
+[style*="color:#ffe033"]{color:var(--acc)!important}
+[style*="color: #ffe033"]{color:var(--acc)!important}
+[style*="background:#FFE033"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: #FFE033"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:#ffe033"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background-color:#FFE033"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background:linear-gradient(135deg,#FFE033"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="background: linear-gradient(135deg, #FFE033"]{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+[style*="border:1px solid #FFE033"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #FFE033"]{border-color:#2A2A2E!important}
+[style*="border-color:#FFE033"]{border-color:#2A2A2E!important}
+[style*="border:2px solid #FFE033"]{border-color:#2A2A2E!important}
+[style*="border-left:3px solid #FFE033"]{border-color:#2A2A2E!important}
+[style*="border-left:4px solid #FFE033"]{border-color:#2A2A2E!important}
+[style*="border:1px dashed #FFE033"]{border-color:#2A2A2E!important}
+[style*="background:#04121A"]{background:#1C1C1F!important}
+[style*="background: #04121A"]{background:#1C1C1F!important}
+[style*="background:#04121a"]{background:#1C1C1F!important}
+[style*="border:1px solid #04121A"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #04121A"]{border-color:#2A2A2E!important}
+[style*="border-color:#04121A"]{border-color:#2A2A2E!important}
+[style*="background:#04220C"]{background:#1C1C1F!important}
+[style*="background: #04220C"]{background:#1C1C1F!important}
+[style*="background:#04220c"]{background:#1C1C1F!important}
+[style*="border:1px solid #04220C"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #04220C"]{border-color:#2A2A2E!important}
+[style*="border-color:#04220C"]{border-color:#2A2A2E!important}
+[style*="background:#0A1016"]{background:#1C1C1F!important}
+[style*="background: #0A1016"]{background:#1C1C1F!important}
+[style*="background:#0a1016"]{background:#1C1C1F!important}
+[style*="border:1px solid #0A1016"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #0A1016"]{border-color:#2A2A2E!important}
+[style*="border-color:#0A1016"]{border-color:#2A2A2E!important}
+[style*="background:#0A1220"]{background:#1C1C1F!important}
+[style*="background: #0A1220"]{background:#1C1C1F!important}
+[style*="background:#0a1220"]{background:#1C1C1F!important}
+[style*="border:1px solid #0A1220"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #0A1220"]{border-color:#2A2A2E!important}
+[style*="border-color:#0A1220"]{border-color:#2A2A2E!important}
+[style*="background:#0A1410"]{background:#1C1C1F!important}
+[style*="background: #0A1410"]{background:#1C1C1F!important}
+[style*="background:#0a1410"]{background:#1C1C1F!important}
+[style*="border:1px solid #0A1410"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #0A1410"]{border-color:#2A2A2E!important}
+[style*="border-color:#0A1410"]{border-color:#2A2A2E!important}
+[style*="background:#0A1A2E"]{background:#1C1C1F!important}
+[style*="background: #0A1A2E"]{background:#1C1C1F!important}
+[style*="background:#0a1a2e"]{background:#1C1C1F!important}
+[style*="border:1px solid #0A1A2E"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #0A1A2E"]{border-color:#2A2A2E!important}
+[style*="border-color:#0A1A2E"]{border-color:#2A2A2E!important}
+[style*="background:#0D1F0D"]{background:#1C1C1F!important}
+[style*="background: #0D1F0D"]{background:#1C1C1F!important}
+[style*="background:#0d1f0d"]{background:#1C1C1F!important}
+[style*="border:1px solid #0D1F0D"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #0D1F0D"]{border-color:#2A2A2E!important}
+[style*="border-color:#0D1F0D"]{border-color:#2A2A2E!important}
+[style*="background:#0D1F14"]{background:#1C1C1F!important}
+[style*="background: #0D1F14"]{background:#1C1C1F!important}
+[style*="background:#0d1f14"]{background:#1C1C1F!important}
+[style*="border:1px solid #0D1F14"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #0D1F14"]{border-color:#2A2A2E!important}
+[style*="border-color:#0D1F14"]{border-color:#2A2A2E!important}
+[style*="background:#0D2A0D"]{background:#1C1C1F!important}
+[style*="background: #0D2A0D"]{background:#1C1C1F!important}
+[style*="background:#0d2a0d"]{background:#1C1C1F!important}
+[style*="border:1px solid #0D2A0D"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #0D2A0D"]{border-color:#2A2A2E!important}
+[style*="border-color:#0D2A0D"]{border-color:#2A2A2E!important}
+[style*="background:#0F1A12"]{background:#1C1C1F!important}
+[style*="background: #0F1A12"]{background:#1C1C1F!important}
+[style*="background:#0f1a12"]{background:#1C1C1F!important}
+[style*="border:1px solid #0F1A12"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #0F1A12"]{border-color:#2A2A2E!important}
+[style*="border-color:#0F1A12"]{border-color:#2A2A2E!important}
+[style*="background:#12100A"]{background:#1C1C1F!important}
+[style*="background: #12100A"]{background:#1C1C1F!important}
+[style*="background:#12100a"]{background:#1C1C1F!important}
+[style*="border:1px solid #12100A"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #12100A"]{border-color:#2A2A2E!important}
+[style*="border-color:#12100A"]{border-color:#2A2A2E!important}
+[style*="background:#160D16"]{background:#1C1C1F!important}
+[style*="background: #160D16"]{background:#1C1C1F!important}
+[style*="background:#160d16"]{background:#1C1C1F!important}
+[style*="border:1px solid #160D16"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #160D16"]{border-color:#2A2A2E!important}
+[style*="border-color:#160D16"]{border-color:#2A2A2E!important}
+[style*="background:#161206"]{background:#1C1C1F!important}
+[style*="background: #161206"]{background:#1C1C1F!important}
+[style*="background:#161206"]{background:#1C1C1F!important}
+[style*="border:1px solid #161206"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #161206"]{border-color:#2A2A2E!important}
+[style*="border-color:#161206"]{border-color:#2A2A2E!important}
+[style*="background:#1A0A2E"]{background:#1C1C1F!important}
+[style*="background: #1A0A2E"]{background:#1C1C1F!important}
+[style*="background:#1a0a2e"]{background:#1C1C1F!important}
+[style*="border:1px solid #1A0A2E"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #1A0A2E"]{border-color:#2A2A2E!important}
+[style*="border-color:#1A0A2E"]{border-color:#2A2A2E!important}
+[style*="background:#1A0F0F"]{background:#1C1C1F!important}
+[style*="background: #1A0F0F"]{background:#1C1C1F!important}
+[style*="background:#1a0f0f"]{background:#1C1C1F!important}
+[style*="border:1px solid #1A0F0F"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #1A0F0F"]{border-color:#2A2A2E!important}
+[style*="border-color:#1A0F0F"]{border-color:#2A2A2E!important}
+[style*="background:#1A170A"]{background:#1C1C1F!important}
+[style*="background: #1A170A"]{background:#1C1C1F!important}
+[style*="background:#1a170a"]{background:#1C1C1F!important}
+[style*="border:1px solid #1A170A"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #1A170A"]{border-color:#2A2A2E!important}
+[style*="border-color:#1A170A"]{border-color:#2A2A2E!important}
+[style*="background:#1E3A28"]{background:#1C1C1F!important}
+[style*="background: #1E3A28"]{background:#1C1C1F!important}
+[style*="background:#1e3a28"]{background:#1C1C1F!important}
+[style*="border:1px solid #1E3A28"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #1E3A28"]{border-color:#2A2A2E!important}
+[style*="border-color:#1E3A28"]{border-color:#2A2A2E!important}
+[style*="background:#1E3A2A"]{background:#1C1C1F!important}
+[style*="background: #1E3A2A"]{background:#1C1C1F!important}
+[style*="background:#1e3a2a"]{background:#1C1C1F!important}
+[style*="border:1px solid #1E3A2A"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #1E3A2A"]{border-color:#2A2A2E!important}
+[style*="border-color:#1E3A2A"]{border-color:#2A2A2E!important}
+[style*="background:#2A0D0D"]{background:#1C1C1F!important}
+[style*="background: #2A0D0D"]{background:#1C1C1F!important}
+[style*="background:#2a0d0d"]{background:#1C1C1F!important}
+[style*="border:1px solid #2A0D0D"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #2A0D0D"]{border-color:#2A2A2E!important}
+[style*="border-color:#2A0D0D"]{border-color:#2A2A2E!important}
+[style*="background:#2A1A0D"]{background:#1C1C1F!important}
+[style*="background: #2A1A0D"]{background:#1C1C1F!important}
+[style*="background:#2a1a0d"]{background:#1C1C1F!important}
+[style*="border:1px solid #2A1A0D"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #2A1A0D"]{border-color:#2A2A2E!important}
+[style*="border-color:#2A1A0D"]{border-color:#2A2A2E!important}
+[style*="background:#2A1A1A"]{background:#1C1C1F!important}
+[style*="background: #2A1A1A"]{background:#1C1C1F!important}
+[style*="background:#2a1a1a"]{background:#1C1C1F!important}
+[style*="border:1px solid #2A1A1A"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #2A1A1A"]{border-color:#2A2A2E!important}
+[style*="border-color:#2A1A1A"]{border-color:#2A2A2E!important}
+[style*="background:#2A2A3E"]{background:#1C1C1F!important}
+[style*="background: #2A2A3E"]{background:#1C1C1F!important}
+[style*="background:#2a2a3e"]{background:#1C1C1F!important}
+[style*="border:1px solid #2A2A3E"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #2A2A3E"]{border-color:#2A2A2E!important}
+[style*="border-color:#2A2A3E"]{border-color:#2A2A2E!important}
+[style*="background:#2A2A4E"]{background:#1C1C1F!important}
+[style*="background: #2A2A4E"]{background:#1C1C1F!important}
+[style*="background:#2a2a4e"]{background:#1C1C1F!important}
+[style*="border:1px solid #2A2A4E"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #2A2A4E"]{border-color:#2A2A2E!important}
+[style*="border-color:#2A2A4E"]{border-color:#2A2A2E!important}
+[style*="background:#3A1A1A"]{background:#1C1C1F!important}
+[style*="background: #3A1A1A"]{background:#1C1C1F!important}
+[style*="background:#3a1a1a"]{background:#1C1C1F!important}
+[style*="border:1px solid #3A1A1A"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #3A1A1A"]{border-color:#2A2A2E!important}
+[style*="border-color:#3A1A1A"]{border-color:#2A2A2E!important}
+[style*="background:#3A2A1A"]{background:#1C1C1F!important}
+[style*="background: #3A2A1A"]{background:#1C1C1F!important}
+[style*="background:#3a2a1a"]{background:#1C1C1F!important}
+[style*="border:1px solid #3A2A1A"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #3A2A1A"]{border-color:#2A2A2E!important}
+[style*="border-color:#3A2A1A"]{border-color:#2A2A2E!important}
+[style*="background:#4E2A2A"]{background:#1C1C1F!important}
+[style*="background: #4E2A2A"]{background:#1C1C1F!important}
+[style*="background:#4e2a2a"]{background:#1C1C1F!important}
+[style*="border:1px solid #4E2A2A"]{border-color:#2A2A2E!important}
+[style*="border: 1px solid #4E2A2A"]{border-color:#2A2A2E!important}
+[style*="border-color:#4E2A2A"]{border-color:#2A2A2E!important}
+.val-green,.box-income,.plan-preview{color:var(--acc)!important}
+.box-expense,.box-balance,.week-label,.sav-sum-box .ssl,.sav-sum-box .ssv,.dl-yellow,.dl-red,.badge-warn,.badge-bad,.btn-danger,.btn-delete-goal,.wn-btn-del,.btn-edit-goal,.wn-btn-edit{color:var(--acc)!important}
+.dl-green,.dl-yellow,.dl-red,.badge-good,.badge-warn,.badge-bad,.goal-card.done,.savings-goal-card.done,.wn-item.bought,.completed-banner,.btn-delete-goal,.wn-btn-del,.btn-edit-goal,.wn-btn-edit,.btn-ghost,.btn-danger{background:#1C1C1F!important;border-color:#2A2A2E!important}
+.btn-primary,.btn-modal-save,.wn-item-check.checked{background:var(--acc)!important;color:var(--onAcc)!important;border-color:var(--acc)!important}
+.add-savings-btn{border:1px dashed var(--accLine)!important;color:var(--acc)!important}
+.wn-tab.active-want,.wn-tab.active-need{background:var(--accSoft)!important;border-color:var(--acc)!important;color:var(--acc)!important}
+.modal-input:focus,.wn-input:focus,.wn-price-input:focus{border-color:var(--acc)!important}
+.toast{background:#1C1C1F!important;color:#fff!important;border:1px solid #2A2A2E}
+.savings-goal-card.drag-over,.savings-goal-card.is-dragging{border-color:var(--acc)!important;background:var(--accSoft)!important}
+[style*='background:#161616'],[style*='background: #161616']{background:#131315!important}
+[style*='border:1px solid #2A2A2A'],[style*='border: 1px solid #2A2A2A'],[style*='border:1px solid #333'],[style*='border: 1px solid #333']{border-color:#222226!important}
+.bottom-nav{background:rgba(14,14,16,.9)!important;backdrop-filter:blur(20px) saturate(140%);-webkit-backdrop-filter:blur(20px) saturate(140%);border-top:1px solid #222226!important}
+.btn-export{background:#1C1C1F!important;color:#fff!important;border:1px solid #2A2A2E!important}
+.btn-import{background:#1C1C1F!important;color:#fff!important;border:1px solid #2A2A2E!important}
+.period-select{--period-accent:#2A2A2E!important;border-color:#2A2A2E!important;background:#131315!important;color:#fff!important}
+[style*="border:1.5px solid #0A84FF"]{border-color:var(--acc)!important}
+[style*="background:#1A0A2E"],[style*="background:#0A1A2E"]{background:var(--accSoft)!important}
+[style*="border:1.5px solid #28A745"]{border-color:var(--acc)!important}
+[style*="background:#1A0A2E"],[style*="background:#0A1A2E"]{background:var(--accSoft)!important}
+[style*="border:1.5px solid #30D158"]{border-color:var(--acc)!important}
+[style*="background:#1A0A2E"],[style*="background:#0A1A2E"]{background:var(--accSoft)!important}
+[style*="border:1.5px solid #32ADE6"]{border-color:var(--acc)!important}
+[style*="background:#1A0A2E"],[style*="background:#0A1A2E"]{background:var(--accSoft)!important}
+[style*="border:1.5px solid #5E5CE6"]{border-color:var(--acc)!important}
+[style*="background:#1A0A2E"],[style*="background:#0A1A2E"]{background:var(--accSoft)!important}
+[style*="border:1.5px solid #6FBF8A"]{border-color:var(--acc)!important}
+[style*="background:#1A0A2E"],[style*="background:#0A1A2E"]{background:var(--accSoft)!important}
+[style*="border:1.5px solid #8E44AD"]{border-color:var(--acc)!important}
+[style*="background:#1A0A2E"],[style*="background:#0A1A2E"]{background:var(--accSoft)!important}
+[style*="border:1.5px solid #BF5AF2"]{border-color:var(--acc)!important}
+[style*="background:#1A0A2E"],[style*="background:#0A1A2E"]{background:var(--accSoft)!important}
+[style*="border:1.5px solid #C9B87A"]{border-color:var(--acc)!important}
+[style*="background:#1A0A2E"],[style*="background:#0A1A2E"]{background:var(--accSoft)!important}
+[style*="border:1.5px solid #D4FF00"]{border-color:var(--acc)!important}
+[style*="background:#1A0A2E"],[style*="background:#0A1A2E"]{background:var(--accSoft)!important}
+[style*="border:1.5px solid #FF375F"]{border-color:var(--acc)!important}
+[style*="background:#1A0A2E"],[style*="background:#0A1A2E"]{background:var(--accSoft)!important}
+[style*="border:1.5px solid #FF453A"]{border-color:var(--acc)!important}
+[style*="background:#1A0A2E"],[style*="background:#0A1A2E"]{background:var(--accSoft)!important}
+[style*="border:1.5px solid #FF5CA8"]{border-color:var(--acc)!important}
+[style*="background:#1A0A2E"],[style*="background:#0A1A2E"]{background:var(--accSoft)!important}
+[style*="border:1.5px solid #FF6961"]{border-color:var(--acc)!important}
+[style*="background:#1A0A2E"],[style*="background:#0A1A2E"]{background:var(--accSoft)!important}
+[style*="border:1.5px solid #FF6B35"]{border-color:var(--acc)!important}
+[style*="background:#1A0A2E"],[style*="background:#0A1A2E"]{background:var(--accSoft)!important}
+[style*="border:1.5px solid #FF7A00"]{border-color:var(--acc)!important}
+[style*="background:#1A0A2E"],[style*="background:#0A1A2E"]{background:var(--accSoft)!important}
+[style*="border:1.5px solid #FF9F0A"]{border-color:var(--acc)!important}
+[style*="background:#1A0A2E"],[style*="background:#0A1A2E"]{background:var(--accSoft)!important}
+[style*="border:1.5px solid #FFCC00"]{border-color:var(--acc)!important}
+[style*="background:#1A0A2E"],[style*="background:#0A1A2E"]{background:var(--accSoft)!important}
+[style*="border:1.5px solid #FFD60A"]{border-color:var(--acc)!important}
+[style*="background:#1A0A2E"],[style*="background:#0A1A2E"]{background:var(--accSoft)!important}
+[style*="border:1.5px solid #FFD700"]{border-color:var(--acc)!important}
+[style*="background:#1A0A2E"],[style*="background:#0A1A2E"]{background:var(--accSoft)!important}
+[style*="border:1.5px solid #FFE033"]{border-color:var(--acc)!important}
+[style*="background:#1A0A2E"],[style*="background:#0A1A2E"]{background:var(--accSoft)!important}
+/* ===== v14.0 EMERALD FINANCE LOOK ===== */
+:root{--acc:#2BD47D;--onAcc:#03170C;--accSoft:rgba(43,212,125,.13);--accLine:rgba(43,212,125,.45);--bg:#000;--card:#111113;--card2:#1A1A1D;--line:#232326;--t1:#F5F5F7;--t2:#9A9AA0;--t3:#626268;--warn:#FF9F0A;--bad:#FF5A52}
+body{font-feature-settings:"tnum" 1,"cv11" 1;color:var(--t1)!important;-webkit-font-smoothing:antialiased;padding-bottom:104px!important}
+.page{padding:4px 16px 14px!important}
+.app-header{display:none!important}
+/* cards: flat, no borders, rounder */
+.card,.goal-card,.savings-goal-card,.history-card,.spend-big,.cat-big-box,.wn-box,.wn-item{background:var(--card)!important;border:1px solid #17171A!important;border-radius:20px!important}
+.card{padding:16px!important}
+.history-card{padding:4px 16px!important}
+.entry-item{border-bottom:1px solid var(--line)!important;padding:11px 0!important}
+.entry-item:last-child{border-bottom:none!important}
+.entry-desc{font-size:15px!important;font-weight:600!important;color:var(--t1)!important}
+.entry-meta{font-size:12.5px!important;color:var(--t2)!important}
+.entry-amt{font-size:15px!important;font-weight:600!important;color:var(--t1)!important}
+.btn-del{opacity:.55}
+.spend-big{text-align:left!important;padding:18px!important}
+.spend-big-label{text-transform:none!important;letter-spacing:0!important;font-size:13px!important;font-weight:500!important;color:var(--t2)!important}
+.spend-big-amt{color:var(--t1)!important;font-size:34px!important;font-weight:700!important;letter-spacing:-1px!important}
+.spend-big-sub{color:var(--t2)!important}
+.cat-big-box .cbb-label,.wn-box .wn-label{text-transform:none!important;letter-spacing:0!important;font-size:12.5px!important;font-weight:500!important;color:var(--t2)!important}
+.cat-big-box .cbb-amt{color:var(--t1)!important;font-size:20px!important;font-weight:700!important}
+.cat-big-box .cbb-icon{margin-bottom:10px!important}
+.wn-box .wn-val{color:var(--t1)!important}
+.section-title{font-size:17px!important;font-weight:700!important;color:var(--t1)!important;letter-spacing:-.2px}
+.label-sm{color:var(--t2)!important;font-weight:500!important;font-size:13px!important}
+.empty-msg{color:var(--t2)!important}
+.week-nav{background:var(--card);border-radius:14px;padding:4px 6px}
+.week-nav-btn{background:var(--card2)!important;border:none!important;color:var(--t1)!important;border-radius:11px!important;font-weight:600}
+.week-label{color:var(--t1)!important;font-weight:700!important}
+.add-debt-btn,.add-savings-btn{background:transparent!important;border:1px dashed #2E2E33!important;color:var(--acc)!important;border-radius:16px!important;font-weight:600!important}
+.modal-box,.sheet-panel,.sav-modal-box,.cat-modal-box{background:#121214!important;border-color:#232326!important}
+.modal-input,.custom-input,.cat-modal-input,.wn-input,.wn-price-input{background:#1A1A1D!important;border:1px solid #26262A!important;color:var(--t1)!important;border-radius:12px!important}
+.modal-label{color:var(--t2)!important}
+.bar-wrap{background:var(--card2)!important}
+.bar-fill::after{display:none!important}
+.bar-fill{background:var(--acc)!important}
+.btn-sm{border-radius:11px!important;font-weight:600!important}
+.btn-cancel{background:var(--card2)!important;color:var(--t1)!important}
+.dl-red,.badge-bad{color:var(--bad)!important}
+.dl-yellow,.badge-warn{color:var(--warn)!important}
+.dl-green,.badge-good{color:var(--acc)!important}
+.deadline-badge{border:none!important;background:var(--card2)!important}
+
+/* top bar */
+.fh-top{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 14px;max-width:480px;margin:0 auto}
+.fh-hi small{display:block;font-size:13px;color:var(--t2);font-weight:500;margin-bottom:1px}
+.fh-hi b{font-size:26px;font-weight:700;letter-spacing:-.6px;color:var(--t1)}
+.fh-hi b i{font-style:normal;font-size:11px;color:var(--t3);font-weight:600;margin-left:7px;letter-spacing:0;vertical-align:middle}
+.fh-gear{width:42px;height:42px;border-radius:21px;background:var(--card2);border:none;color:var(--t1);display:grid;place-items:center;cursor:pointer}
+.fh-gear.on{background:var(--acc);color:var(--onAcc)}
+.fh-ic{width:20px;height:20px;display:inline-block;flex:none;background:currentColor;-webkit-mask:var(--m) center/contain no-repeat;mask:var(--m) center/contain no-repeat}
+
+/* bottom bar */
+.bottom-nav{height:auto;padding:6px 4px calc(10px + env(safe-area-inset-bottom))!important}
+.nav-btn{gap:5px!important;padding:8px 2px 4px!important;font-size:11px!important;color:var(--t3)!important;font-weight:600!important}
+.nav-btn .fh-ic{width:24px;height:24px}
+.nav-btn.active{color:var(--acc)!important}
+.nav-btn.active .fh-ic{transform:none}
+
+/* segmented control and chips */
+.fh-seg{display:flex;background:var(--card);border-radius:14px;padding:4px;margin:2px 0 14px;gap:2px}
+.fh-seg button{flex:1;border:none;background:transparent;color:var(--t2);font-size:14px;font-weight:600;padding:10px 4px;border-radius:10px;cursor:pointer}
+.fh-seg button.on{background:var(--card2);color:var(--t1)}
+.fh-chips{display:flex;gap:8px;margin:0 0 14px;overflow-x:auto}
+.fh-chips button{border:none;background:var(--card);color:var(--t2);font-size:13px;font-weight:600;padding:8px 15px;border-radius:18px;cursor:pointer;white-space:nowrap}
+.fh-chips button.on{background:var(--acc);color:var(--onAcc)}
+
+/* tiles and rows */
+.fh-tile{width:40px;height:40px;border-radius:13px;background:var(--card2);display:grid;place-items:center;color:var(--t1);flex:none;font-weight:700;font-size:15px}
+.fh-tile.a{background:var(--accSoft);color:var(--acc)}
+.fh-tile.w{background:rgba(255,159,10,.13);color:var(--warn)}
+.fh-tile.b{background:rgba(255,90,82,.13);color:var(--bad)}
+.fh-row{display:flex;align-items:center;gap:12px;padding:11px 0;cursor:pointer}
+.fh-row+.fh-row{border-top:1px solid var(--line)}
+.fh-mid{flex:1;min-width:0}
+.fh-mid b{display:block;font-size:15px;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fh-mid small{font-size:12.5px;color:var(--t2)}
+.fh-amt{font-size:15px;font-weight:600;text-align:right;white-space:nowrap;color:var(--t1)}
+.fh-amt.in{color:var(--acc)}
+.fh-amt small{display:block;font-size:12px;color:var(--t2);font-weight:500}
+.fh-list{background:var(--card);border-radius:20px;padding:2px 16px;margin-bottom:16px}
+.fh-sh{display:flex;justify-content:space-between;align-items:baseline;margin:6px 2px 10px}
+.fh-sh b{font-size:17px;font-weight:700;letter-spacing:-.2px;color:var(--t1)}
+.fh-sh a{font-size:13px;color:var(--acc);font-weight:600;cursor:pointer}
+
+/* home */
+.fh-hero{background:linear-gradient(160deg,#123524 0%,#111113 70%);padding:20px 18px 18px;border-radius:24px;margin-bottom:18px}
+.fh-lbl{font-size:13px;color:var(--t2);font-weight:500}
+.fh-big{font-size:40px;font-weight:700;letter-spacing:-1.4px;margin:4px 0 14px;line-height:1.1;color:var(--t1)}
+.fh-big span{font-size:.55em;font-weight:600;color:var(--t2);letter-spacing:0;margin-right:5px;vertical-align:.32em}
+.fh-pills{display:flex;gap:8px}
+.fh-pill{flex:1;background:rgba(255,255,255,.06);border-radius:14px;padding:10px 12px}
+.fh-pill .fh-lbl{font-size:12px;display:flex;align-items:center;gap:5px}
+.fh-pill b{display:block;font-size:16px;font-weight:600;margin-top:3px;color:var(--t1)}
+.fh-qa{display:flex;justify-content:space-between;margin:0 4px 22px}
+.fh-qa button{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:12px;color:var(--t2);font-weight:500;width:72px;background:none;border:none;cursor:pointer}
+.fh-qa .c{width:54px;height:54px;border-radius:27px;background:var(--card2);display:grid;place-items:center;color:var(--t1)}
+.fh-qa .c.p{background:var(--acc);color:var(--onAcc)}
+.fh-empty{padding:16px 0;text-align:center;color:var(--t2);font-size:13.5px}
+.fh-btn{width:100%;padding:13px;border-radius:13px;border:none;background:var(--acc);color:var(--onAcc);font-size:15px;font-weight:700;cursor:pointer;margin-top:4px}
+.toast{border-radius:14px!important}
+.nav-btn::before,.nav-btn::after{display:none!important}
+.streak-box{background:var(--card)!important;border:1px solid #17171A!important;border-radius:16px!important;text-align:left!important;padding:12px!important}
+.streak-box .sb-icon{display:none!important}
+.streak-box .sb-val{font-size:20px!important;font-weight:700!important}
+.streak-box .sb-label{text-transform:none!important;letter-spacing:0!important;font-size:12px!important;color:var(--t2)!important;font-weight:500!important}
+
+.bar-fill[style*="#FF453A"]{background:var(--bad)!important}
+
+</style>
 </head>
 <body>
 
@@ -317,10 +1001,8 @@
 <div class="sheet-wrap" id="fhSheet" onclick="if(event.target.id==='fhSheet')closeFhSheet()">
   <div class="sheet-panel" id="fhSheetBody"></div>
 </div>
-<div class="app-header">
-  <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v13.4</span></h1>
-</div>
+<div class="app-header"><h1>Finance Hub</h1></div>
+<div class="fh-top"><div class="fh-hi" id="fhTop"><b>Finance Hub</b></div><button class="fh-gear" id="fhGear" onclick="switchTab('backup')" aria-label="Settings"><span class="fh-ic" style="--m:url(&quot;data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.8%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%22M4%207h10M18%207h2M4%2017h4M12%2017h8%22%2F%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%227%22%20r%3D%222.2%22%2F%3E%3Ccircle%20cx%3D%2210%22%20cy%3D%2217%22%20r%3D%222.2%22%2F%3E%3C%2Fsvg%3E&quot;)"></span></button></div>
 
 <div class="toast" id="toast"></div>
 <div id="dragGhost"></div>
@@ -468,20 +1150,20 @@
 </div>
 
 <div id="fhNotice" style="padding:0 16px"></div>
+<div class="page active" id="page-home"></div>
 <div class="page" id="page-debt"></div>
 <div class="page" id="page-savings"></div>
-<div class="page active" id="page-money"></div>
+<div class="page" id="page-money"></div>
 <div class="page" id="page-budget"></div>
 <div class="page" id="page-wn"></div>
 <div class="page" id="page-backup"></div>
 
 <div class="bottom-nav">
-  <button class="nav-btn active" onclick="switchTab('money')" id="nav-money"><span class="nav-icon">💰</span>Money</button>
-  <button class="nav-btn" onclick="switchTab('debt')" id="nav-debt"><span class="nav-icon">💳</span>Plans</button>
-  <button class="nav-btn" onclick="switchTab('savings')" id="nav-savings"><span class="nav-icon">🏦</span>Savings</button>
-  <button class="nav-btn" onclick="switchTab('budget')" id="nav-budget"><span class="nav-icon">🗓️</span>Budget</button>
-  <button class="nav-btn" onclick="switchTab('wn')" id="nav-wn"><span class="nav-icon">🛍️</span>Lists</button>
-  <button class="nav-btn" onclick="switchTab('backup')" id="nav-backup"><span class="nav-icon">⚙️</span>Settings</button>
+  <button class="nav-btn active" onclick="switchTab('home')" id="nav-home"><span class="fh-ic" style="--m:url(&quot;data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.8%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%22M3%2010.5%2012%203l9%207.5V20a1%201%200%200%201-1%201h-5v-6H9v6H4a1%201%200%200%201-1-1z%22%2F%3E%3C%2Fsvg%3E&quot;)"></span>Home</button>
+  <button class="nav-btn" onclick="switchTab('money')" id="nav-money"><span class="fh-ic" style="--m:url(&quot;data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.8%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%22M7%204v16M7%2020l-4-4M7%2020l4-4M17%2020V4M17%204l-4%204M17%204l4%204%22%2F%3E%3C%2Fsvg%3E&quot;)"></span>Activity</button>
+  <button class="nav-btn" onclick="switchTab('budget')" id="nav-budget"><span class="fh-ic" style="--m:url(&quot;data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.8%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%22M12%203v9h9%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%229%22%2F%3E%3C%2Fsvg%3E&quot;)"></span>Budget</button>
+  <button class="nav-btn" onclick="switchTab('debt')" id="nav-debt"><span class="fh-ic" style="--m:url(&quot;data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.8%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%229%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%225%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%221%22%2F%3E%3C%2Fsvg%3E&quot;)"></span>Plans</button>
+  <button class="nav-btn" onclick="switchTab('savings')" id="nav-savings"><span class="fh-ic" style="--m:url(&quot;data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.8%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%223%22%20y%3D%225%22%20width%3D%2218%22%20height%3D%2215%22%20rx%3D%223%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212.5%22%20r%3D%223.5%22%2F%3E%3Cpath%20d%3D%22M12%209v1M7%2020v1.5M17%2020v1.5%22%2F%3E%3C%2Fsvg%3E&quot;)"></span>Savings</button>
 </div>
 
 <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)"/>
@@ -713,7 +1395,7 @@ function showToast(msg, color="#30D158"){
   setTimeout(()=>t.style.display="none", 3000);
 }
 
-const TABS = ["money","debt","savings","budget","wn","backup"];
+const TABS = ["home","money","debt","savings","budget","wn","backup"];
 let showSent=false;
 function toggleSent(){ showSent=!showSent; renderMoney(); }
 function potCardHTML(){
@@ -758,7 +1440,6 @@ function attentionHTML(){
       <div style="font-size:11px;color:${r.c};margin-top:3px;font-weight:700">${r.t}</div>
     </div>`).join("");
 }
-function renderHome(){ /* no separate home screen — the pots live on the Income side */ }
 // ===== SETTINGS =====
 function openSettings(){
   const el=document.getElementById("settingsSheet"); if(!el) return;
@@ -810,10 +1491,13 @@ function saveSettings(){
   showToast("✅ Settings saved");
 }
 function switchTab(tab){
-  TABS.forEach(t=>{
-    document.getElementById("page-"+t).classList.toggle("active",t===tab);
-    document.getElementById("nav-"+t).classList.toggle("active",t===tab);
-  });
+  // v14.0: Lists sits inside Plans, Settings opens from the top button
+  const navOf={home:"home",money:"money",debt:"debt",wn:"debt",savings:"savings",budget:"budget"};
+  TABS.forEach(t=>{ const p=document.getElementById("page-"+t); if(p) p.classList.toggle("active",t===tab); });
+  ["home","money","budget","debt","savings"].forEach(n=>{ const b=document.getElementById("nav-"+n); if(b) b.classList.toggle("active",navOf[tab]===n); });
+  const gear=document.getElementById("fhGear"); if(gear) gear.classList.toggle("on",tab==="backup");
+  fhPageTitle(tab);
+  if(tab==="home")    renderHome();
   if(tab==="debt")    renderDebt();
   if(tab==="money")   renderMoney();
   if(tab==="savings") renderSavings();
@@ -821,6 +1505,7 @@ function switchTab(tab){
   if(tab==="budget")  renderBudget();
   if(tab==="backup")  renderBackup();
   renderNotice();
+  window.scrollTo(0,0);
 }
 
 // ===== DEADLINE HELPERS =====
@@ -2238,7 +2923,7 @@ function renderPlanSide(side){
       <div class="row"><span class="label-sm">Total Completed · ${done.length} plan${done.length!==1?'s':''}</span><span style="color:#30D158;font-weight:800;font-size:14px">GH₵ ${dTot.toLocaleString()} ${side==='buy'?'saved':'cleared'}</span></div>
     </div>`+done.map(pp=>planCardHTML(side,pp)).join("");
   }
-  document.getElementById("page-debt").innerHTML=dailyTargetHTML()+toggle+html;
+  document.getElementById("page-debt").innerHTML=planSegHTML(planSide)+dailyTargetHTML()+html;
 }
 function renderDebt(){ renderPlanSide(planSide); }
 
@@ -2336,8 +3021,8 @@ function renderWN(){
   const list=wnTab==="wants"?wants:needs;
   const color=wnTab==="wants"?"#BF5AF2":"#32ADE6";
   const label=wnTab==="wants"?"Wants 🛍️":"Needs 📌";
-  document.getElementById("page-wn").innerHTML=`
-    <div style="margin-top:10px">
+  document.getElementById("page-wn").innerHTML=planSegHTML('wn')+`
+    <div style="margin-top:2px">
     <div class="wn-summary">
       <div class="wn-box"><div class="wn-label">🛍️ Wants Total</div><div class="wn-val" style="color:#BF5AF2">GH₵ ${wTotal.toLocaleString()}</div><div style="font-size:10px;color:#E5E5E5;margin-top:2px">${wants.length} item${wants.length!==1?'s':''}</div></div>
       <div class="wn-box"><div class="wn-label">📌 Needs Total</div><div class="wn-val" style="color:#32ADE6">GH₵ ${nTotal.toLocaleString()}</div><div style="font-size:10px;color:#E5E5E5;margin-top:2px">${needs.length} item${needs.length!==1?'s':''}</div></div>
@@ -2521,11 +3206,9 @@ const PERIOD_OPTIONS=[
   {id:"lifetime",label:"♾️ Lifetime"}
 ];
 function periodSelectHTML(value,handler,accent="#333333"){
-  return `<div class="period-select-wrap" style="--period-accent:${accent}">
-    <select class="period-select" aria-label="Select time period" onchange="${handler}(this.value)">
-      ${PERIOD_OPTIONS.map(o=>`<option value="${o.id}" ${value===o.id?'selected':''}>${o.label}</option>`).join("")}
-    </select>
-  </div>`;
+  // v14.0: tap chips instead of a dropdown, same periods
+  const short={week:"Week",month:"Month",year:"Year",lifetime:"All"};
+  return `<div class="fh-chips">${PERIOD_OPTIONS.map(o=>`<button class="${value===o.id?'on':''}" onclick="${handler}('${o.id}')">${short[o.id]||o.label}</button>`).join("")}</div>`;
 }
 function setSpendPeriod(value){
   if(!PERIOD_OPTIONS.some(o=>o.id===value)) return;
@@ -2543,8 +3226,8 @@ function periodBarHTML(){
 let moneySide="spend";
 function setMoneySide(x){ moneySide=x; renderMoney(); }
 function moneyToggleHTML(){
-  const b=(id,lab,col)=>`<button onclick="setMoneySide('${id}')" style="flex:1;padding:11px 6px;border:none;border-radius:11px;background:${moneySide===id?col:'transparent'};color:${moneySide===id?'#0A0A0A':'#9A9A9A'};font-size:13px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">${lab}</button>`;
-  return `<div style="display:flex;gap:4px;padding:4px;background:#161616;border:1px solid #2A2A2A;border-radius:14px;margin:2px 0 14px">${b('income','Income','#30D158')}${b('spend','Spending','#FF9F0A')}</div>`;
+  const b=(id,lab)=>`<button class="${moneySide===id?'on':''}" onclick="setMoneySide('${id}')">${lab}</button>`;
+  return `<div class="fh-seg">${b('income','Money in')}${b('spend','Spending')}</div>`;
 }
 function incomeSourceTotals(from,to){
   const m={};
@@ -2642,17 +3325,17 @@ function renderSpendMoney(){
     <div style="margin-top:10px">
       ${periodSelectHTML(spendPeriod,"setSpendPeriod",accentColor)}
     <div class="spend-big" style="border-color:${accentColor}33">
-      <div class="spend-big-label" style="color:${accentColor}">💸 Total Spent — ${periodLabel}</div>
+      <div class="spend-big-label" style="color:${accentColor}">Spent · ${periodLabel.toLowerCase()}</div>
       <div class="spend-big-amt" style="color:${accentColor}">GH₵ ${total.toLocaleString()}</div>
       <div class="spend-big-sub">${(all.length+arch.count)} transaction${(all.length+arch.count)!==1?'s':''}${arch.count>0?" · "+arch.count+" archived":""}</div>
     </div>
     <div class="cat-big-grid">
       ${(function(){
         const boxes=[
-          {icon:'💳',label:'Debt Paid',color:'#FF453A',amt:catTotal('debt',all)+arch.debt},
-          {icon:'🏦',label:'Savings',color:'#32ADE6',amt:catTotal('sav',all)+arch.sav},
-          {icon:'🛍️',label:'Lists',color:'#BF5AF2',amt:catTotal('wants',all)+catTotal('needs',all)+catTotal('buy',all)+arch.wants+arch.needs},
-          {icon:'🗓️',label:'Budget',color:'#FF6B35',amt:all.filter(e=>!['debt','sav','wants','needs','buy'].includes(e.cat)).reduce((s,e)=>s+e.amount,0)+arch.budget}
+          {icon:catIconHTML({id:'debt'}),label:'Debt Paid',color:'#FF453A',amt:catTotal('debt',all)+arch.debt},
+          {icon:catIconHTML({id:'sav'}),label:'Savings',color:'#32ADE6',amt:catTotal('sav',all)+arch.sav},
+          {icon:catIconHTML({id:'wants'}),label:'Lists',color:'#BF5AF2',amt:catTotal('wants',all)+catTotal('needs',all)+catTotal('buy',all)+arch.wants+arch.needs},
+          {icon:`<span class="fh-tile">${fhIc('bud')}</span>`,label:'Budget',color:'#FF6B35',amt:all.filter(e=>!['debt','sav','wants','needs','buy'].includes(e.cat)).reduce((s,e)=>s+e.amount,0)+arch.budget}
         ];
         return boxes.map(b=>`<div class="cat-big-box" style="border-color:${b.color}22">
           <div class="cbb-icon">${b.icon}</div>
@@ -2672,14 +3355,14 @@ function renderSpendMoney(){
       const cat=getCat(e.cat);
       return `<div class="entry-item">
         <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
-          <span style="font-size:20px;flex-shrink:0">${cat.icon}</span>
+          ${catIconHTML(cat)}
           <div style="min-width:0;flex:1">
             <div class="entry-desc" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.desc}</div>
-            <div class="entry-meta">${e.date} · ${cat.label}${e.auto?' · Auto':''}</div>
+            <div class="entry-meta">${fhDayLabel(e.date)} · ${cat.label}${e.auto?' · Auto':''}</div>
           </div>
         </div>
         <div class="entry-right" style="flex-shrink:0">
-          <span class="entry-amt" style="color:${cat.color}">-GH₵ ${e.amount.toLocaleString()}</span>
+          <span class="entry-amt">−${e.amount.toLocaleString()}</span>
           ${!e.auto?`<button class="btn-del" onclick="deleteSpendEntry('${e.id}')">🗑</button>`:`<span style="width:22px"></span>`}
         </div>
       </div>`;
@@ -2846,8 +3529,8 @@ function renderSavings(){
 
   document.getElementById("page-savings").innerHTML=`
     <div style="margin-top:10px">
-    ${periodSelectHTML(isavPeriod,"setISavPeriod","#32ADE6")}
     ${savToggleHTML()}
+    ${periodSelectHTML(isavPeriod,"setISavPeriod","#32ADE6")}
     ${dailyTargetHTML()}
 
     <div class="sav-streak-grid">
@@ -3124,7 +3807,7 @@ function renderBudget(){
       <button onclick="setMonthlyPlan()" style="width:100%;margin-top:12px;padding:10px;border-radius:10px;background:#1E1E1E;border:1px solid #E5E5E544;color:#E5E5E5;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">${planned>0?'✏️ Edit Monthly Plan':'➕ Set Monthly Plan'}</button>
     </div>
 
-    <div class="section-title">📂 Spending Categories</div>
+    <div class="section-title">Categories</div>
     ${cats.map(cat=>{
       const t=catSpentMonth(cat.id,ym);
       const open=budgetExpandedId===cat.id;
@@ -3132,7 +3815,7 @@ function renderBudget(){
       return `<div class="card" style="padding:14px 16px;border-color:${cat.color}22">
         <div style="display:flex;justify-content:space-between;align-items:center">
           <div onclick="budgetExpandedId=budgetExpandedId==='${cat.id}'?null:'${cat.id}';renderBudget()" style="display:flex;align-items:center;gap:10px;cursor:pointer;flex:1;min-width:0">
-            <span style="font-size:22px">${cat.icon}</span>
+            ${catIconHTML(cat)}
             <div style="min-width:0">
               <div style="font-size:14px;font-weight:700;color:${cat.color}">${cat.label}</div>
               ${(function(){const moneyIn=catMoneyIn(cat.id,ym); if(!moneyIn) return `<div style="font-size:11px;color:#E5E5E5">GH₵ ${t.toLocaleString()} spent${ents.length?` · ${ents.length} entr${ents.length===1?'y':'ies'}`:''}</div>`;
@@ -3423,8 +4106,8 @@ function rangeFrom(p){
 var savSide="income", isavPeriod="lifetime";
 function setSavSide(x){ savSide=x; renderSavings(); }
 function savToggleHTML(){
-  const b=(id,lab)=>`<button onclick="setSavSide('${id}')" style="flex:1;padding:11px 6px;border:none;border-radius:11px;background:${savSide===id?'#32ADE6':'transparent'};color:${savSide===id?'#04121A':'#9A9A9A'};font-size:13px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">${lab}</button>`;
-  return `<div style="display:flex;gap:4px;padding:4px;background:#161616;border:1px solid #2A2A2A;border-radius:14px;margin:2px 0 14px">${b('income','📺 Income Savings')}${b('goals','🏦 Goals')}</div>`;
+  const b=(id,lab)=>`<button class="${savSide===id?'on':''}" onclick="setSavSide('${id}')">${lab}</button>`;
+  return `<div class="fh-seg">${b('income','Income pots')}${b('goals','Goals')}</div>`;
 }
 function renderIncomeSavings(){
   const from=rangeFrom(isavPeriod);
@@ -3451,8 +4134,8 @@ function renderIncomeSavings(){
       </div></div>`;
   };
   document.getElementById("page-savings").innerHTML=`<div style="margin-top:10px">
-    ${periodSelectHTML(isavPeriod,"setISavPeriod","#32ADE6")}
     ${savToggleHTML()}
+    ${periodSelectHTML(isavPeriod,"setISavPeriod","#32ADE6")}
     <div class="card" style="border-color:#32ADE655">
       <div style="font-size:11px;color:#8A8A8A;font-weight:700">In your income pots now</div>
       <div style="font-size:31px;font-weight:900;color:#32ADE6;margin:4px 0 2px;letter-spacing:-1px">${fmtC(inPots)}</div>
@@ -3781,10 +4464,173 @@ ensureDestinations();
 migrateYouTubeSavings(false);
 if(!localStorage.getItem("pfhub_hist_seeded_v1")){ seedHistory(); try{localStorage.setItem("pfhub_hist_seeded_v1","1");}catch(e){} }
 refreshOldPlans();
+
+// ===== v14.0: ICONS, HOME, TOP BAR, TABS =====
+const FH_VERSION="v14.0"; // the version shown at the top. Change it with the <title> and sw.js CACHE
+const FH_ICONS={
+home:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+act:'<path d="M7 4v16M7 20l-4-4M7 20l4-4M17 20V4M17 4l-4 4M17 4l4 4"/>',
+bud:'<path d="M12 3v9h9"/><circle cx="12" cy="12" r="9"/>',
+plan:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+save:'<rect x="3" y="5" width="18" height="15" rx="3"/><circle cx="12" cy="12.5" r="3.5"/><path d="M12 9v1M7 20v1.5M17 20v1.5"/>',
+gear:'<path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2.2"/><circle cx="10" cy="17" r="2.2"/>',
+plus:'<path d="M12 5v14M5 12h14"/>',
+minus:'<path d="M5 12h14"/>',
+in:'<path d="M17 7 7 17M7 9v8h8"/>',
+out:'<path d="M7 17 17 7M9 7h8v8"/>',
+food:'<path d="M6 3v8a2 2 0 0 0 4 0V3M8 11v10M17 21V3c-2 1-3 4-3 7h3"/>',
+car:'<path d="M5 16V11l2-5h10l2 5v5M3 16h18v3H3zM7 19v2M17 19v2"/>',
+wifi:'<path d="M2 9a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19.5" r=".8"/>',
+phone:'<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/>',
+bolt:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
+rep:'<path d="M4 11V9a3 3 0 0 1 3-3h13M17 3l3 3-3 3M20 13v2a3 3 0 0 1-3 3H4M7 21l-3-3 3-3"/>',
+card:'<rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20M6 15h4"/>',
+cart:'<path d="M3 4h2l2.5 11h11L21 7H6.5"/><circle cx="9" cy="19.5" r="1.3"/><circle cx="17" cy="19.5" r="1.3"/>',
+bag:'<path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
+pin:'<path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/>',
+dice:'<rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="9" cy="9" r=".9"/><circle cx="15" cy="15" r=".9"/><circle cx="15" cy="9" r=".9"/><circle cx="9" cy="15" r=".9"/>',
+coins:'<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/>',
+cal:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+yt:'<rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 5 3-5 3z"/>',
+alert:'<path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17h.01"/>'
+};
+const FH_CAT_ICON={debt:'card',sav:'save',buy:'cart',wants:'bag',needs:'pin',food:'food',airtime:'phone',bundles:'wifi',transport:'car',personal:'user',bills:'bolt',subs:'rep',other:'coins',cat_1777886325794:'dice'};
+function fhIc(name,size){
+  const p=FH_ICONS[name]||FH_ICONS.coins;
+  const svg="<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'>"+p+"</svg>";
+  return `<span class="fh-ic" style="--m:url(&quot;data:image/svg+xml,${encodeURIComponent(svg)}&quot;)${size?`;width:${size}px;height:${size}px`:''}"></span>`;
+}
+// a category's picture: a line icon for the built-in ones, the first letter for ones you made
+function catIconHTML(cat){
+  const k=FH_CAT_ICON[cat.id];
+  if(k) return `<span class="fh-tile">${fhIc(k)}</span>`;
+  const l=String(cat.label||"?").trim().charAt(0).toUpperCase()||"?";
+  return `<span class="fh-tile">${l}</span>`;
+}
+function fhMoney(n){ return Math.round(n||0).toLocaleString(); }
+function fhDayLabel(ds){
+  if(!ds) return "";
+  if(ds===TODAY) return "Today";
+  const y=new Date(TODAY); y.setDate(y.getDate()-1);
+  if(ds===y.toISOString().split("T")[0]) return "Yesterday";
+  return shortDate(ds);
+}
+function fhPageTitle(tab){
+  const t={money:"Activity",debt:"Plans",wn:"Plans",savings:"Savings",budget:"Budget",backup:"Settings"}[tab];
+  const el=document.getElementById("fhTop"); if(!el) return;
+  if(!t){
+    const h=new Date().getHours();
+    const g=h<12?"Good morning":(h<17?"Good afternoon":"Good evening");
+    el.innerHTML=`<small>${g}</small><b>Philip<i>${FH_VERSION}</i></b>`;
+  } else el.innerHTML=`<b>${t}<i>${FH_VERSION}</i></b>`;
+}
+function planSegHTML(on){
+  const b=(id,lab,go)=>`<button class="${on===id?'on':''}" onclick="${go}">${lab}</button>`;
+  return `<div class="fh-seg">${b('debt','Debts',"planSide='debt';switchTab('debt')")}${b('buy','Buy',"planSide='buy';switchTab('debt')")}${b('wn','Lists',"switchTab('wn')")}</div>`;
+}
+function fhTotalSaved(){
+  let pots=0; try{ pots=potRows("","").reduce((a,r)=>a+(r.net||0),0); }catch(e){}
+  const goals=(savGoals||[]).filter(g=>!g.completed).reduce((a,g)=>a+(g.saved||0),0);
+  return {pots, goals, total:pots+goals};
+}
+function fhMonthRange(){ const r=getMonthRange(); return {from:r.start,to:r.end}; }
+function fhSpentIn(from,to){
+  return (spendData.entries||[]).filter(e=>inRange(e.date,from,to)&&!['debt','sav','buy'].includes(e.cat)).reduce((s,e)=>s+(e.amount||0),0);
+}
+function fhComingUp(){
+  const rows=[];
+  for(const s of (subs||[]).filter(x=>!x.cancelled&&x.deadline)){
+    const dl=deadlineDaysLeft(s.deadline);
+    if(dl!==null&&dl<=14) rows.push({d:dl,ic:'rep',tc:dl<0?'b':'w',n:s.name,s:dl<0?`${-dl} days overdue`:(dl===0?'Renews today':`Renews in ${dl} day${dl!==1?'s':''}`),a:fhMoney(s.amount),go:"switchTab('budget')"});
+  }
+  for(const side of ['debt','buy']){
+    for(const p of pPending(side)) rows.push({d:-1,ic:side==='buy'?'cart':'card',tc:'w',n:p.label,s:'Ready to settle',a:fhMoney(p.amount),go:`planSide='${side}';switchTab('debt')`});
+    for(const p of pActive(side)){
+      const dl=p.deadline?deadlineDaysLeft(p.deadline):null;
+      if(dl!==null&&dl<=14){ const left=Math.max(p.amount-pPaid(side,p),0);
+        rows.push({d:dl,ic:side==='buy'?'cart':'card',tc:dl<0?'b':'w',n:p.label,s:(dl<0?`${-dl} days over`:`Due in ${dl} day${dl!==1?'s':''}`)+` · GH₵ ${fhMoney(left)} left`,a:fhMoney(left),go:`planSide='${side}';switchTab('debt')`}); }
+    }
+  }
+  for(const g of (savGoals||[]).filter(x=>!x.completed&&x.saved<x.target&&x.deadline)){
+    const dl=deadlineDaysLeft(g.deadline);
+    if(dl!==null&&dl<0) rows.push({d:dl,ic:'save',tc:'b',n:g.name,s:`${-dl} days over`,a:fhMoney(g.target-g.saved),go:"switchTab('savings')"});
+  }
+  return rows.sort((x,y)=>x.d-y.d);
+}
+function fhRecent(n){
+  const inc=(incomeData.entries||[]).map(e=>({date:e.date||"",t:getSource(e.src).name,s:'Money in',a:e.amount,inc:true,o:1}));
+  const sp=(spendData.entries||[]).map((e,i)=>({date:e.date||"",t:e.desc||getCat(e.cat).label,s:getCat(e.cat).label,a:e.amount,cat:getCat(e.cat),o:i}));
+  return [...inc,...sp].sort((x,y)=>(y.date.localeCompare(x.date))||((y.o||0)-(x.o||0))).slice(0,n);
+}
+function renderHome(){
+  const el=document.getElementById("page-home"); if(!el) return;
+  const T=fhTotalSaved();
+  const {from,to}=fhMonthRange();
+  const mName=new Date(TODAY).toLocaleDateString('en-GB',{month:'long'});
+  const inM=incomeTotal(from,to), outM=fhSpentIn(from,to);
+  const up=fhComingUp();
+  const rec=fhRecent(5);
+  const row=(r)=>`<div class="fh-row" onclick="${r.go}"><span class="fh-tile ${r.tc||''}">${fhIc(r.ic)}</span><div class="fh-mid"><b>${r.n}</b><small>${r.s}</small></div><div class="fh-amt">${r.a}</div></div>`;
+  el.innerHTML=`
+    <div class="fh-hero"><div class="fh-lbl">Total saved</div>
+      <div class="fh-big"><span>GH₵</span>${fhMoney(T.total)}</div>
+      <div class="fh-pills">
+        <div class="fh-pill"><div class="fh-lbl">${fhIc('in',14)} In · ${mName}</div><b style="color:var(--acc)">+${fhMoney(inM)}</b></div>
+        <div class="fh-pill"><div class="fh-lbl">${fhIc('out',14)} Spent · ${mName}</div><b>${fhMoney(outM)}</b></div>
+      </div></div>
+    <div class="fh-qa">
+      <button onclick="fhAddIncome()"><span class="c p">${fhIc('plus',24)}</span>Income</button>
+      <button onclick="fhAddExpense()"><span class="c">${fhIc('minus',24)}</span>Expense</button>
+      <button onclick="planSide='debt';switchTab('debt')"><span class="c">${fhIc('card',22)}</span>Pay plan</button>
+      <button onclick="switchTab('savings')"><span class="c">${fhIc('save',22)}</span>Save</button>
+    </div>
+    <div class="fh-sh"><b>Coming up</b>${up.length>3?`<a onclick="planSide='debt';switchTab('debt')">See all</a>`:''}</div>
+    <div class="fh-list">${up.length?up.slice(0,3).map(row).join(""):`<div class="fh-empty">Nothing due in the next 2 weeks</div>`}</div>
+    <div class="fh-sh"><b>Recent</b><a onclick="switchTab('money')">See all</a></div>
+    <div class="fh-list">${rec.length?rec.map(r=>`<div class="fh-row" onclick="${r.inc?"moneySide='income';switchTab('money')":"moneySide='spend';switchTab('money')"}">
+        ${r.inc?`<span class="fh-tile a">${fhIc('in')}</span>`:catIconHTML(r.cat)}
+        <div class="fh-mid"><b>${r.t}</b><small>${r.s} · ${fhDayLabel(r.date)}</small></div>
+        <div class="fh-amt ${r.inc?'in':''}">${r.inc?'+':'−'}${fhMoney(r.a)}</div></div>`).join(""):`<div class="fh-empty">No money in or out yet. Tap Income or Expense above.</div>`}</div>`;
+}
+// Income: opens the Money in form on Activity
+function fhAddIncome(){
+  moneySide='income'; switchTab('money');
+  setTimeout(()=>{ const a=document.getElementById('incAmt'); if(a){ a.scrollIntoView({behavior:'smooth',block:'center'}); a.focus(); } },120);
+}
+// Expense: a quick form that logs into a Budget category, exactly like + Log on Budget
+function fhAddExpense(){
+  const b=document.getElementById("fhSheetBody"); if(!b) return;
+  const cats=budgetCats().filter(c=>c.id!=="buy");
+  b.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div style="font-size:18px;font-weight:700">Add expense</div>
+      <button onclick="closeFhSheet()" class="fh-gear" style="width:34px;height:34px">✕</button></div>
+    <label class="modal-label">Amount (GH₵)</label>
+    <input class="modal-input" type="number" id="fhExAmt" placeholder="e.g. 50"/>
+    <label class="modal-label">Category</label>
+    <select class="modal-input" id="fhExCat">${cats.map(c=>`<option value="${c.id}">${c.label}</option>`).join("")}</select>
+    <label class="modal-label">Note (optional)</label>
+    <input class="modal-input" id="fhExNote" placeholder="e.g. Lunch"/>
+    <button class="fh-btn" onclick="fhSaveExpense()">Add expense</button>`;
+  openFhSheet();
+  setTimeout(()=>{ const a=document.getElementById('fhExAmt'); if(a) a.focus(); },150);
+}
+function fhSaveExpense(){
+  const amt=parseFloat(document.getElementById("fhExAmt").value);
+  if(!amt||amt<=0){ showToast("Enter an amount","#FF453A"); return; }
+  const cat=document.getElementById("fhExCat").value, note=document.getElementById("fhExNote").value;
+  const keep=selBudgetMonth; selBudgetMonth=TODAY.slice(0,7);
+  logBudgetSpend(cat,amt,note);
+  selBudgetMonth=keep;
+  closeFhSheet(); renderHome();
+}
+
 renderDebt();
 renderMoney();
 renderSavings();
 renderNotice();
+renderHome();
+fhPageTitle('home');
 </script>
 <script>
 // v111: installable app. Registers the offline file. Does not touch any saved data.
@@ -3797,7 +4643,7 @@ if('serviceWorker' in navigator){window.addEventListener('load',function(){navig
     e.preventDefault();deferred=e;
     if(standalone||document.getElementById('fhInstallBtn'))return;
     var b=document.createElement('button');b.id='fhInstallBtn';b.type='button';b.textContent='\u2B07 Install Finance Hub';
-    b.style.cssText='position:fixed;right:14px;bottom:96px;z-index:9999;border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:11px 16px;background:#FFD700;color:#000;font:800 13px Outfit,system-ui,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.45)';
+    b.style.cssText='position:fixed;right:14px;bottom:96px;z-index:9999;border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:11px 16px;background:#2BD47D;color:#03170C;font:700 13px Inter,system-ui,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.45)';
     b.addEventListener('click',function(){if(!deferred)return;deferred.prompt();deferred.userChoice.then(function(){deferred=null;b.remove();});});
     document.body.appendChild(b);
   });
