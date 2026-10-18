@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v13.7</title>
+<title>Philip's Finance Hub v13.8</title>
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="var(--bg)">
+<meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Finance Hub">
@@ -15,12 +15,12 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap');
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; min-height: 100vh; max-width: 480px; margin: 0 auto; padding-bottom: 90px; }
+  body { background: #000000; color: #fff; font-family: 'Outfit', sans-serif; min-height: 100vh; max-width: 480px; margin: 0 auto; padding-bottom: 90px; }
   .app-header { text-align: center; padding: 20px 16px 0; position: relative; }
-  .app-header .sub { font-size: 10px; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; margin-bottom: 2px; }
-  .app-header h1 { font-size: 24px; font-weight: 900; background: linear-gradient(135deg, #FFFFFF, var(--muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; display: flex; background: #0D0D0D; border-top: 1px solid var(--line); z-index: 100; }
-  .nav-btn { position: relative; flex: 1; padding: 13px 4px 11px; background: none; border: none; color: var(--muted); font-size: 9px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; display: flex; flex-direction: column; align-items: center; gap: 3px; transition: color .18s ease; }
+  .app-header .sub { font-size: 10px; letter-spacing: 4px; color: #C9C9C9; text-transform: uppercase; margin-bottom: 2px; }
+  .app-header h1 { font-size: 24px; font-weight: 900; background: linear-gradient(135deg, #FFFFFF, #B0B0B0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; display: flex; background: #0D0D0D; border-top: 1px solid #333333; z-index: 100; }
+  .nav-btn { position: relative; flex: 1; padding: 13px 4px 11px; background: none; border: none; color: #C9C9C9; font-size: 9px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; display: flex; flex-direction: column; align-items: center; gap: 3px; transition: color .18s ease; }
   .nav-btn .nav-icon { font-size: 18px; transition: transform .18s ease; }
   /* the solid bar that tells you where you are */
   .nav-btn::before { content:''; position:absolute; top:0; left:18%; right:18%; height:3px;
@@ -30,11 +30,11 @@
   .nav-btn.active { color: var(--tab); }
   .nav-btn.active .nav-icon { transform: translateY(-1px) scale(1.12); }
     #nav-debt    { --tab:#FF453A; }
-  #nav-savings { --tab:var(--acc); }
-  #nav-money   { --tab:var(--acc); }
-  #nav-budget  { --tab:var(--acc); }
-  #nav-wn      { --tab:var(--acc); }
-  #nav-backup  { --tab:var(--acc); }
+  #nav-savings { --tab:#32ADE6; }
+  #nav-money   { --tab:#FFD60A; }
+  #nav-budget  { --tab:#FF9F0A; }
+  #nav-wn      { --tab:#BF5AF2; }
+  #nav-backup  { --tab:#8E8E93; }
   .page { display: none; padding: 14px 16px; }
   .page.active { display: block; animation: pageIn .26s cubic-bezier(.22,.8,.3,1) both; }
 
@@ -66,261 +66,238 @@
     animation: sheen 2.6s ease-in-out infinite; }
   .settle-pulse { animation: softPulse 2.6s ease-in-out infinite; }
   @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important } }
-  .card { background: var(--card); border-radius: 16px; padding: 16px 18px; margin-bottom: 12px; border: 1px solid var(--line); }
-  .bar-wrap { background: var(--bg); border-radius: 99px; height: 8px; overflow: hidden; }
+  .card { background: #161616; border-radius: 16px; padding: 16px 18px; margin-bottom: 12px; border: 1px solid #333333; }
+  .bar-wrap { background: #000000; border-radius: 99px; height: 8px; overflow: hidden; }
   .bar-fill { height: 100%; border-radius: 99px; transition: width 0.6s ease; }
   .row { display: flex; justify-content: space-between; align-items: center; }
-  .label-sm { font-size: 12px; color: var(--text); font-weight: 600; }
+  .label-sm { font-size: 12px; color: #fff; font-weight: 600; }
   .val-green { font-size: 13px; font-weight: 700; color: #30D158; }
-  .val-muted { font-size: 13px; color: var(--text); font-weight: 600; }
-  .val-gold { color: var(--text); font-weight: 700; font-size: 12px; }
-  .section-title { font-size: 13px; font-weight: 800; color: var(--muted); margin-bottom: 10px; }
-  .btn-primary { width: 100%; padding: 15px; border-radius: 14px; background: linear-gradient(135deg, #30D158, #28A745); border: none; color: var(--text); font-size: 15px; font-weight: 800; cursor: pointer; font-family: 'Outfit', sans-serif; box-shadow: 0 4px 20px rgba(52,199,89,0.25); margin-bottom: 12px; }
-  .btn-sm { padding: 6px 14px; border-radius: 8px; border: none; color: var(--text); font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; }
-  .btn-ghost { padding: 6px 12px; border-radius: 8px; background: var(--card2); border: 1px solid var(--line); color: var(--muted); font-size: 11px; font-weight: 600; cursor: pointer; font-family: 'Outfit', sans-serif; }
-  .btn-cancel { padding: 6px 10px; border-radius: 8px; background: var(--card2); border: none; color: var(--muted); font-size: 12px; cursor: pointer; font-family: 'Outfit', sans-serif; }
-  .btn-danger { padding: 11px 16px; border-radius: 10px; background: var(--card); border: 1px solid #3A1A1A; color: #FF453A; font-size: 12px; cursor: pointer; font-family: 'Outfit', sans-serif; }
-  .btn-footer { flex: 1; padding: 11px; border-radius: 10px; background: var(--card); border: 1px solid var(--line); color: var(--muted); font-size: 12px; cursor: pointer; font-family: 'Outfit', sans-serif; }
+  .val-muted { font-size: 13px; color: #fff; font-weight: 600; }
+  .val-gold { color: #E5E5E5; font-weight: 700; font-size: 12px; }
+  .section-title { font-size: 13px; font-weight: 800; color: #ccc; margin-bottom: 10px; }
+  .btn-primary { width: 100%; padding: 15px; border-radius: 14px; background: linear-gradient(135deg, #30D158, #28A745); border: none; color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; font-family: 'Outfit', sans-serif; box-shadow: 0 4px 20px rgba(52,199,89,0.25); margin-bottom: 12px; }
+  .btn-sm { padding: 6px 14px; border-radius: 8px; border: none; color: #fff; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; }
+  .btn-ghost { padding: 6px 12px; border-radius: 8px; background: #1E1E1E; border: 1px solid #2A2A3E; color: #C9C9C9; font-size: 11px; font-weight: 600; cursor: pointer; font-family: 'Outfit', sans-serif; }
+  .btn-cancel { padding: 6px 10px; border-radius: 8px; background: #222; border: none; color: #C9C9C9; font-size: 12px; cursor: pointer; font-family: 'Outfit', sans-serif; }
+  .btn-danger { padding: 11px 16px; border-radius: 10px; background: #161616; border: 1px solid #3A1A1A; color: #FF453A; font-size: 12px; cursor: pointer; font-family: 'Outfit', sans-serif; }
+  .btn-footer { flex: 1; padding: 11px; border-radius: 10px; background: #161616; border: 1px solid #333333; color: #C9C9C9; font-size: 12px; cursor: pointer; font-family: 'Outfit', sans-serif; }
   .footer-row { display: flex; gap: 8px; margin-top: 16px; }
 
   /* GOAL CARDS */
   .savings-goal-card, .goal-card, .card { max-width: 100%; box-sizing: border-box; overflow: hidden; }
   .savings-content { min-width: 0; }
-  .goal-card { border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; border: 1px solid var(--line); background: var(--card); position: relative; transition: border 0.2s, background 0.2s; display: flex; align-items: stretch; }
-  .goal-card.active-goal { background: var(--card); }
-  .goal-card.focus-card { border-width: 2px; background: var(--accbg); }
+  .goal-card { border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; border: 1px solid #333333; background: #161616; position: relative; transition: border 0.2s, background 0.2s; display: flex; align-items: stretch; }
+  .goal-card.active-goal { background: #161616; }
+  .goal-card.focus-card { border-width: 2px; background: #12100A; }
   .focus-tag { display:inline-block; font-size:9px; font-weight:900; letter-spacing:0.5px; padding:2px 7px; border-radius:6px; margin-bottom:6px; }
   .goal-card.done { background: #0D1F0D; border-color: #1E3A2A; opacity: 0.75; }
-  .goal-card.drag-over { border: 2px solid var(--text); background: var(--card2); }
-  .goal-card.is-dragging { opacity: 0.35; border: 2px dashed var(--text); }
-  .drag-handle { display: flex; align-items: center; justify-content: center; width: 32px; min-width: 32px; cursor: grab; color: var(--line); font-size: 20px; user-select: none; touch-action: none; border-radius: 8px; transition: color 0.2s; margin: -14px 8px -14px -16px; padding: 14px 8px; }
-  .drag-handle:active { cursor: grabbing; color: var(--text); }
+  .goal-card.drag-over { border: 2px solid #E5E5E5; background: #1E1E1E; }
+  .goal-card.is-dragging { opacity: 0.35; border: 2px dashed #E5E5E5; }
+  .drag-handle { display: flex; align-items: center; justify-content: center; width: 32px; min-width: 32px; cursor: grab; color: #333; font-size: 20px; user-select: none; touch-action: none; border-radius: 8px; transition: color 0.2s; margin: -14px 8px -14px -16px; padding: 14px 8px; }
+  .drag-handle:active { cursor: grabbing; color: #E5E5E5; }
   .goal-content { flex: 1; min-width: 0; }
   .goal-actions { display: flex; flex-direction: column; gap: 4px; justify-content: center; margin: -14px -16px -14px 8px; padding: 8px 10px; }
-  .btn-edit-goal { background: var(--card2); border: 1px solid var(--line); border-radius: 8px; color: var(--acc); font-size: 13px; width: 28px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .btn-edit-goal { background: #1E1E1E; border: 1px solid #2A2A4E; border-radius: 8px; color: #32ADE6; font-size: 13px; width: 28px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
   .btn-delete-goal { background: #2A1A1A; border: 1px solid #4E2A2A; border-radius: 8px; color: #FF453A; font-size: 13px; width: 28px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
   .goal-name { font-size: 14px; font-weight: 700; }
-  .goal-person { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .goal-person { font-size: 11px; color: #A0A0A0; margin-top: 2px; }
   .active-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; margin-right: 5px; vertical-align: middle; }
   .custom-wrap { display: flex; gap: 6px; align-items: center; }
-  .custom-input { width: 85px; padding: 5px 8px; border-radius: 8px; background: var(--bg); border: 1px solid var(--line); color: var(--text); font-size: 13px; font-family: 'Outfit', sans-serif; }
-  .custom-input:focus { outline: none; border-color: var(--muted); }
-  .reorder-hint { text-align: center; font-size: 11px; color: var(--muted); margin-bottom: 10px; padding: 8px 12px; background: var(--card); border-radius: 10px; border: 1px solid var(--line); }
-  .log-section { background: var(--card); border-radius: 12px; padding: 14px; margin-top: 10px; display: none; }
+  .custom-input { width: 85px; padding: 5px 8px; border-radius: 8px; background: #000000; border: 1px solid #2A2A2A; color: #fff; font-size: 13px; font-family: 'Outfit', sans-serif; }
+  .custom-input:focus { outline: none; border-color: #C9C9C9; }
+  .reorder-hint { text-align: center; font-size: 11px; color: #C9C9C9; margin-bottom: 10px; padding: 8px 12px; background: #161616; border-radius: 10px; border: 1px solid #333333; }
+  .log-section { background: #161616; border-radius: 12px; padding: 14px; margin-top: 10px; display: none; }
   .log-section.visible { display: block; }
-  .log-title { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
-  .log-entry { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 12px; }
+  .log-title { font-size: 12px; color: #C9C9C9; margin-bottom: 8px; }
+  .log-entry { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #333333; font-size: 12px; }
   .log-entry:last-child { border-bottom: none; }
 
   /* DEADLINE BADGE */
   .deadline-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: 700; margin-top: 4px; }
   .dl-green  { background: #0D2A0D; color: #30D158; border: 1px solid #1E3A2A; }
-  .dl-yellow { background: #2A1A0D; color: var(--acc); border: 1px solid #3A2A1A; }
+  .dl-yellow { background: #2A1A0D; color: #FF9F0A; border: 1px solid #3A2A1A; }
   .dl-red    { background: #2A0D0D; color: #FF453A; border: 1px solid #3A1A1A; }
 
   /* MANAGE DEBT MODAL */
   .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 500; display: none; align-items: flex-end; justify-content: center; }
   .modal-overlay.open { display: flex; }
-  .modal-box { background: var(--card); border-radius: 20px 20px 0 0; padding: 20px 20px 40px; width: 100%; max-width: 480px; border-top: 1px solid var(--line); max-height: 85vh; overflow-y: auto; }
-  .modal-title { font-size: 16px; font-weight: 800; margin-bottom: 16px; color: var(--text); }
-  .modal-input { width: 100%; padding: 11px 14px; border-radius: 12px; background: var(--in); border: 1px solid var(--line); color: var(--text); font-size: 14px; font-family: 'Outfit', sans-serif; margin-bottom: 10px; }
-  .modal-input:focus { outline: none; border-color: var(--acc); }
-  .modal-label { font-size: 11px; color: var(--muted); margin-bottom: 5px; display: block; }
+  .modal-box { background: #161616; border-radius: 20px 20px 0 0; padding: 20px 20px 40px; width: 100%; max-width: 480px; border-top: 1px solid #2A2A2A; max-height: 85vh; overflow-y: auto; }
+  .modal-title { font-size: 16px; font-weight: 800; margin-bottom: 16px; color: #fff; }
+  .modal-input { width: 100%; padding: 11px 14px; border-radius: 12px; background: #101010; border: 1px solid #2A2A2A; color: #fff; font-size: 14px; font-family: 'Outfit', sans-serif; margin-bottom: 10px; }
+  .modal-input:focus { outline: none; border-color: #FFD700; }
+  .modal-label { font-size: 11px; color: #C9C9C9; margin-bottom: 5px; display: block; }
   .sheet-wrap { display:none; position:fixed; inset:0; background:rgba(0,0,0,.72); z-index:400; align-items:flex-end; justify-content:center; }
   .sheet-wrap.open { display:flex; }
-  .sheet-panel { width:100%; max-width:480px; max-height:86vh; overflow-y:auto; background:var(--card); border-radius:22px 22px 0 0;
-    padding:18px 18px calc(24px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); }
+  .sheet-panel { width:100%; max-width:480px; max-height:86vh; overflow-y:auto; background:#141414; border-radius:22px 22px 0 0;
+    padding:18px 18px calc(24px + env(safe-area-inset-bottom)); border-top:1px solid #333333; }
   .plan-preview { margin:-2px 0 12px; font-size:12px; font-weight:700; color:#30D158; line-height:1.45; min-height:17px; }
   .color-picker-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
   .color-dot { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.2s; }
-  .color-dot.selected { border-color: var(--text); transform: scale(1.2); }
+  .color-dot.selected { border-color: #fff; transform: scale(1.2); }
   .modal-btns { display: flex; gap: 10px; margin-top: 4px; }
-  .btn-modal-save { flex: 1; padding: 13px; border-radius: 12px; background: linear-gradient(135deg,#30D158,#28A745); border: none; color: var(--text); font-size: 14px; font-weight: 800; cursor: pointer; font-family: 'Outfit', sans-serif; }
-  .btn-modal-cancel { padding: 13px 16px; border-radius: 12px; background: var(--card2); border: 1px solid var(--line); color: var(--muted); font-size: 14px; cursor: pointer; font-family: 'Outfit', sans-serif; }
-  .add-debt-btn { width: 100%; padding: 13px; border-radius: 14px; background: var(--card); border: 1px dashed #E5E5E566; color: var(--text); font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; margin-bottom: 12px; }
+  .btn-modal-save { flex: 1; padding: 13px; border-radius: 12px; background: linear-gradient(135deg,#30D158,#28A745); border: none; color: #fff; font-size: 14px; font-weight: 800; cursor: pointer; font-family: 'Outfit', sans-serif; }
+  .btn-modal-cancel { padding: 13px 16px; border-radius: 12px; background: #222; border: 1px solid #333; color: #C9C9C9; font-size: 14px; cursor: pointer; font-family: 'Outfit', sans-serif; }
+  .add-debt-btn { width: 100%; padding: 13px; border-radius: 14px; background: #161616; border: 1px dashed #E5E5E566; color: #E5E5E5; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; margin-bottom: 12px; }
 
   /* OTHER TABS */
   .summary-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-  .summary-box { background: var(--card); border-radius: 14px; padding: 12px 8px; border: 1px solid var(--line); text-align: center; }
-  .summary-box .box-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+  .summary-box { background: #161616; border-radius: 14px; padding: 12px 8px; border: 1px solid #333333; text-align: center; }
+  .summary-box .box-label { font-size: 9px; color: #C9C9C9; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
   .summary-box .box-val { font-size: 15px; font-weight: 800; }
-  .box-income{color:#30D158;}.box-expense{color:var(--acc);}.box-balance{color:var(--acc);}
-  .add-entry-form { background: var(--card); border-radius: 14px; padding: 16px; margin-bottom: 12px; border: 1px solid var(--line); }
+  .box-income{color:#30D158;}.box-expense{color:#FF6B35;}.box-balance{color:#FFD700;}
+  .add-entry-form { background: #161616; border-radius: 14px; padding: 16px; margin-bottom: 12px; border: 1px solid #333333; }
   .form-title { font-size: 13px; font-weight: 700; margin-bottom: 12px; }
-  .form-input { width: 100%; padding: 10px 12px; border-radius: 10px; background: var(--in); border: 1px solid var(--line); color: var(--text); font-size: 13px; font-family: 'Outfit', sans-serif; margin-bottom: 8px; }
-  .form-input:focus { outline: none; border-color: var(--muted); }
-  .btn-add-entry { width: 100%; padding: 12px; border-radius: 12px; border: none; color: var(--text); font-size: 14px; font-weight: 800; cursor: pointer; font-family: 'Outfit', sans-serif; }
-  .entry-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .form-input { width: 100%; padding: 10px 12px; border-radius: 10px; background: #101010; border: 1px solid #2A2A2A; color: #fff; font-size: 13px; font-family: 'Outfit', sans-serif; margin-bottom: 8px; }
+  .form-input:focus { outline: none; border-color: #C9C9C9; }
+  .btn-add-entry { width: 100%; padding: 12px; border-radius: 12px; border: none; color: #fff; font-size: 14px; font-weight: 800; cursor: pointer; font-family: 'Outfit', sans-serif; }
+  .entry-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #333333; }
   .entry-item:last-child { border-bottom: none; }
   .entry-desc { font-size: 13px; font-weight: 600; color: #ddd; }
-  .entry-meta { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .entry-meta { font-size: 11px; color: #C9C9C9; margin-top: 1px; }
   .entry-right { display: flex; align-items: center; gap: 8px; }
   .entry-amt { font-size: 14px; font-weight: 800; }
-  .btn-del { background: none; border: none; color: var(--line); font-size: 14px; cursor: pointer; padding: 2px 4px; }
+  .btn-del { background: none; border: none; color: #333; font-size: 14px; cursor: pointer; padding: 2px 4px; }
 
   /* SPENDING TRACKER */
   .period-select-wrap { margin: 10px 0 14px; position: relative; }
   .period-select {
     width: 100%; padding: 12px 42px 12px 14px; border-radius: 12px;
-    background: var(--card); border: 1px solid var(--period-accent, var(--line));
-    color: var(--text); font-size: 13px; font-weight: 800; cursor: pointer;
+    background: #161616; border: 1px solid var(--period-accent, #333333);
+    color: #E5E5E5; font-size: 13px; font-weight: 800; cursor: pointer;
     font-family: 'Outfit', sans-serif; color-scheme: dark;
     appearance: auto;
   }
-  .period-select:focus { outline: none; border-color: var(--period-accent, var(--text)); }
-  .spend-big { text-align: center; padding: 20px; background: var(--card); border-radius: 16px; margin-bottom: 12px; border: 1px solid var(--line); }
-  .spend-big-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 6px; }
-  .spend-big-amt { font-size: 36px; font-weight: 900; color: var(--text); }
-  .spend-big-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .period-select:focus { outline: none; border-color: var(--period-accent, #E5E5E5); }
+  .spend-big { text-align: center; padding: 20px; background: #161616; border-radius: 16px; margin-bottom: 12px; border: 1px solid #333333; }
+  .spend-big-label { font-size: 11px; color: #C9C9C9; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 6px; }
+  .spend-big-amt { font-size: 36px; font-weight: 900; color: #fff; }
+  .spend-big-sub { font-size: 12px; color: #C9C9C9; margin-top: 4px; }
   /* SAVINGS SUMMARY ON MONEY TAB */
   .sav-summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-  .sav-sum-box { background: var(--card); border-radius: 14px; padding: 12px 10px; border: 1px solid #32ADE622; text-align: center; }
-  .sav-sum-box .ssl { font-size: 9px; color: var(--acc); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-  .sav-sum-box .ssv { font-size: 18px; font-weight: 900; color: var(--acc); }
+  .sav-sum-box { background: #161616; border-radius: 14px; padding: 12px 10px; border: 1px solid #32ADE622; text-align: center; }
+  .sav-sum-box .ssl { font-size: 9px; color: #32ADE6; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .sav-sum-box .ssv { font-size: 18px; font-weight: 900; color: #32ADE6; }
   /* BIG CATEGORY BOXES */
   .cat-big-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-  .cat-big-box { background: var(--card); border-radius: 16px; padding: 16px 14px; border: 1px solid var(--line); position: relative; }
+  .cat-big-box { background: #161616; border-radius: 16px; padding: 16px 14px; border: 1px solid #333333; position: relative; }
   .cat-big-box .cbb-icon { font-size: 24px; margin-bottom: 6px; }
-  .cat-big-box .cbb-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .cat-big-box .cbb-label { font-size: 10px; color: #C9C9C9; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
   .cat-big-box .cbb-amt { font-size: 22px; font-weight: 900; }
-  .cat-big-box .cbb-del { position: absolute; top: 8px; right: 8px; background: none; border: none; color: var(--line); font-size: 14px; cursor: pointer; padding: 2px; }
+  .cat-big-box .cbb-del { position: absolute; top: 8px; right: 8px; background: none; border: none; color: #2A2A2A; font-size: 14px; cursor: pointer; padding: 2px; }
   .cat-big-box .cbb-del:hover { color: #FF453A; }
-  .cat-big-box.add-cat-box { border: 1px dashed var(--line); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; min-height: 100px; }
-  .cat-big-box.add-cat-box:hover { border-color: var(--acc); }
+  .cat-big-box.add-cat-box { border: 1px dashed #2A2A2A; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; min-height: 100px; }
+  .cat-big-box.add-cat-box:hover { border-color: #FFD700; }
   /* ADD CATEGORY MODAL */
   .cat-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 600; display: none; align-items: flex-end; justify-content: center; }
   .cat-modal.open { display: flex; }
-  .cat-modal-box { background: var(--card); border-radius: 20px 20px 0 0; padding: 20px 20px 40px; width: 100%; max-width: 480px; border-top: 1px solid var(--line); }
+  .cat-modal-box { background: #161616; border-radius: 20px 20px 0 0; padding: 20px 20px 40px; width: 100%; max-width: 480px; border-top: 1px solid #2A2A2A; }
   .cat-modal-title { font-size: 15px; font-weight: 800; margin-bottom: 14px; }
-  .cat-modal-input { width: 100%; padding: 11px 14px; border-radius: 12px; background: var(--in); border: 1px solid var(--line); color: var(--text); font-size: 14px; font-family: 'Outfit', sans-serif; margin-bottom: 10px; }
-  .cat-modal-input:focus { outline: none; border-color: var(--text); }
+  .cat-modal-input { width: 100%; padding: 11px 14px; border-radius: 12px; background: #101010; border: 1px solid #2A2A2A; color: #fff; font-size: 14px; font-family: 'Outfit', sans-serif; margin-bottom: 10px; }
+  .cat-modal-input:focus { outline: none; border-color: #E5E5E5; }
   .emoji-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
   .emoji-opt { font-size: 22px; cursor: pointer; padding: 4px; border-radius: 8px; border: 2px solid transparent; }
-  .emoji-opt.sel { border-color: var(--text); background: var(--card2); }
+  .emoji-opt.sel { border-color: #E5E5E5; background: #1E1E1E; }
   .cat-color-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
   .cat-color-dot { width: 26px; height: 26px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
-  .cat-color-dot.sel { border-color: var(--text); transform: scale(1.2); }
+  .cat-color-dot.sel { border-color: #fff; transform: scale(1.2); }
   /* LOG FORM */
-  .spend-log-form { background: var(--card); border-radius: 14px; padding: 14px 16px; margin-bottom: 14px; border: 1px solid var(--line); }
-  .spend-log-input { width: 100%; padding: 10px 12px; border-radius: 10px; background: var(--in); border: 1px solid var(--line); color: var(--text); font-size: 13px; font-family: 'Outfit', sans-serif; margin-bottom: 8px; box-sizing: border-box; }
-  .spend-log-input:focus { outline: none; border-color: var(--text); }
-  .spend-cat-select { width: 100%; padding: 10px 12px; border-radius: 10px; background: var(--in); border: 1px solid var(--line); color: var(--text); font-size: 13px; font-family: 'Outfit', sans-serif; margin-bottom: 8px; box-sizing: border-box; appearance: none; }
-  .spend-cat-select:focus { outline: none; border-color: var(--text); }
+  .spend-log-form { background: #161616; border-radius: 14px; padding: 14px 16px; margin-bottom: 14px; border: 1px solid #333333; }
+  .spend-log-input { width: 100%; padding: 10px 12px; border-radius: 10px; background: #101010; border: 1px solid #2A2A2A; color: #fff; font-size: 13px; font-family: 'Outfit', sans-serif; margin-bottom: 8px; box-sizing: border-box; }
+  .spend-log-input:focus { outline: none; border-color: #E5E5E5; }
+  .spend-cat-select { width: 100%; padding: 10px 12px; border-radius: 10px; background: #101010; border: 1px solid #2A2A2A; color: #fff; font-size: 13px; font-family: 'Outfit', sans-serif; margin-bottom: 8px; box-sizing: border-box; appearance: none; }
+  .spend-cat-select:focus { outline: none; border-color: #E5E5E5; }
   /* HISTORY */
-  .history-card { background: var(--card); border-radius: 14px; padding: 4px 14px; border: 1px solid var(--line); margin-bottom: 10px; }
+  .history-card { background: #161616; border-radius: 14px; padding: 4px 14px; border: 1px solid #333333; margin-bottom: 10px; }
   .spend-history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-  .empty-msg { text-align: center; color: var(--muted); font-size: 13px; padding: 20px 0; }
+  .empty-msg { text-align: center; color: #C9C9C9; font-size: 13px; padding: 20px 0; }
 
   /* SAVINGS TAB — like Debt */
-  .savings-goal-card { border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; background: var(--card); border: 1px solid var(--line); position: relative; display: flex; align-items: stretch; }
+  .savings-goal-card { border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; background: #161616; border: 1px solid #333333; position: relative; display: flex; align-items: stretch; }
   .savings-goal-card.done { background: #0D1F0D; border-color: #1E3A2A; opacity: 0.75; }
-  .savings-goal-card.drag-over { border: 2px solid var(--acc); background: #0A1220; }
-  .savings-goal-card.is-dragging { opacity: 0.35; border: 2px dashed var(--acc); }
+  .savings-goal-card.drag-over { border: 2px solid #32ADE6; background: #0A1220; }
+  .savings-goal-card.is-dragging { opacity: 0.35; border: 2px dashed #32ADE6; }
   .savings-content { flex: 1; min-width: 0; }
-  .add-savings-btn { width: 100%; padding: 13px; border-radius: 14px; background: var(--card); border: 1px dashed #32ADE666; color: var(--acc); font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; margin-bottom: 12px; }
+  .add-savings-btn { width: 100%; padding: 13px; border-radius: 14px; background: #161616; border: 1px dashed #32ADE666; color: #32ADE6; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; margin-bottom: 12px; }
 
   /* SAVINGS STREAK */
   .sav-streak-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-  .sav-streak-box { border-radius: 14px; padding: 12px 8px; border: 1px solid var(--line); text-align: center; background: var(--card); }
+  .sav-streak-box { border-radius: 14px; padding: 12px 8px; border: 1px solid #333333; text-align: center; background: #161616; }
   .sav-streak-box .ssb-icon { font-size: 22px; margin-bottom: 4px; }
   .sav-streak-box .ssb-val { font-size: 20px; font-weight: 900; }
-  .sav-streak-box .ssb-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+  .sav-streak-box .ssb-label { font-size: 10px; color: #C9C9C9; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
 
   /* SAVINGS MODAL */
   .sav-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 500; display: none; align-items: flex-end; justify-content: center; }
   .sav-modal.open { display: flex; }
-  .sav-modal-box { background: var(--card); border-radius: 20px 20px 0 0; padding: 20px 20px 40px; width: 100%; max-width: 480px; border-top: 1px solid var(--line); max-height: 80vh; overflow-y: auto; }
+  .sav-modal-box { background: #161616; border-radius: 20px 20px 0 0; padding: 20px 20px 40px; width: 100%; max-width: 480px; border-top: 1px solid #2A2A2A; max-height: 80vh; overflow-y: auto; }
 
   /* WANTS & NEEDS */
   .wn-tabs { display: flex; gap: 8px; margin-bottom: 14px; }
-  .wn-tab { flex: 1; padding: 10px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); color: var(--muted); font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; text-align: center; transition: all 0.2s; }
-  .wn-tab.active-want { background: var(--accbg); border-color: var(--acc); color: var(--acc); }
-  .wn-tab.active-need { background: #0A1A2E; border-color: var(--acc); color: var(--acc); }
+  .wn-tab { flex: 1; padding: 10px; border-radius: 12px; background: #161616; border: 1px solid #333333; color: #C9C9C9; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; text-align: center; transition: all 0.2s; }
+  .wn-tab.active-want { background: #1A0A2E; border-color: #BF5AF2; color: #BF5AF2; }
+  .wn-tab.active-need { background: #0A1A2E; border-color: #32ADE6; color: #32ADE6; }
   .wn-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-  .wn-box { background: var(--card); border-radius: 14px; padding: 12px; border: 1px solid var(--line); text-align: center; }
-  .wn-box .wn-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .wn-box { background: #161616; border-radius: 14px; padding: 12px; border: 1px solid #333333; text-align: center; }
+  .wn-box .wn-label { font-size: 10px; color: #C9C9C9; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
   .wn-box .wn-val { font-size: 17px; font-weight: 800; }
-  .wn-add-form { background: var(--card); border-radius: 14px; padding: 14px 16px; margin-bottom: 12px; border: 1px solid var(--line); }
+  .wn-add-form { background: #161616; border-radius: 14px; padding: 14px 16px; margin-bottom: 12px; border: 1px solid #333333; }
   .wn-form-row { display: flex; gap: 8px; margin-bottom: 8px; }
-  .wn-input { flex: 1; padding: 10px 12px; border-radius: 10px; background: var(--in); border: 1px solid var(--line); color: var(--text); font-size: 13px; font-family: 'Outfit', sans-serif; }
-  .wn-input:focus { outline: none; border-color: var(--acc); }
-  .wn-price-input { width: 110px; padding: 10px 12px; border-radius: 10px; background: var(--in); border: 1px solid var(--line); color: var(--text); font-size: 13px; font-family: 'Outfit', sans-serif; }
-  .wn-price-input:focus { outline: none; border-color: var(--acc); }
-  .wn-item { display: flex; align-items: center; gap: 8px; padding: 12px 14px; margin-bottom: 8px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); }
+  .wn-input { flex: 1; padding: 10px 12px; border-radius: 10px; background: #101010; border: 1px solid #2A2A2A; color: #fff; font-size: 13px; font-family: 'Outfit', sans-serif; }
+  .wn-input:focus { outline: none; border-color: #FFD700; }
+  .wn-price-input { width: 110px; padding: 10px 12px; border-radius: 10px; background: #101010; border: 1px solid #2A2A2A; color: #fff; font-size: 13px; font-family: 'Outfit', sans-serif; }
+  .wn-price-input:focus { outline: none; border-color: #FFD700; }
+  .wn-item { display: flex; align-items: center; gap: 8px; padding: 12px 14px; margin-bottom: 8px; border-radius: 12px; background: #161616; border: 1px solid #333333; }
   .wn-item.bought { background: #0D1F0D; border-color: #1E3A2A; opacity: 0.7; }
-  .wn-item-check { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--line); background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; transition: all 0.2s; }
+  .wn-item-check { width: 22px; height: 22px; border-radius: 6px; border: 2px solid #333; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; transition: all 0.2s; }
   .wn-item-check.checked { background: #30D158; border-color: #30D158; }
   .wn-item-info { flex: 1; min-width: 0; }
-  .wn-item-name { font-size: 13px; font-weight: 700; color: var(--text); }
-  .wn-item-name.bought-text { text-decoration: line-through; color: var(--muted); }
-  .wn-item-price { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .wn-item-name { font-size: 13px; font-weight: 700; color: #fff; }
+  .wn-item-name.bought-text { text-decoration: line-through; color: #C9C9C9; }
+  .wn-item-price { font-size: 11px; color: #C9C9C9; margin-top: 2px; }
   .wn-item-btns { display: flex; gap: 4px; flex-shrink: 0; }
-  .wn-btn-edit { background: var(--card2); border: 1px solid var(--line); border-radius: 8px; color: var(--acc); font-size: 12px; width: 26px; height: 26px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .wn-btn-edit { background: #1E1E1E; border: 1px solid #2A2A4E; border-radius: 8px; color: #32ADE6; font-size: 12px; width: 26px; height: 26px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
   .wn-btn-del { background: #2A1A1A; border: 1px solid #4E2A2A; border-radius: 8px; color: #FF453A; font-size: 12px; width: 26px; height: 26px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-  .wn-empty { text-align: center; color: var(--muted); font-size: 13px; padding: 20px 0; }
+  .wn-empty { text-align: center; color: #C9C9C9; font-size: 13px; padding: 20px 0; }
   .wn-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
   .wn-section-total { font-size: 12px; font-weight: 700; }
 
   /* WEEKLY */
   .week-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-  .week-nav-btn { padding: 8px 14px; border-radius: 10px; background: var(--card); border: 1px solid var(--line); color: var(--muted); font-size: 14px; cursor: pointer; font-family: 'Outfit', sans-serif; }
-  .week-label { font-size: 13px; font-weight: 700; color: var(--acc); }
+  .week-nav-btn { padding: 8px 14px; border-radius: 10px; background: #161616; border: 1px solid #333333; color: #C9C9C9; font-size: 14px; cursor: pointer; font-family: 'Outfit', sans-serif; }
+  .week-label { font-size: 13px; font-weight: 700; color: #FFD700; }
   .week-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-  .week-stat { background: var(--card); border-radius: 14px; padding: 14px 12px; border: 1px solid var(--line); text-align: center; }
-  .week-stat .ws-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .week-stat { background: #161616; border-radius: 14px; padding: 14px 12px; border: 1px solid #333333; text-align: center; }
+  .week-stat .ws-label { font-size: 10px; color: #C9C9C9; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
   .week-stat .ws-val { font-size: 20px; font-weight: 900; }
-  .week-breakdown { background: var(--card); border-radius: 14px; padding: 16px; border: 1px solid var(--line); margin-bottom: 12px; }
-  .wb-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+  .week-breakdown { background: #161616; border-radius: 14px; padding: 16px; border: 1px solid #333333; margin-bottom: 12px; }
+  .wb-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #333333; font-size: 13px; }
   .wb-row:last-child { border-bottom: none; }
-  .wb-label { color: var(--muted); }
+  .wb-label { color: #C9C9C9; }
   .status-badge { display: inline-block; padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; margin-top: 8px; }
   .badge-good{background:#0D2A0D;color:#30D158;border:1px solid #1E3A2A;}
-  .badge-warn{background:#2A1A0D;color:var(--acc);border:1px solid #3A2A1A;}
+  .badge-warn{background:#2A1A0D;color:#FF9F0A;border:1px solid #3A2A1A;}
   .badge-bad{background:#2A0D0D;color:#FF453A;border:1px solid #3A1A1A;}
   .completed-banner { text-align: center; padding: 28px; background: #0D1F0D; border-radius: 16px; border: 1px solid #30D158; margin-top: 10px; }
   /* BACKUP */
-  .backup-card { background: var(--card); border-radius: 16px; padding: 16px 18px; margin-bottom: 12px; border: 1px solid var(--line); }
-  .backup-title { font-size: 13px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
-  .backup-sub { font-size: 11px; color: var(--muted); margin-bottom: 12px; line-height: 1.5; }
+  .backup-card { background: #161616; border-radius: 16px; padding: 16px 18px; margin-bottom: 12px; border: 1px solid #333333; }
+  .backup-title { font-size: 13px; font-weight: 800; color: #E5E5E5; margin-bottom: 4px; }
+  .backup-sub { font-size: 11px; color: #C9C9C9; margin-bottom: 12px; line-height: 1.5; }
   .backup-btns { display: flex; gap: 8px; }
-  .btn-export { flex: 1; padding: 12px; border-radius: 12px; background: linear-gradient(135deg, var(--text), var(--muted)); border: none; color: var(--in); font-size: 13px; font-weight: 800; cursor: pointer; font-family: 'Outfit', sans-serif; }
-  .btn-import { flex: 1; padding: 12px; border-radius: 12px; background: var(--card2); border: 1px solid #E5E5E544; color: var(--text); font-size: 13px; font-weight: 800; cursor: pointer; font-family: 'Outfit', sans-serif; }
-  .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #30D158; color: var(--text); padding: 10px 20px; border-radius: 99px; font-size: 13px; font-weight: 700; z-index: 9999; display: none; font-family: 'Outfit', sans-serif; white-space: nowrap; }
+  .btn-export { flex: 1; padding: 12px; border-radius: 12px; background: linear-gradient(135deg, #E5E5E5, #B0B0B0); border: none; color: #0A0A0A; font-size: 13px; font-weight: 800; cursor: pointer; font-family: 'Outfit', sans-serif; }
+  .btn-import { flex: 1; padding: 12px; border-radius: 12px; background: #1E1E1E; border: 1px solid #E5E5E544; color: #E5E5E5; font-size: 13px; font-weight: 800; cursor: pointer; font-family: 'Outfit', sans-serif; }
+  .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #30D158; color: #fff; padding: 10px 20px; border-radius: 99px; font-size: 13px; font-weight: 700; z-index: 9999; display: none; font-family: 'Outfit', sans-serif; white-space: nowrap; }
   .streak-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-  .streak-box { border-radius: 14px; padding: 12px 8px; border: 1px solid var(--line); text-align: center; background: var(--card); }
+  .streak-box { border-radius: 14px; padding: 12px 8px; border: 1px solid #333333; text-align: center; background: #161616; }
   .streak-box .sb-icon { font-size: 22px; margin-bottom: 4px; }
   .streak-box .sb-val { font-size: 20px; font-weight: 900; }
-  .streak-box .sb-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
-  .custom-log-wrap { background: var(--card); border-radius: 14px; padding: 14px 16px; margin-bottom: 12px; border: 1px solid var(--line); }
-  .custom-log-title { font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 10px; }
+  .streak-box .sb-label { font-size: 10px; color: #C9C9C9; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+  .custom-log-wrap { background: #161616; border-radius: 14px; padding: 14px 16px; margin-bottom: 12px; border: 1px solid #2A2A2A; }
+  .custom-log-title { font-size: 12px; font-weight: 700; color: #C9C9C9; margin-bottom: 10px; }
   .custom-log-row { display: flex; gap: 8px; align-items: center; }
-  .custom-log-input { flex: 1; padding: 10px 12px; border-radius: 10px; background: var(--in); border: 1px solid var(--line); color: var(--text); font-size: 14px; font-family: 'Outfit', sans-serif; }
-  .custom-log-input:focus { outline: none; border-color: var(--text); }
-  .btn-log-custom { padding: 10px 16px; border-radius: 10px; background: linear-gradient(135deg,var(--text),var(--muted)); border: none; color: var(--in); font-size: 13px; font-weight: 800; cursor: pointer; font-family: 'Outfit', sans-serif; }
-  #dragGhost { position: fixed; z-index: 9998; pointer-events: none; opacity: 0.85; border: 2px solid var(--text); border-radius: 14px; background: var(--card2); padding: 12px 16px; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 700; color: var(--text); display: none; max-width: 280px; box-shadow: 0 8px 30px rgba(229,229,229,0.3); }
-:root{--bg:#000000;--card:#111317;--card2:#1A1D23;--line:#2C3038;--in:#07080A;--text:#FFFFFF;--muted:#BCC3CD;--acc:#F2C14E;--onacc:#000000;--accbg:rgba(242,193,78,.12)}
-html[data-theme="gold"]{--bg:#000000;--card:#111317;--card2:#1A1D23;--line:#2C3038;--in:#07080A;--text:#FFFFFF;--muted:#BCC3CD;--acc:#F2C14E;--onacc:#000000;--accbg:rgba(242,193,78,.13)}
-html[data-theme="blue"]{--bg:#02050B;--card:#0D1524;--card2:#15203A;--line:#26344F;--in:#050A14;--text:#FFFFFF;--muted:#B8C4D6;--acc:#4C8DFF;--onacc:#FFFFFF;--accbg:rgba(76,141,255,.13)}
-html[data-theme="silver"]{--bg:#000000;--card:#141414;--card2:#1E1E1E;--line:#333333;--in:#0A0A0A;--text:#FFFFFF;--muted:#C2C2C2;--acc:#F2F2F2;--onacc:#000000;--accbg:rgba(242,242,242,.13)}
-html[data-theme="teal"]{--bg:#010807;--card:#0D1817;--card2:#152523;--line:#24393A;--in:#050F0E;--text:#FFFFFF;--muted:#B5C9C6;--acc:#2DD4BF;--onacc:#00211D;--accbg:rgba(45,212,191,.13)}
-html[data-theme="violet"]{--bg:#04030A;--card:#120F1D;--card2:#1B1730;--line:#2E2848;--in:#08060F;--text:#FFFFFF;--muted:#C0BAD6;--acc:#A78BFA;--onacc:#120A2B;--accbg:rgba(167,139,250,.13)}
-body{background:var(--bg)!important;color:var(--text)!important;font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
-.app-header h1{background:none!important;-webkit-text-fill-color:var(--text)!important;color:var(--text)!important;font-weight:800!important}
-.app-header .sub{color:var(--muted)!important}
-.card,.goal-card,.savings-goal-card,.backup-card,.wn-item{border-radius:16px!important}
-.section-title{color:var(--muted)!important;font-size:12px!important;letter-spacing:1.4px;text-transform:uppercase}
-.label-sm,.val-muted,.goal-name{color:var(--text)!important}
-.btn-primary,.btn-modal-save{background:var(--acc)!important;color:var(--onacc)!important}
-.bar-wrap{background:var(--card2)!important}
-.bar-fill::after{display:none!important}
-.bottom-nav{background:var(--card)!important;border-top:1px solid var(--line)!important}
-.nav-btn{color:var(--muted)!important;font-size:10.5px!important;font-weight:600!important}
-.nav-btn .nav-icon svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:block}
-.nav-btn.active{color:var(--acc)!important}.nav-btn::before{background:var(--acc)!important}
-.th-pick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.th-pick button{display:flex;align-items:center;gap:10px;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-align:left}
-.th-pick button.on{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc)}
-.th-pick i{width:26px;height:26px;border-radius:8px;flex:none;border:1px solid rgba(255,255,255,.15)}
+  .custom-log-input { flex: 1; padding: 10px 12px; border-radius: 10px; background: #101010; border: 1px solid #2A2A2A; color: #fff; font-size: 14px; font-family: 'Outfit', sans-serif; }
+  .custom-log-input:focus { outline: none; border-color: #E5E5E5; }
+  .btn-log-custom { padding: 10px 16px; border-radius: 10px; background: linear-gradient(135deg,#E5E5E5,#B0B0B0); border: none; color: #0A0A0A; font-size: 13px; font-weight: 800; cursor: pointer; font-family: 'Outfit', sans-serif; }
+  #dragGhost { position: fixed; z-index: 9998; pointer-events: none; opacity: 0.85; border: 2px solid #E5E5E5; border-radius: 14px; background: #1E1E1E; padding: 12px 16px; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 700; color: #fff; display: none; max-width: 280px; box-shadow: 0 8px 30px rgba(229,229,229,0.3); }
 </style>
 </head>
 <body>
@@ -328,8 +305,8 @@ body{background:var(--bg)!important;color:var(--text)!important;font-variant-num
 <div class="sheet-wrap" id="settingsSheet" onclick="if(event.target.id==='settingsSheet')closeSettings()">
   <div class="sheet-panel">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <div style="font-size:15px;font-weight:800;color:var(--text)">⚙️ Income settings</div>
-      <button onclick="closeSettings()" style="background:none;border:none;color:var(--muted);font-size:19px;cursor:pointer">✕</button>
+      <div style="font-size:15px;font-weight:800;color:#E5E5E5">⚙️ Income settings</div>
+      <button onclick="closeSettings()" style="background:none;border:none;color:#A0A0A0;font-size:19px;cursor:pointer">✕</button>
     </div>
     <div id="settingsBody"></div>
   </div>
@@ -342,7 +319,7 @@ body{background:var(--bg)!important;color:var(--text)!important;font-variant-num
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:var(--acc);vertical-align:middle;opacity:.85">v13.7</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v13.8</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -395,7 +372,7 @@ body{background:var(--bg)!important;color:var(--text)!important;font-variant-num
     <div class="color-picker-row" id="savColorPicker"></div>
     <div class="modal-btns">
       <button class="btn-modal-cancel" onclick="closeSavModal()">Cancel</button>
-      <button class="btn-modal-save" style="background:linear-gradient(135deg,var(--acc),#0A84FF)" onclick="saveSavModal()">Save Goal</button>
+      <button class="btn-modal-save" style="background:linear-gradient(135deg,#32ADE6,#0A84FF)" onclick="saveSavModal()">Save Goal</button>
     </div>
   </div>
 </div>
@@ -405,13 +382,13 @@ body{background:var(--bg)!important;color:var(--text)!important;font-variant-num
   <div class="cat-modal-box">
     <div class="cat-modal-title">➕ New Spending Category</div>
     <input class="cat-modal-input" id="catModalName" placeholder="Category name (e.g. Airtime, Gym...)"/>
-    <div style="font-size:11px;color:var(--text);margin-bottom:6px">Pick an emoji</div>
+    <div style="font-size:11px;color:#E5E5E5;margin-bottom:6px">Pick an emoji</div>
     <div class="emoji-row" id="catModalEmojiRow"></div>
-    <div style="font-size:11px;color:var(--text);margin-bottom:6px">Pick a color</div>
+    <div style="font-size:11px;color:#E5E5E5;margin-bottom:6px">Pick a color</div>
     <div class="cat-color-row" id="catModalColorRow"></div>
     <div style="display:flex;gap:10px">
-      <button onclick="closeCatModal()" style="padding:12px 16px;border-radius:12px;background:var(--card2);border:1px solid var(--line);color:var(--text);font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif;">Cancel</button>
-      <button onclick="saveCatModal()" style="flex:1;padding:12px;border-radius:12px;background:linear-gradient(135deg,var(--text),var(--muted));border:none;color:var(--text);font-size:14px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif;">Save Category</button>
+      <button onclick="closeCatModal()" style="padding:12px 16px;border-radius:12px;background:#222;border:1px solid #333;color:#E5E5E5;font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif;">Cancel</button>
+      <button onclick="saveCatModal()" style="flex:1;padding:12px;border-radius:12px;background:linear-gradient(135deg,#E5E5E5,#B0B0B0);border:none;color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif;">Save Category</button>
     </div>
   </div>
 </div>
@@ -428,7 +405,7 @@ body{background:var(--bg)!important;color:var(--text)!important;font-variant-num
     <input class="modal-input" type="date" id="subModalDeadline"/>
     <div class="modal-btns">
       <button class="btn-modal-cancel" onclick="closeSubModal()">Cancel</button>
-      <button class="btn-modal-save" style="background:linear-gradient(135deg,var(--acc),#0A84FF)" onclick="saveSubModal()">Save</button>
+      <button class="btn-modal-save" style="background:linear-gradient(135deg,#5E5CE6,#0A84FF)" onclick="saveSubModal()">Save</button>
     </div>
   </div>
 </div>
@@ -466,7 +443,7 @@ body{background:var(--bg)!important;color:var(--text)!important;font-variant-num
     <div class="color-picker-row" id="buyColorPicker"></div>
     <div class="modal-btns">
       <button class="btn-modal-cancel" onclick="closeBuyModal()">Cancel</button>
-      <button class="btn-modal-save" style="background:linear-gradient(135deg,var(--acc),var(--acc))" onclick="saveBuyModal()">Save Buy Plan</button>
+      <button class="btn-modal-save" style="background:linear-gradient(135deg,#BF5AF2,#5E5CE6)" onclick="saveBuyModal()">Save Buy Plan</button>
     </div>
   </div>
 </div>
@@ -474,9 +451,9 @@ body{background:var(--bg)!important;color:var(--text)!important;font-variant-num
 <div class="modal-overlay" id="debtActionModal">
   <div class="modal-box">
     <div class="modal-title" id="debtActionTitle">Manage Debt</div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:14px">What would you like to do with this debt?</div>
-    <button onclick="debtActionClose()" style="width:100%;padding:14px;border-radius:12px;background:var(--card);border:1px solid #FF9F0A55;color:var(--acc);font-size:14px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif;margin-bottom:10px">⏸ Close (pause it)</button>
-    <button onclick="debtActionDelete()" style="width:100%;padding:14px;border-radius:12px;background:var(--card);border:1px solid #FF453A55;color:#FF453A;font-size:14px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif;margin-bottom:10px">🗑 Delete permanently</button>
+    <div style="font-size:12px;color:#A0A0A0;margin-bottom:14px">What would you like to do with this debt?</div>
+    <button onclick="debtActionClose()" style="width:100%;padding:14px;border-radius:12px;background:#161616;border:1px solid #FF9F0A55;color:#FF9F0A;font-size:14px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif;margin-bottom:10px">⏸ Close (pause it)</button>
+    <button onclick="debtActionDelete()" style="width:100%;padding:14px;border-radius:12px;background:#161616;border:1px solid #FF453A55;color:#FF453A;font-size:14px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif;margin-bottom:10px">🗑 Delete permanently</button>
     <button class="btn-modal-cancel" style="width:100%" onclick="closeDebtActionMenu()">Cancel</button>
   </div>
 </div>
@@ -484,7 +461,7 @@ body{background:var(--bg)!important;color:var(--text)!important;font-variant-num
 <div class="modal-overlay" id="logPickModal">
   <div class="modal-box">
     <div class="modal-title" id="logPickTitle">Log to a Plan</div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5" id="logPickSub">Tap the plan you're paying:</div>
+    <div style="font-size:12px;color:#A0A0A0;margin-bottom:12px;line-height:1.5" id="logPickSub">Tap the plan you're paying:</div>
     <div id="logPickList"></div>
     <div class="modal-btns"><button class="btn-modal-cancel" id="logPickDone" onclick="finishLogPicker()">Cancel</button></div>
   </div>
@@ -499,12 +476,12 @@ body{background:var(--bg)!important;color:var(--text)!important;font-variant-num
 <div class="page" id="page-backup"></div>
 
 <div class="bottom-nav">
-  <button class="nav-btn active" onclick="switchTab('money')" id="nav-money"><span class="nav-icon"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M16 12.5h2M3 10h18"/></svg></span>Money</button>
-  <button class="nav-btn" onclick="switchTab('debt')" id="nav-debt"><span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg></span>Plans</button>
-  <button class="nav-btn" onclick="switchTab('savings')" id="nav-savings"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></svg></span>Savings</button>
-  <button class="nav-btn" onclick="switchTab('budget')" id="nav-budget"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9h-9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/></svg></span>Budget</button>
-  <button class="nav-btn" onclick="switchTab('wn')" id="nav-wn"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg></span>Lists</button>
-  <button class="nav-btn" onclick="switchTab('backup')" id="nav-backup"><span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg></span>Settings</button>
+  <button class="nav-btn active" onclick="switchTab('money')" id="nav-money"><span class="nav-icon">💰</span>Money</button>
+  <button class="nav-btn" onclick="switchTab('debt')" id="nav-debt"><span class="nav-icon">💳</span>Plans</button>
+  <button class="nav-btn" onclick="switchTab('savings')" id="nav-savings"><span class="nav-icon">🏦</span>Savings</button>
+  <button class="nav-btn" onclick="switchTab('budget')" id="nav-budget"><span class="nav-icon">🗓️</span>Budget</button>
+  <button class="nav-btn" onclick="switchTab('wn')" id="nav-wn"><span class="nav-icon">🛍️</span>Lists</button>
+  <button class="nav-btn" onclick="switchTab('backup')" id="nav-backup"><span class="nav-icon">⚙️</span>Settings</button>
 </div>
 
 <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)"/>
@@ -727,7 +704,7 @@ function getSavStreakData(){
 
 let debtAddingId=null, debtShowLog=false, weekOffset=0;
 let modalEditId=null, selectedColor=COLORS[0];
-let savingsAddingId=null, savModalEditId=null, savSelectedColor="var(--acc)";
+let savingsAddingId=null, savModalEditId=null, savSelectedColor="#32ADE6";
 let moneyType="income", moneyFilter="all";
 
 function showToast(msg, color="#30D158"){
@@ -751,10 +728,10 @@ function potCardHTML(){
     <div style="font-size:11px;letter-spacing:1.4px;color:#6FBF8A;font-weight:800">WAITING TO BE MOVED</div>
     <div style="font-size:31px;font-weight:900;color:#30D158;letter-spacing:-1.2px;margin:4px 0 3px">GH₵ ${Math.round(wSave+wSpend).toLocaleString()}</div>
     <div style="font-size:12px;color:#7E9C88;margin-bottom:12px">GH₵ ${Math.round(wSave).toLocaleString()} into ${g?g.name:'savings'} · GH₵ ${Math.round(wSpend).toLocaleString()} stays with you</div>
-    ${waiting.map(e=>`<div style="background:var(--in);border:1px solid #1E3A28;border-radius:12px;padding:11px 12px;margin-bottom:8px">
-      <div class="row"><span style="font-size:12.5px;font-weight:700;color:var(--text)">${getSource(e.src).name}</span>
+    ${waiting.map(e=>`<div style="background:#0A0A0A;border:1px solid #1E3A28;border-radius:12px;padding:11px 12px;margin-bottom:8px">
+      <div class="row"><span style="font-size:12.5px;font-weight:700;color:#E5E5E5">${getSource(e.src).name}</span>
         <span style="font-size:13px;font-weight:800;color:#30D158">GH₵ ${Math.round(e.amount).toLocaleString()}</span></div>
-      <div class="row" style="margin-top:3px"><span style="font-size:11px;color:var(--muted)">${shortDate(e.date)}${e.note?' · '+e.note:''}</span>
+      <div class="row" style="margin-top:3px"><span style="font-size:11px;color:#8A8A8A">${shortDate(e.date)}${e.note?' · '+e.note:''}</span>
         <span style="font-size:11px;color:#7E9C88">${Math.round(e.build).toLocaleString()} save · ${Math.round(e.live).toLocaleString()} spend</span></div>
       <button onclick="movePayment('${e.id}')" style="width:100%;margin-top:9px;padding:11px;border-radius:11px;background:#30D158;border:none;color:#04220C;font-size:13px;font-weight:900;cursor:pointer;font-family:'Outfit',sans-serif">Move it</button>
     </div>`).join("")}
@@ -763,11 +740,11 @@ function potCardHTML(){
 function attentionHTML(){
   const rows=[];
   for(const side of ['debt','buy']){
-    for(const p of pPending(side)) rows.push({t:"To settle", n:p.label, a:p.amount, c:"var(--acc)", go:`switchTab('debt');setPlanSide('${side}')`});
+    for(const p of pPending(side)) rows.push({t:"To settle", n:p.label, a:p.amount, c:"#FF9F0A", go:`switchTab('debt');setPlanSide('${side}')`});
     for(const p of pActive(side)){
       const dl=p.deadline?deadlineDaysLeft(p.deadline):null;
       if(dl!==null&&dl<0) rows.push({t:`${-dl} days over`, n:p.label, a:p.amount-pPaid(side,p), c:"#FF453A", go:`switchTab('debt');setPlanSide('${side}')`});
-      else if(dl!==null&&dl<=3) rows.push({t:`${dl} days left`, n:p.label, a:p.amount-pPaid(side,p), c:"var(--acc)", go:`switchTab('debt');setPlanSide('${side}')`});
+      else if(dl!==null&&dl<=3) rows.push({t:`${dl} days left`, n:p.label, a:p.amount-pPaid(side,p), c:"#FF9F0A", go:`switchTab('debt');setPlanSide('${side}')`});
     }
   }
   for(const g of savGoals.filter(x=>!x.completed&&x.saved<x.target)){
@@ -775,9 +752,9 @@ function attentionHTML(){
     if(dl!==null&&dl<0) rows.push({t:`${-dl} days over`, n:g.name, a:g.target-g.saved, c:"#FF453A", go:"switchTab('savings')"});
   }
   if(!rows.length) return `<div class="card"><div style="text-align:center;color:#30D158;font-size:13px;font-weight:700;padding:6px 0">✓ Nothing needs you right now</div></div>`;
-  return `<div style="margin:2px 0 8px"><span class="section-title" style="color:var(--acc)">⚠️ Needs you · ${rows.length}</span></div>`+
+  return `<div style="margin:2px 0 8px"><span class="section-title" style="color:#FF9F0A">⚠️ Needs you · ${rows.length}</span></div>`+
     rows.slice(0,6).map(r=>`<div class="card" style="padding:12px 14px;cursor:pointer" onclick="${r.go}">
-      <div class="row"><span style="font-size:13px;font-weight:700;color:var(--text)">${r.n}</span><span style="font-size:13px;font-weight:800;color:${r.c}">GH₵ ${Math.round(r.a).toLocaleString()}</span></div>
+      <div class="row"><span style="font-size:13px;font-weight:700;color:#E5E5E5">${r.n}</span><span style="font-size:13px;font-weight:800;color:${r.c}">GH₵ ${Math.round(r.a).toLocaleString()}</span></div>
       <div style="font-size:11px;color:${r.c};margin-top:3px;font-weight:700">${r.t}</div>
     </div>`).join("");
 }
@@ -793,21 +770,21 @@ function paintSettings(){
   el.innerHTML=`
     <div class="row" style="margin-bottom:8px"><span class="label-sm">Default split</span><span style="color:#30D158;font-weight:800;font-size:13px">${splitPct}% save / ${100-splitPct}% spend</span></div>
     <input class="modal-input" type="number" id="splitInput" value="${splitPct}" min="0" max="100" placeholder="70"/>
-    <div style="font-size:11px;color:var(--muted);margin:-4px 0 12px;line-height:1.5">Type the save share. 70 means 70% goes into savings and 30% is yours to spend. Sources with their own split (set on Savings → 📺 Income Savings) keep theirs.</div>
-    <div class="row" style="margin-bottom:8px"><span class="label-sm">Daily target</span><span style="color:var(--acc);font-weight:800;font-size:13px">GH₵ ${dtRateToday().toLocaleString()}/day</span></div>
+    <div style="font-size:11px;color:#8A8A8A;margin:-4px 0 12px;line-height:1.5">Type the save share. 70 means 70% goes into savings and 30% is yours to spend. Sources with their own split (set on Savings → 📺 Income Savings) keep theirs.</div>
+    <div class="row" style="margin-bottom:8px"><span class="label-sm">Daily target</span><span style="color:#FFD60A;font-weight:800;font-size:13px">GH₵ ${dtRateToday().toLocaleString()}/day</span></div>
     <input class="modal-input" type="number" id="settingsRate" value="${dtRateToday()}" placeholder="200"/>
-    <div class="row" style="margin:16px 0 8px"><span class="label-sm">Income sources and savings</span><span style="font-size:11px;color:var(--muted)">${sources.length}</span></div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.5">Each payment's save share goes into its source's pot on Savings → 📺 Income Savings. Tap ✏️ to change a source.</div>
-    ${sources.map(x=>{ const tg=srcTarget(x.id); return `<div class="row" onclick="openEditPot('${x.id}')" style="cursor:pointer;padding:10px 12px;margin-bottom:6px;background:#1A1A1A;border:1px solid var(--line);border-radius:11px">
-      <span style="font-size:13px;font-weight:700;color:var(--text)">${x.name}</span>
-      <span style="font-size:11.5px;color:var(--muted)"><b style="color:var(--acc)">${srcPct(x.id)}% save</b>${tg?' · target '+fmt(tg):''} ✏️</span></div>`; }).join("")}
-    <button onclick="openNewPot()" style="width:100%;margin-top:6px;padding:11px;border-radius:11px;background:transparent;border:1px dashed #32ADE677;color:var(--acc);font-size:13px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">➕ Add Income Savings</button>
+    <div class="row" style="margin:16px 0 8px"><span class="label-sm">Income sources and savings</span><span style="font-size:11px;color:#A0A0A0">${sources.length}</span></div>
+    <div style="font-size:11px;color:#8A8A8A;margin-bottom:8px;line-height:1.5">Each payment's save share goes into its source's pot on Savings → 📺 Income Savings. Tap ✏️ to change a source.</div>
+    ${sources.map(x=>{ const tg=srcTarget(x.id); return `<div class="row" onclick="openEditPot('${x.id}')" style="cursor:pointer;padding:10px 12px;margin-bottom:6px;background:#1A1A1A;border:1px solid #2A2A2A;border-radius:11px">
+      <span style="font-size:13px;font-weight:700;color:#E5E5E5">${x.name}</span>
+      <span style="font-size:11.5px;color:#8A8A8A"><b style="color:#32ADE6">${srcPct(x.id)}% save</b>${tg?' · target '+fmt(tg):''} ✏️</span></div>`; }).join("")}
+    <button onclick="openNewPot()" style="width:100%;margin-top:6px;padding:11px;border-radius:11px;background:transparent;border:1px dashed #32ADE677;color:#32ADE6;font-size:13px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">➕ Add Income Savings</button>
     <button onclick="saveSettings()" style="width:100%;margin-top:14px;padding:12px;border-radius:12px;background:#30D158;border:none;color:#04220C;font-size:13px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">Save settings</button>`;
 }
 function addSource(){
   const el=document.getElementById("newSourceName"); const n=(el&&el.value||"").trim();
   if(!n){ showToast("Type a name first","#FF453A"); return; }
-  if(sources.some(x=>x.name.toLowerCase()===n.toLowerCase())){ showToast("That one is already there","var(--acc)"); return; }
+  if(sources.some(x=>x.name.toLowerCase()===n.toLowerCase())){ showToast("That one is already there","#FF9F0A"); return; }
   const nid=uid("usr_");
   sources.push({id:nid, name:n});
   saveSources(); paintSettings(); showToast("✅ Source added");
@@ -1079,7 +1056,7 @@ function toggleDebtLog(){
 function renderDebtLog(){
   const c=document.getElementById("debtLogEntries");
   if(!D().log.length){c.innerHTML='<div class="empty-msg">No payments yet.</div>';return;}
-  c.innerHTML=[...D().log].reverse().map(e=>`<div class="log-entry"><span style="color:var(--text)">${e.date} · ${e.label}</span><span style="color:#30D158;font-weight:700">+GH₵ ${e.amount.toLocaleString()}</span></div>`).join("");
+  c.innerHTML=[...D().log].reverse().map(e=>`<div class="log-entry"><span style="color:#E5E5E5">${e.date} · ${e.label}</span><span style="color:#30D158;font-weight:700">+GH₵ ${e.amount.toLocaleString()}</span></div>`).join("");
 }
 
 // ===== TOUCH DRAG (Debt) =====
@@ -1384,23 +1361,23 @@ function dtSaveRate(){
 }
 function dailyTargetHTML(){
   const d=dtStats();
-  const balColor=d.behind>0?"#FF453A":d.ahead>0?"#30D158":"var(--muted)";
+  const balColor=d.behind>0?"#FF453A":d.ahead>0?"#30D158":"#A0A0A0";
   const balVal=d.behind>0?`-${d.behind} Day${d.behind!==1?'s':''}`:d.ahead>0?`+${d.ahead} Day${d.ahead!==1?'s':''}`:"On track";
   const clear=dtDaysToClear();
-  return `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--card);border:1px solid #FFD70033;border-radius:12px;padding:9px 12px;margin-bottom:10px;cursor:pointer" onclick="dtOpenEdit()">
-      <span style="font-size:12px;font-weight:800;color:var(--acc);white-space:nowrap">🎯 ${d.rate.toLocaleString()}/day</span>
-      <span style="font-size:12px;color:var(--muted);white-space:nowrap">${d.todayGot.toLocaleString()} today</span>
+  return `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:#161616;border:1px solid #FFD70033;border-radius:12px;padding:9px 12px;margin-bottom:10px;cursor:pointer" onclick="dtOpenEdit()">
+      <span style="font-size:12px;font-weight:800;color:#FFD700;white-space:nowrap">🎯 ${d.rate.toLocaleString()}/day</span>
+      <span style="font-size:12px;color:#A0A0A0;white-space:nowrap">${d.todayGot.toLocaleString()} today</span>
       <span style="font-size:13px;font-weight:800;color:${balColor};white-space:nowrap">${balVal}</span>
-      <span style="font-size:12px;color:var(--text);white-space:nowrap">${clear>0?clear+"d to clear":"all clear"}</span>
+      <span style="font-size:12px;color:#E5E5E5;white-space:nowrap">${clear>0?clear+"d to clear":"all clear"}</span>
       <span style="font-size:11px;color:#6f6f6f">✏️</span>
     </div>
     <div id="dtEditWrap" style="display:none;margin-bottom:10px">
       <div style="display:flex;gap:8px">
         <input class="custom-log-input" type="number" id="dtRateInput" placeholder="New daily amount"/>
-        <button class="btn-log-custom" style="background:linear-gradient(135deg,var(--acc),var(--acc));color:#000" onclick="dtSaveRate()">Set</button>
+        <button class="btn-log-custom" style="background:linear-gradient(135deg,#FFD700,#FF9F0A);color:#000" onclick="dtSaveRate()">Set</button>
       </div>
-      <div style="font-size:11px;color:var(--muted);margin-top:6px">Applies from today. Days already counted keep their old amount.</div>
-      <button onclick="dtRestart()" style="width:100%;margin-top:8px;padding:10px;border-radius:10px;background:var(--card);border:1px solid #FF453A55;color:#FF453A;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">🔄 Restart count from today</button>
+      <div style="font-size:11px;color:#A0A0A0;margin-top:6px">Applies from today. Days already counted keep their old amount.</div>
+      <button onclick="dtRestart()" style="width:100%;margin-top:8px;padding:10px;border-radius:10px;background:#161616;border:1px solid #FF453A55;color:#FF453A;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">🔄 Restart count from today</button>
       <div style="font-size:11px;color:#6f6f6f;margin-top:5px">Clears the +/- and the streak only. Plans and payments stay.</div>
     </div>`;
 }
@@ -1558,7 +1535,7 @@ function paceFor(o, paid, total){
   const u=paceUnits(o, paid, total);
   if(u.units>0) return {text:`+${u.units} ${u.word}${u.units!==1?'s':''}`, color:'#30D158'};
   if(u.units<0){ const n=-u.units; return {text:`-${n} ${u.word}${n!==1?'s':''}`, color:'#FF453A'}; }
-  return {text:'On track', color:'var(--muted)'};
+  return {text:'On track', color:'#A0A0A0'};
 }
 // a new target date, a new amount or a new day/week choice = a new plan, so the pace restarts today
 function replanned(o, amount, deadline, freq, newPlanAmt){
@@ -1614,7 +1591,7 @@ function planItemsHTML(p){
   const its=p.items||[];
   if(its.length<2) return '';
   const open=_openItems[p.id];
-  if(!open) return `<div style="font-size:10px;color:var(--muted);margin-top:3px;cursor:pointer" onclick="toggleItems('${p.id}')">📦 ${its.map(i=>i.name).join(' · ')} (${its.length} items) ▾</div>`;
+  if(!open) return `<div style="font-size:10px;color:#8a8a8a;margin-top:3px;cursor:pointer" onclick="toggleItems('${p.id}')">📦 ${its.map(i=>i.name).join(' · ')} (${its.length} items) ▾</div>`;
   return `<div style="margin-top:5px;cursor:pointer" onclick="toggleItems('${p.id}')">
     ${its.map(i=>`<div style="display:flex;justify-content:space-between;font-size:11px;color:#C7C7C7;padding:2px 0"><span>• ${i.name}</span><span>GH₵ ${Number(i.amount||0).toLocaleString()}</span></div>`).join('')}
     <div style="font-size:10px;color:#6f6f6f;margin-top:2px">tap to close ▴</div></div>`;
@@ -1676,17 +1653,17 @@ function mergeGo(side){
 function mergeBarHTML(side){
   const picks=mergePickedPlans(side);
   const total=picks.reduce((s,p)=>s+(p.amount||0),0);
-  const c=side==='buy'?'var(--acc)':'#FF453A';
+  const c=side==='buy'?'#BF5AF2':'#FF453A';
   if(mergeMode!==side){
-    return `<button onclick="toggleMergeMode('${side}')" style="width:100%;padding:11px;border-radius:12px;background:var(--card);border:1px solid var(--line);color:var(--text);font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;margin-bottom:12px">📦 Merge ${side==='buy'?'buy plans':'debts'} into one</button>`;
+    return `<button onclick="toggleMergeMode('${side}')" style="width:100%;padding:11px;border-radius:12px;background:#161616;border:1px solid #2A2A2A;color:#E5E5E5;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;margin-bottom:12px">📦 Merge ${side==='buy'?'buy plans':'debts'} into one</button>`;
   }
   return `<div class="card" style="border-color:${c}44;margin-bottom:12px">
-    <div style="font-size:12px;color:var(--text);margin-bottom:8px">Tap the cards you want joined, then name the new one.</div>
+    <div style="font-size:12px;color:#E5E5E5;margin-bottom:8px">Tap the cards you want joined, then name the new one.</div>
     <input class="wn-input" id="mergeName" placeholder="Name it, e.g. Family Debts" style="width:100%;margin-bottom:8px"/>
     <div class="row" style="margin-bottom:10px"><span class="label-sm">${picks.length} picked</span><span style="color:${c};font-weight:800;font-size:14px">GH₵ ${total.toLocaleString()}</span></div>
     <div style="display:flex;gap:8px">
       <button onclick="toggleMergeMode('${side}')" class="btn-modal-cancel" style="padding:10px 14px;border-radius:10px">Cancel</button>
-      <button onclick="mergeGo('${side}')" style="flex:1;padding:11px;border-radius:10px;background:${c};border:none;color:var(--text);font-size:13px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">📦 Merge into one</button>
+      <button onclick="mergeGo('${side}')" style="flex:1;padding:11px;border-radius:10px;background:${c};border:none;color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">📦 Merge into one</button>
     </div>
   </div>`;
 }
@@ -1739,32 +1716,32 @@ function openLogPicker(side,amount){
 function renderLogPicker(){
   const side=logPickSide;
   const list=pickerList(side);
-  const accent=side==='buy'?'var(--acc)':side==='sav'?'var(--acc)':'#FF453A';
+  const accent=side==='buy'?'#BF5AF2':side==='sav'?'#32ADE6':'#FF453A';
   document.getElementById("logPickTitle").textContent="Share GH₵ "+logPickTotal.toLocaleString();
   const sub=document.getElementById("logPickSub");
-  if(sub) sub.innerHTML=`<b style="color:${logPickPool>0?'#30D158':'var(--muted)'};font-size:14px">GH₵ ${Math.round(logPickPool).toLocaleString()} left to share</b><br>Tap a plan to give it money. Tap as many as you like, or the same one twice.`;
+  if(sub) sub.innerHTML=`<b style="color:${logPickPool>0?'#30D158':'#A0A0A0'};font-size:14px">GH₵ ${Math.round(logPickPool).toLocaleString()} left to share</b><br>Tap a plan to give it money. Tap as many as you like, or the same one twice.`;
   document.getElementById("logPickList").innerHTML=list.map(p=>{
     const paid=side==='sav'?(p.saved||0):pPaid(side,p);
     const total=side==='sav'?p.target:p.amount;
     const step=Math.min(quickAmt(side,p), logPickPool);
     const rest=Math.min(pickerLeft(side,p), logPickPool);
-    return `<div style="background:var(--card);border:1px solid ${p.color}55;border-radius:12px;padding:12px 13px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:8px">
+    return `<div style="background:#161616;border:1px solid ${p.color}55;border-radius:12px;padding:12px 13px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:8px">
       <div style="min-width:0;flex:1"><div style="font-size:14px;font-weight:700;color:#fff">${pickerName(p)}</div>
-      <div style="font-size:11px;color:var(--muted)">GH₵ ${paid.toLocaleString()} / ${total.toLocaleString()} · ${Math.round(p.planAmt>0?p.planAmt:(p.dailyTarget||pDaily(side,p))).toLocaleString()}/${p.planFreq||'day'}</div></div>
+      <div style="font-size:11px;color:#A0A0A0">GH₵ ${paid.toLocaleString()} / ${total.toLocaleString()} · ${Math.round(p.planAmt>0?p.planAmt:(p.dailyTarget||pDaily(side,p))).toLocaleString()}/${p.planFreq||'day'}</div></div>
       <div style="display:flex;gap:6px;flex-shrink:0">
-        ${step>0?`<button onclick="logPickGive('${p.id}','step')" style="padding:8px 11px;border-radius:9px;background:${p.color};border:none;color:var(--in);font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">＋ ${Math.round(step).toLocaleString()}</button>`:''}
-        ${rest>0?`<button onclick="logPickGive('${p.id}','rest')" style="padding:8px 11px;border-radius:9px;background:var(--card);border:1px solid ${p.color};color:${p.color};font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">All ${Math.round(rest).toLocaleString()}</button>`:''}
+        ${step>0?`<button onclick="logPickGive('${p.id}','step')" style="padding:8px 11px;border-radius:9px;background:${p.color};border:none;color:#0A0A0A;font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">＋ ${Math.round(step).toLocaleString()}</button>`:''}
+        ${rest>0?`<button onclick="logPickGive('${p.id}','rest')" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid ${p.color};color:${p.color};font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">All ${Math.round(rest).toLocaleString()}</button>`:''}
       </div></div>`;
   }).join("");
   const dn=document.getElementById("logPickDone");
-  if(dn){ dn.textContent=logPickHits>0?"Done":"Cancel"; dn.style.color=logPickHits>0?'#30D158':'var(--text)'; }
+  if(dn){ dn.textContent=logPickHits>0?"Done":"Cancel"; dn.style.color=logPickHits>0?'#30D158':'#E5E5E5'; }
 }
 function logPickGive(id, mode){
   const side=logPickSide;
   const o=(side==='sav'?savGoals:pList(side)).find(x=>String(x.id)===String(id)); if(!o) return;
   const want = mode==='rest' ? logPickPool : quickAmt(side,o);
   const amt=Math.min(want, logPickPool, pickerLeft(side,o));
-  if(amt<=0){ showToast("Nothing to add there","var(--acc)"); return; }
+  if(amt<=0){ showToast("Nothing to add there","#FF9F0A"); return; }
   logPickPool=Math.max(logPickPool-amt,0); logPickHits++;
   if(side==='sav') addToSavGoal(id,amt); else logToPlan(side,id,amt);
   if(logPickPool<=0.009){ finishLogPicker(); } else { renderLogPicker(); }
@@ -1793,7 +1770,7 @@ function quickAmt(side,o){
 function quickLog(side,id){
   const o=(side==='sav'?savGoals:pList(side)).find(x=>String(x.id)===String(id)); if(!o) return;
   const a=quickAmt(side,o);
-  if(a<=0){ showToast("Nothing left to log here","var(--acc)"); return; }
+  if(a<=0){ showToast("Nothing left to log here","#FF9F0A"); return; }
   if(side==='sav') addToSavGoal(id,a); else logToPlan(side,id,a);
 }
 // countdown to the target date (like Debt): days left, or X days overdue
@@ -1837,7 +1814,7 @@ function quickDate(inputId, kind, refresh){
   else updateDebtPreview();
 }
 function quickDateRow(inputId, refresh){
-  const b=(k,t)=>`<button type="button" onclick="quickDate('${inputId}','${k}','${refresh}')" style="padding:6px 10px;border-radius:8px;background:var(--card);border:1px solid var(--line);color:var(--text);font-size:11px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">${t}</button>`;
+  const b=(k,t)=>`<button type="button" onclick="quickDate('${inputId}','${k}','${refresh}')" style="padding:6px 10px;border-radius:8px;background:#161616;border:1px solid #333;color:#E5E5E5;font-size:11px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">${t}</button>`;
   return `<div style="display:flex;gap:6px;flex-wrap:wrap;margin:-6px 0 10px">${b('w1','1 week')}${b('w2','2 weeks')}${b('eom','End of month')}${b('m1','1 month')}${b('m3','3 months')}</div>`;
 }
 function shortDate(ds){
@@ -1886,9 +1863,9 @@ function planDaysInfo(deadline, remaining, daily, anchor, amount){
   let dl;
   if(deadline){ dl=deadlineDaysLeft(deadline); }
   else { dl=Math.ceil(amount/daily)-Math.max(daysBetween(anchor,TODAY),0); }
-  if(dl===null||dl===undefined){ const n=Math.ceil(remaining/daily); return {text:`${n} day${n!==1?'s':''} left`,color:n<=3?'#FF453A':n<=10?'var(--acc)':'#30D158'}; }
+  if(dl===null||dl===undefined){ const n=Math.ceil(remaining/daily); return {text:`${n} day${n!==1?'s':''} left`,color:n<=3?'#FF453A':n<=10?'#FF9F0A':'#30D158'}; }
   if(dl<0) return {text:`${Math.abs(dl)} day${Math.abs(dl)!==1?'s':''} overdue`, color:'#FF453A'};
-  return {text:`${dl} day${dl!==1?'s':''} left`, color:dl<=3?'#FF453A':dl<=10?'var(--acc)':'#30D158'};
+  return {text:`${dl} day${dl!==1?'s':''} left`, color:dl<=3?'#FF453A':dl<=10?'#FF9F0A':'#30D158'};
 }
 // per-plan pace: +X ahead (green) / -X behind (red) / on track
 function planPaceInfo(paid, daily, anchor, amount){
@@ -1898,12 +1875,12 @@ function planPaceInfo(paid, daily, anchor, amount){
   const net=paid-expected;
   if(net>=daily-0.0001){ const d=Math.floor(net/daily+0.0001); return {text:`+${d} Day${d!==1?'s':''}`, color:'#30D158'}; }
   if(net<=-daily+0.0001){ const d=Math.ceil(-net/daily-0.0001); return {text:`-${d} Day${d!==1?'s':''}`, color:'#FF453A'}; }
-  return {text:'On track', color:'var(--muted)'};
+  return {text:'On track', color:'#A0A0A0'};
 }
 function inlineRow(color){
-  return `<input id="inlineLogInput" type="number" placeholder="Amount" style="flex:1;min-width:0;padding:9px 11px;border-radius:9px;background:var(--in);border:1px solid ${color};color:var(--text);font-size:14px;font-family:'Outfit',sans-serif"/>
-  <button onclick="confirmInlineLog()" style="padding:9px 16px;border-radius:9px;background:${color};border:none;color:var(--in);font-size:13px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">Add</button>
-  <button onclick="cancelInlineLog()" style="padding:9px 12px;border-radius:9px;background:var(--card);border:1px solid var(--line);color:var(--text);font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif">✕</button>`;
+  return `<input id="inlineLogInput" type="number" placeholder="Amount" style="flex:1;min-width:0;padding:9px 11px;border-radius:9px;background:#0A0A0A;border:1px solid ${color};color:#fff;font-size:14px;font-family:'Outfit',sans-serif"/>
+  <button onclick="confirmInlineLog()" style="padding:9px 16px;border-radius:9px;background:${color};border:none;color:#0A0A0A;font-size:13px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">Add</button>
+  <button onclick="cancelInlineLog()" style="padding:9px 12px;border-radius:9px;background:#161616;border:1px solid #333;color:#E5E5E5;font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif">✕</button>`;
 }
 function startInlineLog(side,id){ inlineLogSide=side; inlineLogId=id; if(side==='sav') renderSavings(); else renderDebt(); }
 function cancelInlineLog(){ const sd=inlineLogSide; inlineLogSide=null; inlineLogId=null; if(sd==='sav') renderSavings(); else renderDebt(); }
@@ -2084,7 +2061,7 @@ function planCardHTML(side,p){
   const done = pc.done && !(side==='buy'&&p.reopened);
   const pctW=Math.min((pc.paid/p.amount)*100,100);
   const note=side==='buy'?(p.note||""):(p.person||"");
-  const dlColor=pc.daysLeft<=3?'#FF453A':pc.daysLeft<=10?'var(--acc)':'#30D158';
+  const dlColor=pc.daysLeft<=3?'#FF453A':pc.daysLeft<=10?'#FF9F0A':'#30D158';
   const _anchor=p.planStart||TODAY;
   const _di=planDaysInfo(p.deadline, pc.rem, pc.daily, _anchor, p.amount);
   const _pi=paceFor(p, pc.paid, p.amount);
@@ -2095,13 +2072,13 @@ function planCardHTML(side,p){
   const schedLine = done?"":`GH₵ ${Math.round(_amt).toLocaleString()}/${_freq} · <b style="color:${_di.color}">${_di.text}</b>${_tgt}`;
   if(mergeMode===side && !done && !p.paused){
     const on=!!mergePicked[p.id];
-    const mc=side==='buy'?'var(--acc)':'#FF453A';
-    return `<div class="goal-card" style="border-color:${on?mc:'var(--line)'};background:${on?'var(--accbg)':'#111'};cursor:pointer" onclick="mergePick('${p.id}')">
+    const mc=side==='buy'?'#BF5AF2':'#FF453A';
+    return `<div class="goal-card" style="border-color:${on?mc:'#2A2A2A'};background:${on?'#160D16':'#111'};cursor:pointer" onclick="mergePick('${p.id}')">
       <div style="display:flex;align-items:center;gap:10px">
-        <div style="width:22px;height:22px;border-radius:7px;border:2px solid ${on?mc:'#444'};background:${on?mc:'transparent'};color:var(--text);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center">${on?'✓':''}</div>
+        <div style="width:22px;height:22px;border-radius:7px;border:2px solid ${on?mc:'#444'};background:${on?mc:'transparent'};color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center">${on?'✓':''}</div>
         <div style="flex:1;min-width:0">
           <div class="goal-name" style="color:#fff">${p.label}</div>
-          <div style="font-size:11px;color:var(--muted)">GH₵ ${pc.paid.toLocaleString()} / ${p.amount.toLocaleString()} · GH₵ ${pc.rem.toLocaleString()} left</div>
+          <div style="font-size:11px;color:#A0A0A0">GH₵ ${pc.paid.toLocaleString()} / ${p.amount.toLocaleString()} · GH₵ ${pc.rem.toLocaleString()} left</div>
         </div>
       </div>
     </div>`;
@@ -2123,17 +2100,17 @@ function planCardHTML(side,p){
         </div>
       </div>
       <div class="bar-wrap" style="margin-bottom:${done?0:8}px"><div class="bar-fill" style="width:${pctW}%;background:${done?'#30D158':p.color}"></div></div>
-      ${!done?`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:11px;color:var(--muted)">${schedLine}</span>${_pi.text?`<span style="font-size:12px;font-weight:800;color:${_pi.color}">${_pi.text}</span>`:''}</div>
+      ${!done?`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:11px;color:#A0A0A0">${schedLine}</span>${_pi.text?`<span style="font-size:12px;font-weight:800;color:${_pi.color}">${_pi.text}</span>`:''}</div>
       ${(inlineLogSide===side&&inlineLogId===p.id)?`<div style="display:flex;gap:6px;align-items:center">${inlineRow(p.color)}</div>`:`<div style="display:flex;gap:6px;flex-wrap:wrap">
-        <button onclick="startInlineLog('${side}','${p.id}')" style="flex:1;min-width:70px;padding:8px;border-radius:9px;background:${p.color};border:none;color:var(--in);font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">＋ Log</button>
-        <button onclick="${side==='buy'?`openBuyModal('${p.id}')`:`openEditModal('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:var(--card);border:1px solid var(--line);color:var(--text);font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">✏️</button>
-        <button onclick="setFocus('${side}','${p.id}')" title="Focus on this one" style="padding:8px 11px;border-radius:9px;background:${_foc?p.color+'22':'var(--card)'};border:1px solid ${_foc?p.color:'#333'};color:${_foc?p.color:'var(--muted)'};font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">🎯</button>
-        <button onclick="closePlan('${side}','${p.id}')" style="padding:8px 11px;border-radius:9px;background:var(--card);border:1px solid #FF9F0A55;color:var(--acc);font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">⏸</button>
-        <button onclick="${side==='buy'?`deleteBuyPlan('${p.id}')`:`deleteDebt('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:var(--card);border:1px solid #FF453A55;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">🗑</button>
+        <button onclick="startInlineLog('${side}','${p.id}')" style="flex:1;min-width:70px;padding:8px;border-radius:9px;background:${p.color};border:none;color:#0A0A0A;font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">＋ Log</button>
+        <button onclick="${side==='buy'?`openBuyModal('${p.id}')`:`openEditModal('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #333;color:#E5E5E5;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">✏️</button>
+        <button onclick="setFocus('${side}','${p.id}')" title="Focus on this one" style="padding:8px 11px;border-radius:9px;background:${_foc?p.color+'22':'#161616'};border:1px solid ${_foc?p.color:'#333'};color:${_foc?p.color:'#A0A0A0'};font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">🎯</button>
+        <button onclick="closePlan('${side}','${p.id}')" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #FF9F0A55;color:#FF9F0A;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">⏸</button>
+        <button onclick="${side==='buy'?`deleteBuyPlan('${p.id}')`:`deleteDebt('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #FF453A55;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">🗑</button>
       </div>`}`:`<div style="display:flex;gap:6px;margin-top:8px">
-        <button onclick="${side==='buy'?`openBuyModal('${p.id}')`:`openEditModal('${p.id}')`}" style="flex:1;padding:8px;border-radius:9px;background:var(--card);border:1px solid var(--line);color:var(--text);font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">✏️ Edit</button>
-        <button onclick="${side==='buy'?`addAgainBuy('${p.id}')`:`addAgainDebt('${p.id}')`}" style="flex:1;padding:8px;border-radius:9px;background:var(--card);border:1px solid #30D15855;color:#30D158;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">🔁 Add Again</button>
-        <button onclick="${side==='buy'?`deleteBuyPlan('${p.id}')`:`deleteDebt('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:var(--card);border:1px solid #FF453A55;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">🗑</button>
+        <button onclick="${side==='buy'?`openBuyModal('${p.id}')`:`openEditModal('${p.id}')`}" style="flex:1;padding:8px;border-radius:9px;background:#161616;border:1px solid #333;color:#E5E5E5;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">✏️ Edit</button>
+        <button onclick="${side==='buy'?`addAgainBuy('${p.id}')`:`addAgainDebt('${p.id}')`}" style="flex:1;padding:8px;border-radius:9px;background:#161616;border:1px solid #30D15855;color:#30D158;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">🔁 Add Again</button>
+        <button onclick="${side==='buy'?`deleteBuyPlan('${p.id}')`:`deleteDebt('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #FF453A55;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">🗑</button>
       </div>`}
     </div>
   </div>`;
@@ -2144,7 +2121,7 @@ function pendingCardHTML(side,p){
     <div class="goal-content">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
         <div style="flex:1;min-width:0;margin-right:8px">
-          <div class="goal-name" onclick="event.stopPropagation();openHistory({r:'${p.id}'})" style="cursor:pointer;color:var(--acc)">${p.label} <span style="font-size:11px;opacity:.55">📜</span></div>
+          <div class="goal-name" onclick="event.stopPropagation();openHistory({r:'${p.id}'})" style="cursor:pointer;color:#FF9F0A">${p.label} <span style="font-size:11px;opacity:.55">📜</span></div>
           ${(side!=='buy'&&p.person)?`<div class="goal-person">${p.person}</div>`:''}
           ${(side==='buy'&&p.note)?`<div class="goal-person">${p.note}</div>`:''}
           ${planItemsHTML(p)}
@@ -2157,14 +2134,14 @@ function pendingCardHTML(side,p){
       </div>
       <div class="bar-wrap" style="margin-bottom:8px"><div class="bar-fill" style="width:100%;background:#30D158"></div></div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <span style="font-size:11px;color:var(--muted)">Money is in${p.deadline?` · Due ${shortDate(p.deadline)}`:''}</span>
-        <span style="font-size:12px;font-weight:800;color:var(--acc)">Not settled</span>
+        <span style="font-size:11px;color:#A0A0A0">Money is in${p.deadline?` · Due ${shortDate(p.deadline)}`:''}</span>
+        <span style="font-size:12px;font-weight:800;color:#FF9F0A">Not settled</span>
       </div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <button class="settle-pulse" onclick="clearPlan('${side}','${p.id}')" style="flex:1;min-width:70px;padding:8px;border-radius:9px;background:#30D158;border:none;color:var(--in);font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">✓ Settled</button>
-        <button onclick="restartPlan('${side}','${p.id}')" title="Start a fresh round" style="padding:8px 11px;border-radius:9px;background:var(--card);border:1px solid #FF9F0A55;color:var(--acc);font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">🔄</button>
-        <button onclick="${side==='buy'?`openBuyModal('${p.id}')`:`openEditModal('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:var(--card);border:1px solid var(--line);color:var(--text);font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">✏️</button>
-        <button onclick="${side==='buy'?`deleteBuyPlan('${p.id}')`:`deleteDebt('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:var(--card);border:1px solid #FF453A55;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">🗑</button>
+        <button class="settle-pulse" onclick="clearPlan('${side}','${p.id}')" style="flex:1;min-width:70px;padding:8px;border-radius:9px;background:#30D158;border:none;color:#0A0A0A;font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">✓ Settled</button>
+        <button onclick="restartPlan('${side}','${p.id}')" title="Start a fresh round" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #FF9F0A55;color:#FF9F0A;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">🔄</button>
+        <button onclick="${side==='buy'?`openBuyModal('${p.id}')`:`openEditModal('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #333;color:#E5E5E5;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">✏️</button>
+        <button onclick="${side==='buy'?`deleteBuyPlan('${p.id}')`:`deleteDebt('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #FF453A55;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">🗑</button>
       </div>
     </div>
   </div>`;
@@ -2174,38 +2151,38 @@ function inactiveCardHTML(side,p){
   return `<div class="goal-card" style="opacity:0.7;border-color:#333">
     <div class="goal-content">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <div style="min-width:0"><div class="goal-name" onclick="event.stopPropagation();openHistory({r:'${p.id}'})" style="cursor:pointer;color:var(--muted)">⏸ ${p.label} <span style="font-size:11px;opacity:.55">📜</span></div>
-        <div style="font-size:11px;color:var(--muted)">GH₵ ${pc.paid.toLocaleString()} / ${p.amount.toLocaleString()} · paused</div></div>
+        <div style="min-width:0"><div class="goal-name" onclick="event.stopPropagation();openHistory({r:'${p.id}'})" style="cursor:pointer;color:#A0A0A0">⏸ ${p.label} <span style="font-size:11px;opacity:.55">📜</span></div>
+        <div style="font-size:11px;color:#A0A0A0">GH₵ ${pc.paid.toLocaleString()} / ${p.amount.toLocaleString()} · paused</div></div>
         <div style="display:flex;gap:6px">
-          <button onclick="askReopen('${side}','${p.id}')" style="padding:8px 12px;border-radius:9px;background:var(--card);border:1px solid #30D15855;color:#30D158;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">↩ Reopen</button>
-          <button onclick="${side==='buy'?`deleteBuyPlan('${p.id}')`:`deleteDebt('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:var(--card);border:1px solid #FF453A55;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">🗑</button>
+          <button onclick="askReopen('${side}','${p.id}')" style="padding:8px 12px;border-radius:9px;background:#161616;border:1px solid #30D15855;color:#30D158;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">↩ Reopen</button>
+          <button onclick="${side==='buy'?`deleteBuyPlan('${p.id}')`:`deleteDebt('${p.id}')`}" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #FF453A55;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">🗑</button>
         </div>
       </div>
-      ${_reopenAsk[p.id]?`<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line);width:100%;box-sizing:border-box">
-        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">Keep the GH₵ ${pc.paid.toLocaleString()} already ${side==='buy'?'saved':'paid'} and carry on, or set a new target date and start the schedule again from today?</div>
+      ${_reopenAsk[p.id]?`<div style="margin-top:10px;padding-top:10px;border-top:1px solid #2A2A2A;width:100%;box-sizing:border-box">
+        <div style="font-size:11px;color:#A0A0A0;margin-bottom:8px">Keep the GH₵ ${pc.paid.toLocaleString()} already ${side==='buy'?'saved':'paid'} and carry on, or set a new target date and start the schedule again from today?</div>
         <div style="display:flex;gap:8px;width:100%">
-          <button onclick="reopenPlan('${side}','${p.id}')" style="flex:1 1 0;min-width:0;padding:10px 4px;border-radius:10px;background:var(--card);border:1px solid #30D15855;color:#30D158;font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">▶ Continue</button>
-          <button onclick="reopenFresh('${side}','${p.id}')" style="flex:1 1 0;min-width:0;padding:10px 4px;border-radius:10px;background:${side==='buy'?'var(--acc)':'#FF453A'};border:none;color:var(--text);font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">🔄 Start fresh</button>
+          <button onclick="reopenPlan('${side}','${p.id}')" style="flex:1 1 0;min-width:0;padding:10px 4px;border-radius:10px;background:#161616;border:1px solid #30D15855;color:#30D158;font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">▶ Continue</button>
+          <button onclick="reopenFresh('${side}','${p.id}')" style="flex:1 1 0;min-width:0;padding:10px 4px;border-radius:10px;background:${side==='buy'?'#BF5AF2':'#FF453A'};border:none;color:#fff;font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">🔄 Start fresh</button>
         </div>
       </div>`:''}
     </div></div>`;
 }
 function trackerHTML(side){
   const t=sideTracker(side);
-  const accent=side==='buy'?'var(--acc)':'#FF453A';
-  const streakColor=t.streak>=7?"#30D158":t.streak>=3?"var(--acc)":"#FF453A";
-  const balColor=t.daysBehind>0?"#FF453A":t.daysAhead>0?"#30D158":"var(--text)";
+  const accent=side==='buy'?'#BF5AF2':'#FF453A';
+  const streakColor=t.streak>=7?"#30D158":t.streak>=3?"#FF9F0A":"#FF453A";
+  const balColor=t.daysBehind>0?"#FF453A":t.daysAhead>0?"#30D158":"#E5E5E5";
   const balVal=t.daysBehind>0?`-${t.daysBehind}`:t.daysAhead>0?`+${t.daysAhead}`:"0";
   const balLabel=t.daysBehind>0?"Behind":t.daysAhead>0?"Ahead":"On Track";
   const remaining=t.amt-t.paid;
   return `<div class="streak-grid">
       <div class="streak-box"><div class="sb-icon">🔥</div><div class="sb-val" style="color:${streakColor}">${t.streak}</div><div class="sb-label">Streak</div></div>
       <div class="streak-box"><div class="sb-icon">${t.daysBehind>0?"⚠️":t.daysAhead>0?"🚀":"✅"}</div><div class="sb-val" style="color:${balColor}">${balVal}</div><div class="sb-label">${balLabel}</div></div>
-      <div class="streak-box"><div class="sb-icon">📅</div><div class="sb-val" style="color:var(--text)">${t.daysPaid}</div><div class="sb-label">Days ${side==='buy'?'Saved':'Paid'}</div></div>
+      <div class="streak-box"><div class="sb-icon">📅</div><div class="sb-val" style="color:#E5E5E5">${t.daysPaid}</div><div class="sb-label">Days ${side==='buy'?'Saved':'Paid'}</div></div>
     </div>
     ${t.daysBehind>0?`<div style="background:#2A0D0D;border:1px solid #FF453A44;border-radius:14px;padding:14px 16px;margin-bottom:12px;">
       <div style="font-size:13px;font-weight:800;color:#FF453A;margin-bottom:4px">⚠️ ${t.daysBehind} payment${t.daysBehind>1?'s':''} behind!</div>
-      <div style="font-size:12px;color:var(--text)">Log GH₵ ${t.catchUp.toLocaleString()} to catch up.</div></div>`:''}
+      <div style="font-size:12px;color:#E5E5E5">Log GH₵ ${t.catchUp.toLocaleString()} to catch up.</div></div>`:''}
     ${t.daysAhead>0?`<div style="background:#0D2A0D;border:1px solid #30D15844;border-radius:14px;padding:14px 16px;margin-bottom:12px;">
       <div style="font-size:13px;font-weight:800;color:#30D158">🚀 ${t.daysAhead} payment${t.daysAhead>1?'s':''} ahead!</div></div>`:''}
     <div class="card">
@@ -2217,7 +2194,7 @@ function trackerHTML(side){
       <div class="custom-log-title">💰 Enter amount, then pick a plan to log to</div>
       <div class="custom-log-row">
         <input class="custom-log-input" type="number" id="${side==='buy'?'buyLogInput':'customLogInput'}" placeholder="Enter amount (GH₵)"/>
-        <button class="btn-log-custom" style="background:linear-gradient(135deg,${accent},var(--acc));color:#fff" onclick="logMore('${side}')">Log</button>
+        <button class="btn-log-custom" style="background:linear-gradient(135deg,${accent},#5E5CE6);color:#fff" onclick="logMore('${side}')">Log</button>
       </div>
     </div>`:''}`;
 }
@@ -2227,10 +2204,10 @@ function renderPlanSide(side){
   let active=pActive(side); const inactive=pInactive(side), done=pDone(side);
   active=[...active.filter(p=>p.focus), ...active.filter(p=>!p.focus)];
   const isBuy=side==='buy';
-  const accent=isBuy?'var(--acc)':'#FF453A';
+  const accent=isBuy?'#BF5AF2':'#FF453A';
   const toggle=`<div style="display:flex;gap:8px;margin:10px 0 14px">
-    <button onclick="setPlanSide('buy')" style="flex:1;padding:13px;border-radius:14px;border:1.5px solid ${planSide==='buy'?'var(--acc)':'var(--line)'};background:${planSide==='buy'?'var(--accbg)':'var(--card)'};color:${planSide==='buy'?'var(--acc)':'var(--text)'};font-size:14px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">🛒 Buy</button>
-    <button onclick="setPlanSide('debt')" style="flex:1;padding:13px;border-radius:14px;border:1.5px solid ${planSide==='debt'?'#FF453A':'var(--line)'};background:${planSide==='debt'?'#2A0D0D':'var(--card)'};color:${planSide==='debt'?'#FF453A':'var(--text)'};font-size:14px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">💳 Debt</button>
+    <button onclick="setPlanSide('buy')" style="flex:1;padding:13px;border-radius:14px;border:1.5px solid ${planSide==='buy'?'#BF5AF2':'#333333'};background:${planSide==='buy'?'#1A0A2E':'#161616'};color:${planSide==='buy'?'#BF5AF2':'#E5E5E5'};font-size:14px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">🛒 Buy</button>
+    <button onclick="setPlanSide('debt')" style="flex:1;padding:13px;border-radius:14px;border:1.5px solid ${planSide==='debt'?'#FF453A':'#333333'};background:${planSide==='debt'?'#2A0D0D':'#161616'};color:${planSide==='debt'?'#FF453A':'#E5E5E5'};font-size:14px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">💳 Debt</button>
     </div>`;
   let html=trackerHTML(side)+mergeBarHTML(side);
   html+=`<button class="add-debt-btn" style="border-color:${accent}66;color:${accent}" onclick="${isBuy?'openBuyModal()':'openAddModal()'}">${isBuy?'➕ Add Buy Plan':'➕ Add New Debt'}</button>`;
@@ -2241,15 +2218,15 @@ function renderPlanSide(side){
   if(pend.length){
     const pTot=pend.reduce((x,p)=>x+(p.amount||0),0);
     html+=`<div class="wn-section-header" style="margin-top:22px">
-      <span class="section-title" style="margin-bottom:0;color:var(--acc)">⏳ To Settle · ${pend.length}</span>
-      <span class="wn-section-total" style="color:var(--acc)">GH₵ ${pTot.toLocaleString()}</span>
+      <span class="section-title" style="margin-bottom:0;color:#FF9F0A">⏳ To Settle · ${pend.length}</span>
+      <span class="wn-section-total" style="color:#FF9F0A">GH₵ ${pTot.toLocaleString()}</span>
     </div>`+pend.map(pp=>pendingCardHTML(side,pp)).join("");
   }
   if(inactive.length){
     const iOwed=inactive.reduce((x,p)=>x+Math.max((p.amount||0)-pPaid(side,p),0),0);
     html+=`<div class="wn-section-header" style="margin-top:22px">
-      <span class="section-title" style="margin-bottom:0;color:var(--muted)">⏸ Inactive · ${inactive.length} paused</span>
-      <span class="wn-section-total" style="color:var(--acc)">GH₵ ${iOwed.toLocaleString()} still owed</span>
+      <span class="section-title" style="margin-bottom:0;color:#A0A0A0">⏸ Inactive · ${inactive.length} paused</span>
+      <span class="wn-section-total" style="color:#FF9F0A">GH₵ ${iOwed.toLocaleString()} still owed</span>
     </div>`+inactive.map(pp=>inactiveCardHTML(side,pp)).join(""); }
   if(done.length){
     const dTot=done.reduce((x,p)=>x+(p.amount||0),0);
@@ -2331,8 +2308,8 @@ function wnCombineGo(){
 function wnItemHTML(item){
   if(wnCombineMode && !item.bought && !item.pendingBuy){
     const on=!!wnPicked[item.id];
-    return `<div class="wn-item" style="border-color:${on?'var(--acc)':'var(--line)'};background:${on?'var(--accbg)':'#111'}" onclick="wnPick('${item.id}')">
-      <button class="wn-item-check ${on?'checked':''}" style="${on?'background:var(--acc);border-color:var(--acc)':''}">${on?'✓':''}</button>
+    return `<div class="wn-item" style="border-color:${on?'#BF5AF2':'#2A2A2A'};background:${on?'#1A0A2E':'#111'}" onclick="wnPick('${item.id}')">
+      <button class="wn-item-check ${on?'checked':''}" style="${on?'background:#BF5AF2;border-color:#BF5AF2':''}">${on?'✓':''}</button>
       <div class="wn-item-info">
         <div class="wn-item-name">${item.name}</div>
         <div class="wn-item-price">GH₵ ${(item.price||0).toLocaleString()}</div>
@@ -2344,10 +2321,10 @@ function wnItemHTML(item){
     <div class="wn-item-info">
       <div class="wn-item-name ${item.bought?'bought-text':''}">${item.name}</div>
       ${item.price>0?`<div class="wn-item-price">GH₵ ${item.price.toLocaleString()}</div>`:'<div class="wn-item-price" style="color:#444">No price set</div>'}
-      ${(item.pendingBuy&&!item.bought)?`<div style="font-size:10px;font-weight:800;color:var(--acc);margin-top:2px">⏳ Pending Buy</div>`:''}
+      ${(item.pendingBuy&&!item.bought)?`<div style="font-size:10px;font-weight:800;color:#BF5AF2;margin-top:2px">⏳ Pending Buy</div>`:''}
     </div>
     <div class="wn-item-btns">
-      ${item.price>0&&!item.bought&&!item.pendingBuy?`<button class="wn-btn-edit" title="Add to Buy Plan" style="color:var(--acc);border-color:#BF5AF255" onclick="addToBuyFromListById('${item.id}')">🛒</button>`:''}
+      ${item.price>0&&!item.bought&&!item.pendingBuy?`<button class="wn-btn-edit" title="Add to Buy Plan" style="color:#BF5AF2;border-color:#BF5AF255" onclick="addToBuyFromListById('${item.id}')">🛒</button>`:''}
       <button class="wn-btn-edit" onclick="wnOpenEdit('${item.id}')">✏️</button>
       <button class="wn-btn-del" onclick="wnDelete('${item.id}')">🗑</button>
     </div>
@@ -2357,36 +2334,36 @@ function renderWN(){
   const wants=wnData.wants,needs=wnData.needs;
   const wTotal=WNtotal(wants),nTotal=WNtotal(needs);
   const list=wnTab==="wants"?wants:needs;
-  const color=wnTab==="wants"?"var(--acc)":"var(--acc)";
+  const color=wnTab==="wants"?"#BF5AF2":"#32ADE6";
   const label=wnTab==="wants"?"Wants 🛍️":"Needs 📌";
   document.getElementById("page-wn").innerHTML=`
     <div style="margin-top:10px">
     <div class="wn-summary">
-      <div class="wn-box"><div class="wn-label">🛍️ Wants Total</div><div class="wn-val" style="color:var(--acc)">GH₵ ${wTotal.toLocaleString()}</div><div style="font-size:10px;color:var(--text);margin-top:2px">${wants.length} item${wants.length!==1?'s':''}</div></div>
-      <div class="wn-box"><div class="wn-label">📌 Needs Total</div><div class="wn-val" style="color:var(--acc)">GH₵ ${nTotal.toLocaleString()}</div><div style="font-size:10px;color:var(--text);margin-top:2px">${needs.length} item${needs.length!==1?'s':''}</div></div>
+      <div class="wn-box"><div class="wn-label">🛍️ Wants Total</div><div class="wn-val" style="color:#BF5AF2">GH₵ ${wTotal.toLocaleString()}</div><div style="font-size:10px;color:#E5E5E5;margin-top:2px">${wants.length} item${wants.length!==1?'s':''}</div></div>
+      <div class="wn-box"><div class="wn-label">📌 Needs Total</div><div class="wn-val" style="color:#32ADE6">GH₵ ${nTotal.toLocaleString()}</div><div style="font-size:10px;color:#E5E5E5;margin-top:2px">${needs.length} item${needs.length!==1?'s':''}</div></div>
     </div>
     <div class="wn-tabs">
       <button class="wn-tab ${wnTab==='wants'?'active-want':''}" onclick="wnSetTab('wants')">🛍️ Wants</button>
       <button class="wn-tab ${wnTab==='needs'?'active-need':''}" onclick="wnSetTab('needs')">📌 Needs</button>
     </div>
     <div class="wn-add-form" id="wnAddForm" style="display:none">
-      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px">${wnEditId?'✏️ Edit':'➕ Add'} ${label}</div>
+      <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:10px">${wnEditId?'✏️ Edit':'➕ Add'} ${label}</div>
       <div class="wn-form-row">
         <input class="wn-input" id="wnItemName" placeholder="Item name"/>
         <input class="wn-price-input" type="number" id="wnItemPrice" placeholder="Price (GH₵)"/>
       </div>
       <div style="display:flex;gap:8px">
         <button onclick="wnCancel()" class="btn-modal-cancel" style="padding:10px 14px;border-radius:10px">Cancel</button>
-        <button onclick="wnSave()" style="flex:1;padding:10px;border-radius:10px;background:linear-gradient(135deg,${color},${color}aa);border:none;color:var(--text);font-size:13px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">Save</button>
+        <button onclick="wnSave()" style="flex:1;padding:10px;border-radius:10px;background:linear-gradient(135deg,${color},${color}aa);border:none;color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">Save</button>
       </div>
     </div>
-    <button onclick="wnOpenAdd()" style="width:100%;padding:12px;border-radius:12px;background:var(--card);border:1px dashed ${color}66;color:${color};font-size:13px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;margin-bottom:8px">➕ Add to ${label}</button>
-    <button onclick="wnToggleCombine()" style="width:100%;padding:11px;border-radius:12px;background:${wnCombineMode?'var(--accbg)':'var(--card)'};border:1px solid ${wnCombineMode?'var(--acc)':'var(--line)'};color:${wnCombineMode?'var(--acc)':'var(--text)'};font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;margin-bottom:12px">${wnCombineMode?'✕ Cancel combining':'📦 Combine items into one Buy plan'}</button>
+    <button onclick="wnOpenAdd()" style="width:100%;padding:12px;border-radius:12px;background:#161616;border:1px dashed ${color}66;color:${color};font-size:13px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;margin-bottom:8px">➕ Add to ${label}</button>
+    <button onclick="wnToggleCombine()" style="width:100%;padding:11px;border-radius:12px;background:${wnCombineMode?'#1A0A2E':'#161616'};border:1px solid ${wnCombineMode?'#BF5AF2':'#2A2A2A'};color:${wnCombineMode?'#BF5AF2':'#E5E5E5'};font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;margin-bottom:12px">${wnCombineMode?'✕ Cancel combining':'📦 Combine items into one Buy plan'}</button>
     ${wnCombineMode?`<div class="card" style="border-color:#BF5AF244;margin-bottom:12px">
-      <div style="font-size:12px;color:var(--text);margin-bottom:8px">Tap the items you want together, then name the plan.</div>
+      <div style="font-size:12px;color:#E5E5E5;margin-bottom:8px">Tap the items you want together, then name the plan.</div>
       <input class="wn-input" id="wnCombineName" placeholder="Name it, e.g. Weekend Shopping" style="width:100%;margin-bottom:8px"/>
-      <div class="row" style="margin-bottom:10px"><span class="label-sm">${wnPickedItems().length} picked</span><span style="color:var(--acc);font-weight:800;font-size:14px">GH₵ ${wnCombineTotal().toLocaleString()}</span></div>
-      <button onclick="wnCombineGo()" style="width:100%;padding:11px;border-radius:10px;background:linear-gradient(135deg,var(--acc),#8E44AD);border:none;color:var(--text);font-size:13px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">🛒 Combine into one Buy plan</button>
+      <div class="row" style="margin-bottom:10px"><span class="label-sm">${wnPickedItems().length} picked</span><span style="color:#BF5AF2;font-weight:800;font-size:14px">GH₵ ${wnCombineTotal().toLocaleString()}</span></div>
+      <button onclick="wnCombineGo()" style="width:100%;padding:11px;border-radius:10px;background:linear-gradient(135deg,#BF5AF2,#8E44AD);border:none;color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">🛒 Combine into one Buy plan</button>
     </div>`:''}
     <div class="wn-section-header">
       <span class="section-title" style="margin-bottom:0;color:${color}">${label} — To Buy</span>
@@ -2403,7 +2380,7 @@ function renderWN(){
         <span class="wn-section-total" style="color:#30D158">GH₵ ${WNtotal(bought).toLocaleString()}</span>
       </div>
       ${bought.map(item=>wnItemHTML(item)).join("")}
-      <button onclick="wnClearBought()" style="width:100%;margin-top:8px;padding:10px;border-radius:10px;background:var(--card);border:1px solid var(--line);color:var(--text);font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">🗑 Clear bought record</button>`;
+      <button onclick="wnClearBought()" style="width:100%;margin-top:8px;padding:10px;border-radius:10px;background:#161616;border:1px solid #2A2A2A;color:#E5E5E5;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">🗑 Clear bought record</button>`;
     })()}
     </div>`;
 }
@@ -2413,19 +2390,19 @@ const SPEND_KEY="pfhub_spend_v1";
 const SPEND_CATS_KEY="pfhub_spend_cats_v1";
 const DEFAULT_CATS=[
   {id:"debt",   label:"Debt Paid",    icon:"💳",color:"#FF453A",fixed:true},
-  {id:"sav",    label:"Savings",      icon:"🏦",color:"var(--acc)",fixed:true},
-  {id:"buy",    label:"Buy Plans",    icon:"🛒",color:"var(--acc)",fixed:true},
-  {id:"wants",  label:"Wants",        icon:"🛍️",color:"var(--acc)",fixed:true},
-  {id:"needs",  label:"Needs",        icon:"📌",color:"var(--acc)",fixed:true},
-  {id:"cat_1777886325794",label:"Betting",icon:"&#x1F3B2;",color:"var(--acc)",fixed:false},
-  {id:"food",   label:"Food",         icon:"🍔",color:"var(--acc)",fixed:false},
+  {id:"sav",    label:"Savings",      icon:"🏦",color:"#32ADE6",fixed:true},
+  {id:"buy",    label:"Buy Plans",    icon:"🛒",color:"#BF5AF2",fixed:true},
+  {id:"wants",  label:"Wants",        icon:"🛍️",color:"#BF5AF2",fixed:true},
+  {id:"needs",  label:"Needs",        icon:"📌",color:"#32ADE6",fixed:true},
+  {id:"cat_1777886325794",label:"Betting",icon:"&#x1F3B2;",color:"#FF375F",fixed:false},
+  {id:"food",   label:"Food",         icon:"🍔",color:"#FF9F0A",fixed:false},
   {id:"airtime",label:"Airtime",      icon:"📞",color:"#30D158",fixed:false},
   {id:"bundles",label:"Bundles/Data", icon:"📶",color:"#30D158",fixed:false},
-  {id:"transport",label:"Transport",  icon:"🚗",color:"var(--acc)",fixed:false},
-  {id:"personal",label:"Personal",    icon:"👤",color:"var(--acc)",fixed:false},
+  {id:"transport",label:"Transport",  icon:"🚗",color:"#32ADE6",fixed:false},
+  {id:"personal",label:"Personal",    icon:"👤",color:"#BF5AF2",fixed:false},
   {id:"bills",  label:"Bills",        icon:"💡",color:"#FFE033",fixed:false},
-  {id:"subs",   label:"Subscriptions",icon:"🔁",color:"var(--acc)",fixed:false},
-  {id:"other",  label:"Other",        icon:"💸",color:"var(--acc)",fixed:false},
+  {id:"subs",   label:"Subscriptions",icon:"🔁",color:"#5E5CE6",fixed:false},
+  {id:"other",  label:"Other",        icon:"💸",color:"#FF6B35",fixed:false},
 ];
 const EMOJIS=["💸","🍔","📞","📶","🚗","👤","💡","🎮","🏥","🏠","👗","💈","🎵","📚","🍕","🛒","💊","✈️","🎁","🐟"];
 const CAT_COLORS=["#FF453A","#FF6B35","#FF9F0A","#FFD700","#30D158","#32ADE6","#5E5CE6","#BF5AF2","#FF375F","#30D158"];
@@ -2453,7 +2430,7 @@ function loadSpend(){ try{const r=localStorage.getItem(SPEND_KEY);if(r)return JS
 function saveSpend(){ localStorage.setItem(SPEND_KEY,JSON.stringify(spendData)); }
 let spendData=loadSpend();
 let spendPeriod="week";
-let catModalSelEmoji="💸", catModalSelColor="var(--acc)";
+let catModalSelEmoji="💸", catModalSelColor="#FF6B35";
 
 function getWeekRange(){ const now=new Date(),day=now.getDay(); const monday=new Date(now); monday.setDate(now.getDate()-((day+6)%7)); const sunday=new Date(monday); sunday.setDate(monday.getDate()+6); return{start:monday.toISOString().split("T")[0],end:sunday.toISOString().split("T")[0]}; }
 function getMonthRange(){ const now=new Date(); return{start:new Date(now.getFullYear(),now.getMonth(),1).toISOString().split("T")[0],end:new Date(now.getFullYear(),now.getMonth()+1,0).toISOString().split("T")[0]}; }
@@ -2489,9 +2466,9 @@ function getPeriodEntries(){
   return all.filter(e=>e.date>=range.start&&e.date<=range.end);
 }
 function catTotal(catId,entries){ return entries.filter(e=>e.cat===catId).reduce((s,e)=>s+e.amount,0); }
-function getCat(id){ return spendCats.find(c=>c.id===id)||{label:"Other",icon:"💸",color:"var(--acc)",fixed:false}; }
+function getCat(id){ return spendCats.find(c=>c.id===id)||{label:"Other",icon:"💸",color:"#FF6B35",fixed:false}; }
 
-function openCatModal(){ catModalSelEmoji="💸"; catModalSelColor="var(--acc)"; document.getElementById("catModal").classList.add("open"); buildCatModalUI(); }
+function openCatModal(){ catModalSelEmoji="💸"; catModalSelColor="#FF6B35"; document.getElementById("catModal").classList.add("open"); buildCatModalUI(); }
 function closeCatModal(){ document.getElementById("catModal").classList.remove("open"); }
 function buildCatModalUI(){
   document.getElementById("catModalEmojiRow").innerHTML=EMOJIS.map(e=>`<span class="emoji-opt ${e===catModalSelEmoji?'sel':''}" onclick="selCatEmoji('${e}')">${e}</span>`).join("");
@@ -2543,7 +2520,7 @@ const PERIOD_OPTIONS=[
   {id:"year",label:"📆 This Year"},
   {id:"lifetime",label:"♾️ Lifetime"}
 ];
-function periodSelectHTML(value,handler,accent="var(--line)"){
+function periodSelectHTML(value,handler,accent="#333333"){
   return `<div class="period-select-wrap" style="--period-accent:${accent}">
     <select class="period-select" aria-label="Select time period" onchange="${handler}(this.value)">
       ${PERIOD_OPTIONS.map(o=>`<option value="${o.id}" ${value===o.id?'selected':''}>${o.label}</option>`).join("")}
@@ -2561,13 +2538,13 @@ function setISavPeriod(value){
   renderSavings();
 }
 function periodBarHTML(){
-  return periodSelectHTML(spendPeriod,"setSpendPeriod","var(--line)");
+  return periodSelectHTML(spendPeriod,"setSpendPeriod","#333333");
 }
 let moneySide="spend";
 function setMoneySide(x){ moneySide=x; renderMoney(); }
 function moneyToggleHTML(){
-  const b=(id,lab,col)=>`<button onclick="setMoneySide('${id}')" style="flex:1;padding:11px 6px;border:none;border-radius:11px;background:${moneySide===id?col:'transparent'};color:${moneySide===id?'var(--in)':'var(--muted)'};font-size:13px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">${lab}</button>`;
-  return `<div style="display:flex;gap:4px;padding:4px;background:var(--card);border:1px solid var(--line);border-radius:14px;margin:2px 0 14px">${b('income','Income','#30D158')}${b('spend','Spending','var(--acc)')}</div>`;
+  const b=(id,lab,col)=>`<button onclick="setMoneySide('${id}')" style="flex:1;padding:11px 6px;border:none;border-radius:11px;background:${moneySide===id?col:'transparent'};color:${moneySide===id?'#0A0A0A':'#9A9A9A'};font-size:13px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">${lab}</button>`;
+  return `<div style="display:flex;gap:4px;padding:4px;background:#161616;border:1px solid #2A2A2A;border-radius:14px;margin:2px 0 14px">${b('income','Income','#30D158')}${b('spend','Spending','#FF9F0A')}</div>`;
 }
 function incomeSourceTotals(from,to){
   const m={};
@@ -2592,9 +2569,9 @@ function renderIncome(){
   document.getElementById("page-money").innerHTML=
     moneyToggleHTML()+potCardHTML()+periodBarHTML()+
     `<div class="card" style="border-color:#30D15844">
-      <div style="font-size:11px;color:var(--muted);font-weight:700">Money in · ${label.toLowerCase()}</div>
+      <div style="font-size:11px;color:#8A8A8A;font-weight:700">Money in · ${label.toLowerCase()}</div>
       <div style="font-size:31px;font-weight:900;color:#30D158;margin:4px 0 2px;letter-spacing:-1px">GH₵ ${Math.round(inTot).toLocaleString()}</div>
-      <div style="font-size:12px;color:var(--muted)">${list.length} payment${list.length!==1?'s':''} received</div>
+      <div style="font-size:12px;color:#8A8A8A">${list.length} payment${list.length!==1?'s':''} received</div>
       ${inTot>0?`<div style="display:flex;gap:9px;margin-top:13px">
         <div style="flex:1;background:#0F1A12;border:1px solid #30D15833;border-radius:12px;padding:10px">
           <div style="font-size:10px;color:#6FBF8A;font-weight:700;letter-spacing:.6px">SAVED</div>
@@ -2602,12 +2579,12 @@ function renderIncome(){
         </div>
         <div style="flex:1;background:#1A170A;border:1px solid #FFD60A33;border-radius:12px;padding:10px">
           <div style="font-size:10px;color:#C9B87A;font-weight:700;letter-spacing:.6px">SPEND</div>
-          <div style="font-size:16px;font-weight:800;color:var(--acc);margin-top:2px">GH₵ ${Math.round(list.reduce((a,e)=>a+(e.live||0),0)).toLocaleString()}</div>
+          <div style="font-size:16px;font-weight:800;color:#FFD60A;margin-top:2px">GH₵ ${Math.round(list.reduce((a,e)=>a+(e.live||0),0)).toLocaleString()}</div>
         </div>
       </div>`:''}
     </div>
     <div class="card" style="border-color:#30D15833">
-      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px">Add money you received</div>
+      <div style="font-size:13px;font-weight:700;color:#E5E5E5;margin-bottom:10px">Add money you received</div>
       <input class="modal-input" type="number" id="incAmt" placeholder="Amount (GH₵)"/>
       <select class="modal-input" id="incSrc" onchange="incSrcHint()">${sources.map(x=>`<option value="${x.id}">${x.name}</option>`).join("")}</select>
       <div id="incSrcHint" style="font-size:11px;color:#6FBF8A;margin:-4px 0 10px">${srcPct(sources[0]?sources[0].id:"src_oth")}% goes into ${sources[0]?sources[0].name:"Other"}'s savings pot</div>
@@ -2616,17 +2593,17 @@ function renderIncome(){
       <button onclick="saveIncomeEntry()" style="width:100%;padding:12px;border-radius:12px;background:#30D158;border:none;color:#04220C;font-size:13px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">Add it</button>
 
     </div>
-    ${rows.length?`<div style="margin:18px 0 8px"><span class="section-title" style="color:var(--text)">History</span></div>`+
+    ${rows.length?`<div style="margin:18px 0 8px"><span class="section-title" style="color:#E5E5E5">History</span></div>`+
       rows.map(r=>{
         const open=!!_openSrc[r.src.id];
         const mine=incomeData.entries.filter(e=>String(e.src)===String(r.src.id)&&inRange(e.date,from,to));
-        return `<div class="card" style="padding:13px 15px;cursor:pointer;border-color:${open?'#30D15866':'var(--line)'}" onclick="toggleSrc('${r.src.id}')">
-        <div class="row"><span style="font-size:13.5px;font-weight:700;color:var(--text)">${r.src.name}</span>
+        return `<div class="card" style="padding:13px 15px;cursor:pointer;border-color:${open?'#30D15866':'#2A2A2A'}" onclick="toggleSrc('${r.src.id}')">
+        <div class="row"><span style="font-size:13.5px;font-weight:700;color:#E5E5E5">${r.src.name}</span>
           <span style="font-size:14px;font-weight:800;color:#30D158">GH₵ ${Math.round(r.total).toLocaleString()}</span></div>
-        <div class="row" style="margin-top:4px"><span style="font-size:11px;color:var(--muted)">${r.count} payment${r.count!==1?'s':''} · last ${shortDate(r.last)}</span>
+        <div class="row" style="margin-top:4px"><span style="font-size:11px;color:#8A8A8A">${r.count} payment${r.count!==1?'s':''} · last ${shortDate(r.last)}</span>
           <span style="font-size:11px;color:#30D158;font-weight:700">${open?'hide':'see all'}</span></div>
-        ${open?`<div style="margin-top:10px;padding-top:9px;border-top:1px solid var(--line)">${mine.slice().sort((x,y)=>(x.date<y.date?1:-1)).map((e,idx)=>`<div style="padding:7px 0;border-bottom:1px solid #1C1C1C">
-            <div class="row"><span style="font-size:12px;font-weight:700;color:var(--text)">Payment ${mine.length-idx} · ${shortDate(e.date)}</span>
+        ${open?`<div style="margin-top:10px;padding-top:9px;border-top:1px solid #2A2A2A">${mine.slice().sort((x,y)=>(x.date<y.date?1:-1)).map((e,idx)=>`<div style="padding:7px 0;border-bottom:1px solid #1C1C1C">
+            <div class="row"><span style="font-size:12px;font-weight:700;color:#E5E5E5">Payment ${mine.length-idx} · ${shortDate(e.date)}</span>
               <span style="font-size:13px;font-weight:800;color:#30D158">GH₵ ${Math.round(e.amount).toLocaleString()}<b onclick="event.stopPropagation();deleteIncome('${e.id}')" style="color:#FF453A;cursor:pointer;margin-left:8px;font-weight:400">🗑</b></span></div>
             <div style="font-size:10.5px;color:#7A7A7A;margin-top:1px">saved ${Math.round(e.build).toLocaleString()} · spend ${Math.round(e.live).toLocaleString()}${e.note?' · '+e.note:''}</div>
           </div>`).join("")}</div>`:''}
@@ -2634,7 +2611,7 @@ function renderIncome(){
     `;
 }
 function settingsButtonHTML(){
-  return `<button onclick="openSettings()" style="width:100%;margin:18px 0 6px;padding:13px;border-radius:13px;background:var(--card);border:1px solid var(--line);color:var(--text);font-size:13px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">⚙️ Income settings</button>`;
+  return `<button onclick="openSettings()" style="width:100%;margin:18px 0 6px;padding:13px;border-radius:13px;background:#161616;border:1px solid #333333;color:#E5E5E5;font-size:13px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">⚙️ Income settings</button>`;
 }
 let _openSrc={};
 function toggleSrc(id){ _openSrc[id]=!_openSrc[id]; renderMoney(); }
@@ -2659,7 +2636,7 @@ function renderSpendMoney(){
   const periodLabel=periodLabels[spendPeriod]||"This Week";
   const manualCats=spendCats.filter(c=>!c.fixed);
   const isViewOnly=spendPeriod==="year"||spendPeriod==="lifetime";
-  const accentColor=isViewOnly?"var(--acc)":"var(--acc)";
+  const accentColor=isViewOnly?"#5E5CE6":"#FF6B35";
 
   document.getElementById("page-money").innerHTML=moneyToggleHTML()+`
     <div style="margin-top:10px">
@@ -2673,9 +2650,9 @@ function renderSpendMoney(){
       ${(function(){
         const boxes=[
           {icon:'💳',label:'Debt Paid',color:'#FF453A',amt:catTotal('debt',all)+arch.debt},
-          {icon:'🏦',label:'Savings',color:'var(--acc)',amt:catTotal('sav',all)+arch.sav},
-          {icon:'🛍️',label:'Lists',color:'var(--acc)',amt:catTotal('wants',all)+catTotal('needs',all)+catTotal('buy',all)+arch.wants+arch.needs},
-          {icon:'🗓️',label:'Budget',color:'var(--acc)',amt:all.filter(e=>!['debt','sav','wants','needs','buy'].includes(e.cat)).reduce((s,e)=>s+e.amount,0)+arch.budget}
+          {icon:'🏦',label:'Savings',color:'#32ADE6',amt:catTotal('sav',all)+arch.sav},
+          {icon:'🛍️',label:'Lists',color:'#BF5AF2',amt:catTotal('wants',all)+catTotal('needs',all)+catTotal('buy',all)+arch.wants+arch.needs},
+          {icon:'🗓️',label:'Budget',color:'#FF6B35',amt:all.filter(e=>!['debt','sav','wants','needs','buy'].includes(e.cat)).reduce((s,e)=>s+e.amount,0)+arch.budget}
         ];
         return boxes.map(b=>`<div class="cat-big-box" style="border-color:${b.color}22">
           <div class="cbb-icon">${b.icon}</div>
@@ -2707,9 +2684,9 @@ function renderSpendMoney(){
         </div>
       </div>`;
     }).join("")}
-    ${arch.count>0?`<div style="text-align:center;font-size:12px;color:var(--text);padding:10px 8px;border-top:1px solid var(--line)">📦 ${arch.count} older transaction${arch.count!==1?'s':''} rolled up · GH₵ ${archSum.toLocaleString()}<br>(before ${archiveCutoff()})</div>`:''}
+    ${arch.count>0?`<div style="text-align:center;font-size:12px;color:#E5E5E5;padding:10px 8px;border-top:1px solid #333333">📦 ${arch.count} older transaction${arch.count!==1?'s':''} rolled up · GH₵ ${archSum.toLocaleString()}<br>(before ${archiveCutoff()})</div>`:''}
     </div>
-    ${spendData.entries.some(e=>!e.auto)?`<button onclick="clearManualSpend()" style="width:100%;padding:11px;border-radius:10px;background:var(--card);border:1px solid #3A1A1A;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;">🗑 Clear Manual Entries</button>`:''}
+    ${spendData.entries.some(e=>!e.auto)?`<button onclick="clearManualSpend()" style="width:100%;padding:11px;border-radius:10px;background:#161616;border:1px solid #3A1A1A;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;">🗑 Clear Manual Entries</button>`:''}
     </div>`;
 }
 
@@ -2725,7 +2702,7 @@ function openSavModal(editId){
     document.getElementById("savModalSaved").value=g.saved||0;
     document.getElementById("savModalDate").value=g.deadline||"";
     document.getElementById("savModalFreq").value=g.planFreq||"day";
-    savSelectedColor=g.color||"var(--acc)";
+    savSelectedColor=g.color||"#32ADE6";
   } else {
     document.getElementById("savModalTitle").textContent="🏦 New Savings Goal";
     document.getElementById("savModalName").value="";
@@ -2783,7 +2760,7 @@ function addToSavGoal(id, amount){
   const amt=parseFloat(amount); if(!amt||amt<=0) return;
   const g=savGoals.find(x=>String(x.id)===String(id)); if(!g) return;
   const actual=Math.min(amt, g.target-g.saved);
-  if(actual<=0){showToast("Goal already reached!","var(--acc)");return;}
+  if(actual<=0){showToast("Goal already reached!","#FF9F0A");return;}
   g.saved+=actual;
   g.log.push({date:TODAY,amount:actual});
   let rolled=null;
@@ -2820,7 +2797,7 @@ function restartSavGoal(id){
   g.cleared=true; g.clearedDate=TODAY; g.completed=true; g.focus=false;
   const nid=uid("sav_");
   savGoals.unshift({ id:nid, name:g.name, target:g.target, dailyTarget:0, planAmt:0,
-    planFreq:g.planFreq||"day", deadline:"", saved:0, log:[], color:g.color||"var(--acc)",
+    planFreq:g.planFreq||"day", deadline:"", saved:0, log:[], color:g.color||"#32ADE6",
     planStart:TODAY, planBase:0, planVer:PLAN_VER, cleared:false });
   savOrder.unshift(nid);
   saveSavGoals(); saveSavOrder(); renderSavings(); openSavModal(nid);
@@ -2839,7 +2816,7 @@ function reopenSavGoal(id){
   document.getElementById("savModalSaved").value="";
   document.getElementById("savModalDate").value=keepDate;
   document.getElementById("savModalFreq").value=g.planFreq||"day";
-  savSelectedColor=g.color||"var(--acc)";
+  savSelectedColor=g.color||"#32ADE6";
   buildColorPicker("savColorPicker", savSelectedColor);
   paintQuickDates(); updateSavPreview();
   renderSavings();
@@ -2856,8 +2833,8 @@ function renderSavings(){
   const doneSavTotal=doneSavGoals.reduce((s,g)=>s+g.saved,0);
   const doneSavTarget=doneSavGoals.reduce((s,g)=>s+g.target,0);
   const {totalCredits,daysBehind,daysAhead,streak,catchUp}=getSavStreakData();
-  const streakColor=streak>=7?"#30D158":streak>=3?"var(--acc)":"#FF453A";
-  const balanceColor=daysBehind>0?"#FF453A":daysAhead>0?"#30D158":"var(--text)";
+  const streakColor=streak>=7?"#30D158":streak>=3?"#FF9F0A":"#FF453A";
+  const balanceColor=daysBehind>0?"#FF453A":daysAhead>0?"#30D158":"#E5E5E5";
   const balanceVal=daysBehind>0?`-${daysBehind}`:daysAhead>0?`+${daysAhead}`:"0";
   const balanceLabel=daysBehind>0?"Behind":daysAhead>0?"Ahead":"On Track";
 
@@ -2869,25 +2846,25 @@ function renderSavings(){
 
   document.getElementById("page-savings").innerHTML=`
     <div style="margin-top:10px">
-    ${periodSelectHTML(isavPeriod,"setISavPeriod","var(--acc)")}
+    ${periodSelectHTML(isavPeriod,"setISavPeriod","#32ADE6")}
     ${savToggleHTML()}
     ${dailyTargetHTML()}
 
     <div class="sav-streak-grid">
       <div class="sav-streak-box"><div class="ssb-icon">🔥</div><div class="ssb-val" style="color:${streakColor}">${streak}</div><div class="ssb-label">Streak</div></div>
       <div class="sav-streak-box"><div class="ssb-icon">${daysBehind>0?"⚠️":daysAhead>0?"🚀":"✅"}</div><div class="ssb-val" style="color:${balanceColor}">${balanceVal}</div><div class="ssb-label">${balanceLabel}</div></div>
-      <div class="sav-streak-box"><div class="ssb-icon">💰</div><div class="ssb-val" style="color:var(--acc)">${totalCredits}</div><div class="ssb-label">Days Saved</div></div>
+      <div class="sav-streak-box"><div class="ssb-icon">💰</div><div class="ssb-val" style="color:#32ADE6">${totalCredits}</div><div class="ssb-label">Days Saved</div></div>
     </div>
 
     ${daysBehind>0?`<div style="background:#2A0D0D;border:1px solid #FF453A44;border-radius:14px;padding:14px 16px;margin-bottom:12px;">
       <div style="font-size:13px;font-weight:800;color:#FF453A;margin-bottom:4px">⚠️ ${daysBehind} payment${daysBehind>1?'s':''} behind on savings!</div>
-      <div style="font-size:12px;color:var(--text)">Log GH₵ ${(catchUp||0).toLocaleString()} to catch up.</div></div>`:''}
+      <div style="font-size:12px;color:#E5E5E5">Log GH₵ ${(catchUp||0).toLocaleString()} to catch up.</div></div>`:''}
     ${daysAhead>0?`<div style="background:#0D2A0D;border:1px solid #32ADE644;border-radius:14px;padding:14px 16px;margin-bottom:12px;">
-      <div style="font-size:13px;font-weight:800;color:var(--acc)">🚀 ${daysAhead} payment${daysAhead>1?'s':''} ahead on savings!</div></div>`:''}
+      <div style="font-size:13px;font-weight:800;color:#32ADE6">🚀 ${daysAhead} payment${daysAhead>1?'s':''} ahead on savings!</div></div>`:''}
 
     ${activeSavGoals.length>0?`<div class="card" style="border-color:#32ADE622">
-      <div class="row" style="margin-bottom:8px"><span class="label-sm">Total Savings · ${activeSavGoals.length} active</span><span style="color:var(--acc);font-weight:700;font-size:12px">GH₵ ${totalSaved.toLocaleString()} / GH₵ ${totalTarget.toLocaleString()}</span></div>
-      <div class="bar-wrap"><div class="bar-fill" style="width:${totalTarget>0?Math.min((totalSaved/totalTarget)*100,100):0}%;background:linear-gradient(90deg,var(--acc),var(--acc))"></div></div>
+      <div class="row" style="margin-bottom:8px"><span class="label-sm">Total Savings · ${activeSavGoals.length} active</span><span style="color:#32ADE6;font-weight:700;font-size:12px">GH₵ ${totalSaved.toLocaleString()} / GH₵ ${totalTarget.toLocaleString()}</span></div>
+      <div class="bar-wrap"><div class="bar-fill" style="width:${totalTarget>0?Math.min((totalSaved/totalTarget)*100,100):0}%;background:linear-gradient(90deg,#32ADE6,#5E5CE6)"></div></div>
       <div class="row" style="margin-top:8px"><span class="val-green">GH₵ ${totalSaved.toLocaleString()} saved</span><span style="color:#FF453A;font-size:13px;font-weight:700">GH₵ ${(totalTarget-totalSaved).toLocaleString()} to go</span></div>
     </div>`:''}
 
@@ -2895,23 +2872,23 @@ function renderSavings(){
       <div class="custom-log-title">💰 Enter amount, then pick a goal to log to</div>
       <div class="custom-log-row">
         <input class="custom-log-input" type="number" id="savLogInput" placeholder="Enter amount (GH₵)"/>
-        <button class="btn-log-custom" style="background:linear-gradient(135deg,var(--acc),var(--acc));color:#fff" onclick="logMore('sav')">Log</button>
+        <button class="btn-log-custom" style="background:linear-gradient(135deg,#32ADE6,#5E5CE6);color:#fff" onclick="logMore('sav')">Log</button>
       </div>
     </div>`:''}
     <button class="add-savings-btn" onclick="openSavModal()">➕ Add New Savings Goal</button>
-    <div class="reorder-hint">Hold <b style="color:var(--acc)">⠿</b> to reorder · Tap ✏️ to edit · Tap 🗑 to delete</div>
+    <div class="reorder-hint">Hold <b style="color:#32ADE6">⠿</b> to reorder · Tap ✏️ to edit · Tap 🗑 to delete</div>
 
     ${savGoals.length===0?'<div class="empty-msg">No savings goals yet.<br>Tap above to add your first one!</div>':''}
 
     <div id="savGoalsList">
     ${(()=>{const _sa=sortSavDisplay(savActive); return [..._sa.filter(g=>g.focus), ..._sa.filter(g=>!g.focus)];})().map(goal=>{
       const pct=Math.min((goal.saved/goal.target)*100,100);
-      const color=goal.color||"var(--acc)";
+      const color=goal.color||"#32ADE6";
       const dlBadge=deadlineBadgeHTML(goal.deadline||"");
       const sdaily=goal.dailyTarget>0?goal.dailyTarget:DAILY_SAV;
       const sdays=Math.ceil((goal.target-goal.saved)/sdaily);
       const sfin=addDaysISO(TODAY,sdays);
-      const sColor=sdays<=3?'#FF453A':sdays<=10?'var(--acc)':'#30D158';
+      const sColor=sdays<=3?'#FF453A':sdays<=10?'#FF9F0A':'#30D158';
       const sAnchor=goal.planStart||(goal.log&&goal.log[0]?goal.log[0].date:TODAY);
       const sDInfo=planDaysInfo(goal.deadline,goal.target-goal.saved,sdaily,sAnchor,goal.target);
       const sPInfo=paceFor(goal, goal.saved, goal.target);
@@ -2931,13 +2908,13 @@ function renderSavings(){
             </div>
           </div>
           <div class="bar-wrap" style="margin-bottom:8px"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:11px;color:var(--muted)">GH₵ ${Math.round(Math.min(goal.planAmt||sdaily, Math.max(goal.target-goal.saved,1))).toLocaleString()}/${goal.planFreq||'day'} · <b style="color:${sDInfo.color}">${sDInfo.text}</b>${goal.deadline?` · Due ${shortDate(goal.deadline)}`:''}</span>${sPInfo.text?`<span style="font-size:12px;font-weight:800;color:${sPInfo.color}">${sPInfo.text}</span>`:''}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:11px;color:#A0A0A0">GH₵ ${Math.round(Math.min(goal.planAmt||sdaily, Math.max(goal.target-goal.saved,1))).toLocaleString()}/${goal.planFreq||'day'} · <b style="color:${sDInfo.color}">${sDInfo.text}</b>${goal.deadline?` · Due ${shortDate(goal.deadline)}`:''}</span>${sPInfo.text?`<span style="font-size:12px;font-weight:800;color:${sPInfo.color}">${sPInfo.text}</span>`:''}</div>
           <div style="display:flex;gap:6px;flex-wrap:wrap">
-            ${(inlineLogSide==='sav'&&inlineLogId===goal.id)?inlineRow(color)+`<span style="display:none"></span>` : `<button onclick="startInlineLog('sav','${goal.id}')" style="flex:1;min-width:70px;padding:8px;border-radius:9px;background:${color};border:none;color:var(--in);font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">＋ Log</button>
-            <button onclick="openSavModal('${goal.id}')" style="padding:8px 11px;border-radius:9px;background:var(--card);border:1px solid var(--line);color:var(--text);font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">✏️</button>
-            <button onclick="setFocus('sav','${goal.id}')" title="Focus on this one" style="padding:8px 11px;border-radius:9px;background:${sFoc?color+'22':'var(--card)'};border:1px solid ${sFoc?color:'#333'};color:${sFoc?color:'var(--muted)'};font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">🎯</button>
-            <button onclick="completeSavGoal('${goal.id}')" style="padding:8px 11px;border-radius:9px;background:var(--card);border:1px solid #30D15855;color:#30D158;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">✓</button>
-            <button onclick="deleteSavGoal('${goal.id}')" style="padding:8px 11px;border-radius:9px;background:var(--card);border:1px solid #FF453A55;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">🗑</button>`}
+            ${(inlineLogSide==='sav'&&inlineLogId===goal.id)?inlineRow(color)+`<span style="display:none"></span>` : `<button onclick="startInlineLog('sav','${goal.id}')" style="flex:1;min-width:70px;padding:8px;border-radius:9px;background:${color};border:none;color:#0A0A0A;font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">＋ Log</button>
+            <button onclick="openSavModal('${goal.id}')" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #333;color:#E5E5E5;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">✏️</button>
+            <button onclick="setFocus('sav','${goal.id}')" title="Focus on this one" style="padding:8px 11px;border-radius:9px;background:${sFoc?color+'22':'#161616'};border:1px solid ${sFoc?color:'#333'};color:${sFoc?color:'#A0A0A0'};font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">🎯</button>
+            <button onclick="completeSavGoal('${goal.id}')" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #30D15855;color:#30D158;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">✓</button>
+            <button onclick="deleteSavGoal('${goal.id}')" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #FF453A55;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">🗑</button>`}
           </div>
         </div>
       </div>`;
@@ -2946,31 +2923,31 @@ function renderSavings(){
 
     ${savPending.length>0?`
     <div class="wn-section-header" style="margin-top:22px">
-      <span class="section-title" style="margin-bottom:0;color:var(--acc)">⏳ To Settle · ${savPending.length}</span>
-      <span class="wn-section-total" style="color:var(--acc)">GH₵ ${savPending.reduce((x,g)=>x+g.saved,0).toLocaleString()}</span>
+      <span class="section-title" style="margin-bottom:0;color:#FF9F0A">⏳ To Settle · ${savPending.length}</span>
+      <span class="wn-section-total" style="color:#FF9F0A">GH₵ ${savPending.reduce((x,g)=>x+g.saved,0).toLocaleString()}</span>
     </div>
     ${savPending.map(goal=>`<div class="savings-goal-card" style="border-color:#FF9F0A55;background:#161206">
       <div style="width:8px;min-width:8px"></div>
       <div class="savings-content">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
           <div style="flex:1;min-width:0;margin-right:8px">
-            <div class="goal-name" onclick="event.stopPropagation();openHistory({r:'${goal.id}'})" style="cursor:pointer;color:var(--acc)">${goal.name} <span style="font-size:11px;opacity:.55">📜</span></div>
+            <div class="goal-name" onclick="event.stopPropagation();openHistory({r:'${goal.id}'})" style="cursor:pointer;color:#FF9F0A">${goal.name} <span style="font-size:11px;opacity:.55">📜</span></div>
             <div style="font-size:12px;font-weight:700;color:#30D158;margin-top:3px">GH₵ ${goal.saved.toLocaleString()} saved</div>
           </div>
           <div style="text-align:right;flex-shrink:0">
-            <div style="font-size:13px;font-weight:800;color:var(--acc)">GH₵ ${goal.target.toLocaleString()}</div>
+            <div style="font-size:13px;font-weight:800;color:#32ADE6">GH₵ ${goal.target.toLocaleString()}</div>
             <div style="font-size:12px;font-weight:700;color:#30D158;margin-top:3px">full</div>
           </div>
         </div>
         <div class="bar-wrap" style="margin-bottom:8px"><div class="bar-fill" style="width:100%;background:#30D158"></div></div>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <span style="font-size:11px;color:var(--muted)">Money is in${goal.deadline?` · Due ${shortDate(goal.deadline)}`:''}</span>
-          <span style="font-size:12px;font-weight:800;color:var(--acc)">Not settled</span>
+          <span style="font-size:11px;color:#A0A0A0">Money is in${goal.deadline?` · Due ${shortDate(goal.deadline)}`:''}</span>
+          <span style="font-size:12px;font-weight:800;color:#FF9F0A">Not settled</span>
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <button class="settle-pulse" onclick="clearSavGoal('${goal.id}')" style="flex:1;min-width:70px;padding:8px;border-radius:9px;background:#30D158;border:none;color:var(--in);font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">✓ Settled</button>
-          <button onclick="restartSavGoal('${goal.id}')" title="Start a fresh round" style="padding:8px 11px;border-radius:9px;background:var(--card);border:1px solid #FF9F0A55;color:var(--acc);font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">🔄</button>
-          <button onclick="openSavModal('${goal.id}')" style="padding:8px 11px;border-radius:9px;background:var(--card);border:1px solid var(--line);color:var(--text);font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">✏️</button>
+          <button class="settle-pulse" onclick="clearSavGoal('${goal.id}')" style="flex:1;min-width:70px;padding:8px;border-radius:9px;background:#30D158;border:none;color:#0A0A0A;font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">✓ Settled</button>
+          <button onclick="restartSavGoal('${goal.id}')" title="Start a fresh round" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #FF9F0A55;color:#FF9F0A;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">🔄</button>
+          <button onclick="openSavModal('${goal.id}')" style="padding:8px 11px;border-radius:9px;background:#161616;border:1px solid #333;color:#E5E5E5;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif">✏️</button>
         </div>
       </div>
       <div class="goal-actions"><button class="btn-delete-goal" onclick="deleteSavGoal('${goal.id}')">🗑</button></div>
@@ -2987,7 +2964,7 @@ function renderSavings(){
     ${savDone.map(goal=>{
       const early=goal.saved<goal.target;
       const pct=Math.min((goal.saved/goal.target)*100,100);
-      const sc=goal.saved>=goal.target?"#30D158":(goal.saved>=goal.target*0.5?"var(--acc)":"#FF453A");
+      const sc=goal.saved>=goal.target?"#30D158":(goal.saved>=goal.target*0.5?"#FF9F0A":"#FF453A");
       const stxt=goal.saved>=goal.target?"✓":(goal.saved>=goal.target*0.5?"◐":"✗");
       return `<div class="savings-goal-card done" data-id="${goal.id}">
         <div style="width:8px;min-width:8px"></div>
@@ -2995,18 +2972,18 @@ function renderSavings(){
           <div style="display:flex;justify-content:space-between;align-items:flex-start">
             <div style="flex:1;min-width:0;margin-right:8px">
               <div style="font-size:14px;font-weight:700;color:${sc}">${stxt} ${goal.name}</div>
-              <div style="font-size:11px;color:var(--text);margin-top:3px">${early?`Completed early · GH₵ ${goal.saved.toLocaleString()} of GH₵ ${goal.target.toLocaleString()}`:`Goal reached · GH₵ ${goal.saved.toLocaleString()}`}</div>
+              <div style="font-size:11px;color:#E5E5E5;margin-top:3px">${early?`Completed early · GH₵ ${goal.saved.toLocaleString()} of GH₵ ${goal.target.toLocaleString()}`:`Goal reached · GH₵ ${goal.saved.toLocaleString()}`}</div>
             </div>
             <div style="text-align:right;flex-shrink:0">
               <div style="font-size:13px;font-weight:800;color:${sc}">GH₵ ${goal.saved.toLocaleString()}</div>
-              <button onclick="askReopenSav('${goal.id}')" style="margin-top:5px;padding:4px 8px;border-radius:8px;background:var(--card);border:1px solid #30D15855;color:#30D158;font-size:10px;cursor:pointer;font-family:'Outfit',sans-serif">↩ Reopen</button>
+              <button onclick="askReopenSav('${goal.id}')" style="margin-top:5px;padding:4px 8px;border-radius:8px;background:#161616;border:1px solid #30D15855;color:#30D158;font-size:10px;cursor:pointer;font-family:'Outfit',sans-serif">↩ Reopen</button>
             </div>
           </div>
-          ${_reopenAsk[goal.id]?`<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line);width:100%;box-sizing:border-box">
-            <div style="font-size:11px;color:var(--muted);margin-bottom:8px">Carry on with the GH₵ ${goal.saved.toLocaleString()} already saved, or start a brand new goal at zero and keep this one in the record?</div>
+          ${_reopenAsk[goal.id]?`<div style="margin-top:10px;padding-top:10px;border-top:1px solid #2A2A2A;width:100%;box-sizing:border-box">
+            <div style="font-size:11px;color:#A0A0A0;margin-bottom:8px">Carry on with the GH₵ ${goal.saved.toLocaleString()} already saved, or start a brand new goal at zero and keep this one in the record?</div>
             <div style="display:flex;gap:8px;width:100%">
-              <button onclick="continueSavGoal('${goal.id}')" style="flex:1 1 0;min-width:0;padding:10px 4px;border-radius:10px;background:var(--card);border:1px solid #30D15855;color:#30D158;font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">▶ Continue</button>
-              <button onclick="reopenSavGoal('${goal.id}')" style="flex:1 1 0;min-width:0;padding:10px 4px;border-radius:10px;background:var(--acc);border:none;color:var(--text);font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">🔄 Start fresh</button>
+              <button onclick="continueSavGoal('${goal.id}')" style="flex:1 1 0;min-width:0;padding:10px 4px;border-radius:10px;background:#161616;border:1px solid #30D15855;color:#30D158;font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">▶ Continue</button>
+              <button onclick="reopenSavGoal('${goal.id}')" style="flex:1 1 0;min-width:0;padding:10px 4px;border-radius:10px;background:#32ADE6;border:none;color:#fff;font-size:12px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">🔄 Start fresh</button>
             </div>
           </div>`:''}
           <div class="bar-wrap" style="margin-top:8px"><div class="bar-fill" style="width:${pct}%;background:${sc}"></div></div>
@@ -3141,10 +3118,10 @@ function renderBudget(){
     <div class="card" style="border-color:#E5E5E522">
       <div class="row" style="margin-bottom:6px"><span class="label-sm">Planned</span><span style="color:#30D158;font-weight:800;font-size:13px">GH₵ ${planned.toLocaleString()}</span></div>
       <div class="row" style="margin-bottom:${(subsM>0&&ym===TODAY.slice(0,7))?2:8}px"><span class="label-sm">Spent</span><span style="color:#FF453A;font-weight:800;font-size:13px">GH₵ ${spent.toLocaleString()}</span></div>
-      ${(subsM>0&&ym===TODAY.slice(0,7))?`<div style="font-size:10px;color:var(--text);text-align:right;margin-bottom:8px">includes GH₵ ${subsM.toLocaleString()} subscriptions</div>`:''}
-      <div class="bar-wrap"><div class="bar-fill" style="width:${planned>0?Math.min((spent/planned)*100,100):0}%;background:${spent>planned&&planned>0?'#FF453A':'linear-gradient(90deg,var(--text),#30D158)'}"></div></div>
+      ${(subsM>0&&ym===TODAY.slice(0,7))?`<div style="font-size:10px;color:#E5E5E5;text-align:right;margin-bottom:8px">includes GH₵ ${subsM.toLocaleString()} subscriptions</div>`:''}
+      <div class="bar-wrap"><div class="bar-fill" style="width:${planned>0?Math.min((spent/planned)*100,100):0}%;background:${spent>planned&&planned>0?'#FF453A':'linear-gradient(90deg,#E5E5E5,#30D158)'}"></div></div>
       <div class="row" style="margin-top:8px"><span class="val-muted">${planned>0?(spent>planned?'Over plan':'On plan'):'No plan set'}</span><span style="color:${left<0?'#FF453A':'#30D158'};font-weight:700;font-size:13px">GH₵ ${left.toLocaleString()} left</span></div>
-      <button onclick="setMonthlyPlan()" style="width:100%;margin-top:12px;padding:10px;border-radius:10px;background:var(--card2);border:1px solid #E5E5E544;color:var(--text);font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">${planned>0?'✏️ Edit Monthly Plan':'➕ Set Monthly Plan'}</button>
+      <button onclick="setMonthlyPlan()" style="width:100%;margin-top:12px;padding:10px;border-radius:10px;background:#1E1E1E;border:1px solid #E5E5E544;color:#E5E5E5;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">${planned>0?'✏️ Edit Monthly Plan':'➕ Set Monthly Plan'}</button>
     </div>
 
     <div class="section-title">📂 Spending Categories</div>
@@ -3158,9 +3135,9 @@ function renderBudget(){
             <span style="font-size:22px">${cat.icon}</span>
             <div style="min-width:0">
               <div style="font-size:14px;font-weight:700;color:${cat.color}">${cat.label}</div>
-              ${(function(){const moneyIn=catMoneyIn(cat.id,ym); if(!moneyIn) return `<div style="font-size:11px;color:var(--text)">GH₵ ${t.toLocaleString()} spent${ents.length?` · ${ents.length} entr${ents.length===1?'y':'ies'}`:''}</div>`;
+              ${(function(){const moneyIn=catMoneyIn(cat.id,ym); if(!moneyIn) return `<div style="font-size:11px;color:#E5E5E5">GH₵ ${t.toLocaleString()} spent${ents.length?` · ${ents.length} entr${ents.length===1?'y':'ies'}`:''}</div>`;
                 const left=moneyIn-t, pct=moneyIn>0?Math.max(0,Math.min(100,(left/moneyIn)*100)):0;
-                return `<div style="font-size:11px;color:var(--muted)">GH₵ ${moneyIn.toLocaleString()} in · GH₵ ${t.toLocaleString()} spent</div>
+                return `<div style="font-size:11px;color:#8A8A8A">GH₵ ${moneyIn.toLocaleString()} in · GH₵ ${t.toLocaleString()} spent</div>
                 <div style="font-size:13px;font-weight:800;color:${left<0?'#FF453A':cat.color};margin-top:2px">GH₵ ${left.toLocaleString()} left</div>`;})()}
             </div>
           </div>
@@ -3180,24 +3157,24 @@ function renderBudget(){
             <input class="custom-input" type="number" style="width:72px;flex-shrink:0" id="ba_${cat.id}" placeholder="GH₵"/>
             <button class="btn-sm" style="background:${cat.color};flex-shrink:0;padding:8px 12px" onclick="logBudgetSpend('${cat.id}',document.getElementById('ba_${cat.id}').value,document.getElementById('bd_${cat.id}').value)">Add</button>
           </div>`:''}
-        ${open?`<div style="margin-top:11px;padding:11px 12px;border-radius:12px;background:var(--in);border:1px solid ${cat.color}33">
-          <div class="row"><span style="font-size:11px;color:var(--muted);font-weight:700">Total spent · all time</span>
+        ${open?`<div style="margin-top:11px;padding:11px 12px;border-radius:12px;background:#0A0A0A;border:1px solid ${cat.color}33">
+          <div class="row"><span style="font-size:11px;color:#8A8A8A;font-weight:700">Total spent · all time</span>
             <span style="font-size:17px;font-weight:900;color:${cat.color}">GH₵ ${catSpentAll(cat.id).toLocaleString()}</span></div>
           <div class="row" style="margin-top:3px"><span style="font-size:10.5px;color:#6E6E6E">${catEntriesAll(cat.id).length} entr${catEntriesAll(cat.id).length===1?'y':'ies'} kept${catArchived(cat.id)?` · GH₵ ${catArchived(cat.id).toLocaleString()} from older years`:''}</span>
             <span style="font-size:10.5px;color:#6E6E6E">GH₵ ${t.toLocaleString()} this month</span></div>
         </div>`:''}
         ${open&&ents.length?`<div class="log-section visible" style="margin-top:10px">
-          ${[...ents].sort((a,b)=>b.date.localeCompare(a.date)).map(e=>`<div class="log-entry"><span style="color:var(--text)">${e.desc} · <span style="color:var(--text)">${e.date}</span></span><span style="display:flex;gap:8px;align-items:center"><span style="color:${cat.color};font-weight:700">GH₵ ${e.amount.toLocaleString()}</span><button class="btn-del" onclick="deleteSpendEntry('${e.id}')">🗑</button></span></div>`).join("")}
+          ${[...ents].sort((a,b)=>b.date.localeCompare(a.date)).map(e=>`<div class="log-entry"><span style="color:#E5E5E5">${e.desc} · <span style="color:#E5E5E5">${e.date}</span></span><span style="display:flex;gap:8px;align-items:center"><span style="color:${cat.color};font-weight:700">GH₵ ${e.amount.toLocaleString()}</span><button class="btn-del" onclick="deleteSpendEntry('${e.id}')">🗑</button></span></div>`).join("")}
         </div>`:''}
         ${open&&!ents.length?`<div style="font-size:11px;color:#444;margin-top:10px">No entries this month yet.</div>`:''}
       </div>`;
     }).join("")}
 
-    <button onclick="openCatModal()" style="width:100%;padding:12px;border-radius:12px;background:var(--card);border:1px dashed #E5E5E566;color:var(--text);font-size:13px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;margin-bottom:18px">➕ Add Category</button>
+    <button onclick="openCatModal()" style="width:100%;padding:12px;border-radius:12px;background:#161616;border:1px dashed #E5E5E566;color:#E5E5E5;font-size:13px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;margin-bottom:18px">➕ Add Category</button>
 
     <div class="wn-section-header">
-      <span class="section-title" style="margin-bottom:0;color:var(--acc)">🔁 Active Subscriptions</span>
-      <span class="wn-section-total" style="color:var(--acc)">GH₵ ${subsTotalMonthly().toLocaleString()}/mo</span>
+      <span class="section-title" style="margin-bottom:0;color:#5E5CE6">🔁 Active Subscriptions</span>
+      <span class="wn-section-total" style="color:#5E5CE6">GH₵ ${subsTotalMonthly().toLocaleString()}/mo</span>
     </div>
     ${subs.filter(s=>!s.cancelled).length===0?`<div class="empty-msg" style="padding:14px 0">No active subscriptions.<br>Add YouTube, ElevenLabs, CapCut…</div>`:''}
     ${getOrderedActiveSubs().slice().sort((a,b)=>urgencyKey(a.deadline)-urgencyKey(b.deadline)).map(s=>{
@@ -3208,7 +3185,7 @@ function renderBudget(){
         <div style="display:flex;justify-content:space-between;align-items:flex-start">
           <div style="flex:1;min-width:0;margin-right:8px">
             <div style="font-size:14px;font-weight:700;color:#fff">${s.name}</div>
-            <div style="font-size:11px;color:var(--text);margin-top:2px">GH₵ ${s.amount.toLocaleString()}/mo${s.deadline?` · renews ${s.deadline}`:' · no date set'}</div>
+            <div style="font-size:11px;color:#E5E5E5;margin-top:2px">GH₵ ${s.amount.toLocaleString()}/mo${s.deadline?` · renews ${s.deadline}`:' · no date set'}</div>
             ${badge}
           </div>
           <div class="wn-item-btns">
@@ -3218,24 +3195,24 @@ function renderBudget(){
         </div>
         <div style="display:flex;gap:8px;margin-top:10px">
           ${isDue?`<button onclick="openSubDate('${s.id}','renew')" style="flex:1;padding:9px;border-radius:10px;background:#0D2A0D;border:1px solid #30D15855;color:#30D158;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">🔁 Renew</button>`:''}
-          <button onclick="cancelSub('${s.id}')" style="flex:1;padding:9px;border-radius:10px;background:var(--card);border:1px solid #FF453A55;color:#FF453A;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">✕ Cancel</button>
+          <button onclick="cancelSub('${s.id}')" style="flex:1;padding:9px;border-radius:10px;background:#161616;border:1px solid #FF453A55;color:#FF453A;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">✕ Cancel</button>
         </div>
       </div>`;
     }).join("")}
-    <button onclick="openSubModal()" style="width:100%;padding:12px;border-radius:12px;background:var(--card);border:1px dashed #5E5CE666;color:var(--acc);font-size:13px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;margin-top:8px">➕ Add Subscription</button>
+    <button onclick="openSubModal()" style="width:100%;padding:12px;border-radius:12px;background:#161616;border:1px dashed #5E5CE666;color:#5E5CE6;font-size:13px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;margin-top:8px">➕ Add Subscription</button>
     ${subs.filter(s=>s.cancelled).length>0?`
     <div style="display:flex;justify-content:space-between;align-items:center;margin:22px 0 8px">
-      <span class="section-title" style="margin-bottom:0;color:var(--text)">⏸️ Cancelled Subscriptions</span>
+      <span class="section-title" style="margin-bottom:0;color:#E5E5E5">⏸️ Cancelled Subscriptions</span>
     </div>
-    ${subs.filter(s=>s.cancelled).map(s=>`<div class="card" style="padding:13px 16px;border-color:var(--line);opacity:0.85">
+    ${subs.filter(s=>s.cancelled).map(s=>`<div class="card" style="padding:13px 16px;border-color:#2A2A2A;opacity:0.85">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
         <div style="flex:1;min-width:0;margin-right:8px">
-          <div style="font-size:14px;font-weight:700;color:var(--text)">${s.name}</div>
-          <div style="font-size:11px;color:var(--text);margin-top:2px">GH₵ ${s.amount.toLocaleString()}/mo · cancelled</div>
+          <div style="font-size:14px;font-weight:700;color:#E5E5E5">${s.name}</div>
+          <div style="font-size:11px;color:#E5E5E5;margin-top:2px">GH₵ ${s.amount.toLocaleString()}/mo · cancelled</div>
         </div>
         <button class="wn-btn-del" onclick="deleteSub('${s.id}')">🗑</button>
       </div>
-      <button onclick="openSubDate('${s.id}','reactivate')" style="width:100%;margin-top:10px;padding:9px;border-radius:10px;background:var(--card);border:1px solid #5E5CE655;color:var(--acc);font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">↩ Renew / Reactivate</button>
+      <button onclick="openSubDate('${s.id}','reactivate')" style="width:100%;margin-top:10px;padding:9px;border-radius:10px;background:#161616;border:1px solid #5E5CE655;color:#5E5CE6;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">↩ Renew / Reactivate</button>
     </div>`).join("")}`:''}
     </div>`;
 }
@@ -3307,16 +3284,13 @@ function lastExportHTML(){
   let d=null; try{ d=localStorage.getItem("pfhub_last_export_v1"); }catch(e){}
   if(!d) return `<div style="font-size:11px;color:#FF453A;font-weight:700;margin-top:10px">Never exported</div>`;
   const days=Math.max(0,daysBetween(d,TODAY));
-  const c=days<=1?"#30D158":days<=6?"var(--acc)":"#FF453A";
+  const c=days<=1?"#30D158":days<=6?"#FF9F0A":"#FF453A";
   return `<div style="font-size:11px;color:${c};font-weight:700;margin-top:10px">Last export ${days===0?"today":days===1?"yesterday":days+" days ago"}</div>`;
 }
-function setTheme(t){try{localStorage.setItem("pfhub_theme",t);}catch(e){}if(t==="gold")document.documentElement.removeAttribute("data-theme");else document.documentElement.setAttribute("data-theme",t);markTheme();}
-function markTheme(){var t="gold";try{t=localStorage.getItem("pfhub_theme")||"gold";}catch(e){}["gold","blue","silver","teal","violet"].forEach(function(k){var b=document.getElementById("th-"+k);if(b)b.classList.toggle("on",k===t);});}
-function renderBackup(){setTimeout(markTheme,0);
+function renderBackup(){
   const g=destGoal();
   document.getElementById("page-backup").innerHTML=`
     <div style="margin-top:10px">
-      <div class="backup-card"><div class="backup-title">🎨 App Style</div><div class="th-pick"><button id="th-gold" onclick="setTheme('gold')"><i style="background:linear-gradient(135deg,#000 50%,#F2C14E 50%)"></i>1 Midnight Gold</button><button id="th-blue" onclick="setTheme('blue')"><i style="background:linear-gradient(135deg,#02050B 50%,#4C8DFF 50%)"></i>2 Navy Blue</button><button id="th-silver" onclick="setTheme('silver')"><i style="background:linear-gradient(135deg,#000 50%,#F2F2F2 50%)"></i>3 Black Silver</button><button id="th-teal" onclick="setTheme('teal')"><i style="background:linear-gradient(135deg,#010807 50%,#2DD4BF 50%)"></i>4 Deep Teal</button><button id="th-violet" onclick="setTheme('violet')"><i style="background:linear-gradient(135deg,#04030A 50%,#A78BFA 50%)"></i>5 Royal Violet</button></div></div>
       <div class="backup-card">
         <div class="backup-title">💾 Backup</div>
         <div class="backup-btns">
@@ -3327,27 +3301,27 @@ function renderBackup(){setTimeout(markTheme,0);
       </div>
       <div class="backup-card" onclick="openSettings()" style="cursor:pointer;border-color:#30D15844">
         <div class="row">
-          <span style="font-size:14px;font-weight:800;color:var(--text)">💰 Income settings</span>
+          <span style="font-size:14px;font-weight:800;color:#E5E5E5">💰 Income settings</span>
           <span style="font-size:18px;color:#30D158;font-weight:800">›</span>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">
           <span style="font-size:11px;font-weight:700;padding:5px 9px;border-radius:8px;background:#30D1581A;color:#30D158">${splitPct}% save</span>
-          <span style="font-size:11px;font-weight:700;padding:5px 9px;border-radius:8px;background:#FFD60A1A;color:var(--acc)">${100-splitPct}% spend</span>
-          <span style="font-size:11px;font-weight:700;padding:5px 9px;border-radius:8px;background:#FFD60A1A;color:var(--acc)">🎯 ${dtRateToday().toLocaleString()}/day</span>
-          <span style="font-size:11px;font-weight:700;padding:5px 9px;border-radius:8px;background:var(--line);color:var(--muted)">${sources.length} source${sources.length!==1?'s':''}</span>
+          <span style="font-size:11px;font-weight:700;padding:5px 9px;border-radius:8px;background:#FFD60A1A;color:#FFD60A">${100-splitPct}% spend</span>
+          <span style="font-size:11px;font-weight:700;padding:5px 9px;border-radius:8px;background:#FFD60A1A;color:#FFD60A">🎯 ${dtRateToday().toLocaleString()}/day</span>
+          <span style="font-size:11px;font-weight:700;padding:5px 9px;border-radius:8px;background:#2A2A2A;color:#C9C9C9">${sources.length} source${sources.length!==1?'s':''}</span>
         </div>
       </div>
       <div class="backup-card" onclick="openHistory()" style="cursor:pointer;border-color:#FFD60A44">
         <div class="row">
-          <span style="font-size:14px;font-weight:800;color:var(--text)">📜 History</span>
-          <span style="font-size:18px;color:var(--acc);font-weight:800">›</span>
+          <span style="font-size:14px;font-weight:800;color:#E5E5E5">📜 History</span>
+          <span style="font-size:18px;color:#FFD60A;font-weight:800">›</span>
         </div>
-        <div style="font-size:11.5px;color:var(--muted);margin-top:6px">Everything you've done in the app · ${histData.length} record${histData.length!==1?'s':''}</div>
+        <div style="font-size:11.5px;color:#8A8A8A;margin-top:6px">Everything you've done in the app · ${histData.length} record${histData.length!==1?'s':''}</div>
       </div>
-      <button onclick="openResetSheet()" style="width:100%;padding:12px;border-radius:12px;background:var(--card);border:1px solid #3A1A1A;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;">
+      <button onclick="openResetSheet()" style="width:100%;padding:12px;border-radius:12px;background:#161616;border:1px solid #3A1A1A;color:#FF453A;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;">
         🗑 Reset Finance Hub
       </button>
-      <div style="font-size:10px;color:var(--acc);text-align:center;margin-top:6px">Only clears Finance Hub. Your other apps are never touched.</div>
+      <div style="font-size:10px;color:#8E8E93;text-align:center;margin-top:6px">Only clears Finance Hub. Your other apps are never touched.</div>
     </div>`;
 }
 
@@ -3376,13 +3350,13 @@ function paintResetSheet(){
   const btn="width:100%;padding:13px;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif;margin-bottom:10px;";
   if(resetStep===1){
     b.innerHTML=`<div style="font-size:16px;font-weight:800;color:#FF453A;margin-bottom:8px">🗑 Reset Finance Hub</div>
-      <div style="font-size:12px;color:var(--muted);line-height:1.55;margin-bottom:14px">This deletes everything in Finance Hub: plans, savings, income savings, spending, budget, subscriptions, lists, settings and history.<br><b style="color:#30D158">Your other apps are not touched.</b></div>
-      <button onclick="exportData()" style="${btn}background:linear-gradient(135deg,var(--text),var(--muted));border:none;color:var(--in)">⬇ Export a backup first</button>
-      <button onclick="resetStep=2;paintResetSheet()" style="${btn}background:var(--card);border:1px solid #FF453A77;color:#FF453A">Continue to reset</button>
+      <div style="font-size:12px;color:#C9C9C9;line-height:1.55;margin-bottom:14px">This deletes everything in Finance Hub: plans, savings, income savings, spending, budget, subscriptions, lists, settings and history.<br><b style="color:#30D158">Your other apps are not touched.</b></div>
+      <button onclick="exportData()" style="${btn}background:linear-gradient(135deg,#E5E5E5,#B0B0B0);border:none;color:#0A0A0A">⬇ Export a backup first</button>
+      <button onclick="resetStep=2;paintResetSheet()" style="${btn}background:#161616;border:1px solid #FF453A77;color:#FF453A">Continue to reset</button>
       <button onclick="closeResetSheet()" class="btn-modal-cancel" style="width:100%">Cancel</button>`;
   } else {
     b.innerHTML=`<div style="font-size:16px;font-weight:800;color:#FF453A;margin-bottom:8px">Are you sure?</div>
-      <div style="font-size:12px;color:var(--muted);line-height:1.55;margin-bottom:14px">All Finance Hub data will be gone. This can't be undone unless you have a backup file.</div>
+      <div style="font-size:12px;color:#C9C9C9;line-height:1.55;margin-bottom:14px">All Finance Hub data will be gone. This can't be undone unless you have a backup file.</div>
       <button onclick="doFinanceReset()" style="${btn}background:#FF453A;border:none;color:#fff">Yes, delete Finance Hub data</button>
       <button onclick="closeResetSheet()" class="btn-modal-cancel" style="width:100%">Cancel</button>`;
   }
@@ -3449,8 +3423,8 @@ function rangeFrom(p){
 var savSide="income", isavPeriod="lifetime";
 function setSavSide(x){ savSide=x; renderSavings(); }
 function savToggleHTML(){
-  const b=(id,lab)=>`<button onclick="setSavSide('${id}')" style="flex:1;padding:11px 6px;border:none;border-radius:11px;background:${savSide===id?'var(--acc)':'transparent'};color:${savSide===id?'var(--accbg)':'var(--muted)'};font-size:13px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">${lab}</button>`;
-  return `<div style="display:flex;gap:4px;padding:4px;background:var(--card);border:1px solid var(--line);border-radius:14px;margin:2px 0 14px">${b('income','📺 Income Savings')}${b('goals','🏦 Goals')}</div>`;
+  const b=(id,lab)=>`<button onclick="setSavSide('${id}')" style="flex:1;padding:11px 6px;border:none;border-radius:11px;background:${savSide===id?'#32ADE6':'transparent'};color:${savSide===id?'#04121A':'#9A9A9A'};font-size:13px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">${lab}</button>`;
+  return `<div style="display:flex;gap:4px;padding:4px;background:#161616;border:1px solid #2A2A2A;border-radius:14px;margin:2px 0 14px">${b('income','📺 Income Savings')}${b('goals','🏦 Goals')}</div>`;
 }
 function renderIncomeSavings(){
   const from=rangeFrom(isavPeriod);
@@ -3465,27 +3439,27 @@ function renderIncomeSavings(){
   const idle=life.filter(r=>!(r.n||r.carry||r.outs));
   const card=r=>{
     const nm=getSource(r.src).name, tg=srcTarget(r.src);
-    const bar=tg>0?`<div style="height:6px;border-radius:3px;background:var(--card2);overflow:hidden;margin-top:9px"><div style="width:${Math.max(0,Math.min(100,r.net/tg*100))}%;height:100%;background:#30D158"></div></div>
-      <div style="font-size:10.5px;color:var(--muted);margin-top:4px">${fmtC(r.net)} of ${fmtC(tg)} target · ${Math.max(0,Math.round(r.net/tg*100))}%</div>`:"";
+    const bar=tg>0?`<div style="height:6px;border-radius:3px;background:#222;overflow:hidden;margin-top:9px"><div style="width:${Math.max(0,Math.min(100,r.net/tg*100))}%;height:100%;background:#30D158"></div></div>
+      <div style="font-size:10.5px;color:#8A8A8A;margin-top:4px">${fmtC(r.net)} of ${fmtC(tg)} target · ${Math.max(0,Math.round(r.net/tg*100))}%</div>`:"";
     return `<div class="card" style="padding:13px 14px;border-color:#32ADE633">
       <div class="row"><span style="font-size:14px;font-weight:800;color:#fff">${nm}</span><span style="font-size:16px;font-weight:900;color:#30D158">${fmtC(r.net)}</span></div>
-      <div style="font-size:11px;color:var(--muted);margin-top:3px;line-height:1.5">Earned ${fmt(r.earned)} · saved ${fmt(r.saved)}${r.carry?` · carried ${fmt(r.carry)}`:''}${r.out?` · took out ${fmt(r.out)}`:''} · <b style="color:var(--acc)">${srcPct(r.src)}% save</b></div>
+      <div style="font-size:11px;color:#8A8A8A;margin-top:3px;line-height:1.5">Earned ${fmt(r.earned)} · saved ${fmt(r.saved)}${r.carry?` · carried ${fmt(r.carry)}`:''}${r.out?` · took out ${fmt(r.out)}`:''} · <b style="color:#32ADE6">${srcPct(r.src)}% save</b></div>
       ${bar}
       <div style="display:flex;gap:7px;margin-top:11px">
         <button onclick="openTakeOut('${r.src}')" style="flex:1;padding:10px;border-radius:10px;background:#1A0F0F;border:1px solid #FF453A55;color:#FF6961;font-size:12.5px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">➖ Take out</button>
-        <button onclick="openHistory({r:'${r.src}'})" style="flex:1;padding:10px;border-radius:10px;background:var(--card);border:1px solid var(--line);color:var(--text);font-size:12.5px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">📜 History</button>
+        <button onclick="openHistory({r:'${r.src}'})" style="flex:1;padding:10px;border-radius:10px;background:#161616;border:1px solid #333;color:#E5E5E5;font-size:12.5px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">📜 History</button>
       </div></div>`;
   };
   document.getElementById("page-savings").innerHTML=`<div style="margin-top:10px">
-    ${periodSelectHTML(isavPeriod,"setISavPeriod","var(--acc)")}
+    ${periodSelectHTML(isavPeriod,"setISavPeriod","#32ADE6")}
     ${savToggleHTML()}
     <div class="card" style="border-color:#32ADE655">
-      <div style="font-size:11px;color:var(--muted);font-weight:700">In your income pots now</div>
-      <div style="font-size:31px;font-weight:900;color:var(--acc);margin:4px 0 2px;letter-spacing:-1px">${fmtC(inPots)}</div>
-      <div style="font-size:12px;color:var(--muted)">Every payment's save share lands here by itself</div>
+      <div style="font-size:11px;color:#8A8A8A;font-weight:700">In your income pots now</div>
+      <div style="font-size:31px;font-weight:900;color:#32ADE6;margin:4px 0 2px;letter-spacing:-1px">${fmtC(inPots)}</div>
+      <div style="font-size:12px;color:#8A8A8A">Every payment's save share lands here by itself</div>
     </div>
     <div class="card">
-      <div style="font-size:11px;color:var(--muted);font-weight:700">Net saved · ${labels[isavPeriod]}</div>
+      <div style="font-size:11px;color:#8A8A8A;font-weight:700">Net saved · ${labels[isavPeriod]}</div>
       <div style="font-size:26px;font-weight:900;color:${net>=0?'#30D158':'#FF453A'};margin:3px 0 10px">${fmtC(net)}</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
         ${box("EARNED",T.earned,"#E5E5E5","#141414")}${box("SAVED",T.saved,"#30D158","#0F1A12")}
@@ -3493,7 +3467,7 @@ function renderIncomeSavings(){
       </div>
       <div style="font-size:10.5px;color:#6A6A6A;margin-top:8px">Net saved = saved − taken out</div>
     </div>
-    <div style="margin:16px 0 8px"><span class="section-title" style="color:var(--acc)">📺 Your pots</span></div>
+    <div style="margin:16px 0 8px"><span class="section-title" style="color:#32ADE6">📺 Your pots</span></div>
     ${active.map(card).join("")}
     ${active.length===0?`<div class="empty-msg" style="padding:14px 0">No money in yet. Add money you received on the Money tab and its save share lands in that source's pot. Sources, splits and new income savings are in Settings → 💰 Income settings.</div>`:''}
   </div>`;
@@ -3509,10 +3483,10 @@ const SH_ERR=`<div id="shErr" style="display:none;font-size:12.5px;color:#FF453A
 // take out
 function openTakeOut(src){
   const r=potRows("","").find(x=>String(x.src)===String(src)); const net=r?r.net:0;
-  if(net<=0){ showToast("Nothing in this pot to take out","var(--acc)"); return; }
+  if(net<=0){ showToast("Nothing in this pot to take out","#FF9F0A"); return; }
   document.getElementById("fhSheetBody").innerHTML=`
     <div style="font-size:16px;font-weight:800;color:#FF6961;margin-bottom:4px">➖ Take out · ${getSource(src).name}</div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:12px">In this pot: <b style="color:#30D158">${fmtC(net)}</b></div>
+    <div style="font-size:12px;color:#8A8A8A;margin-bottom:12px">In this pot: <b style="color:#30D158">${fmtC(net)}</b></div>
     <input class="modal-input" type="number" id="toAmt" placeholder="Amount (GH₵)" oninput="shErr('')"/>
     <input class="modal-input" type="date" id="toDate" value="${TODAY}"/>
     <input class="modal-input" id="toNote" placeholder="What is it for? (optional)"/>
@@ -3531,21 +3505,21 @@ function saveTakeOut(src){
   const id=uid("im_");
   incSav.moves.push({id,d,src,kind:"out",a:amt,note}); saveIncSav();
   rec("isav",`Took out ${fmtC(amt)} from ${getSource(src).name}${note?' · '+note:''}${d!==TODAY?' (dated '+shortDate(d)+')':''}`,amt,src);
-  closeFhSheet(); renderSavings(); showToast(`➖ ${fmtC(amt)} taken out of ${getSource(src).name}`,"var(--acc)");
+  closeFhSheet(); renderSavings(); showToast(`➖ ${fmtC(amt)} taken out of ${getSource(src).name}`,"#FF9F0A");
 }
 // add a new income savings pot (a new source)
 function openNewPot(){
   document.getElementById("fhSheetBody").innerHTML=`
-    <div style="font-size:16px;font-weight:800;color:var(--acc);margin-bottom:10px">➕ Add Income Savings</div>
+    <div style="font-size:16px;font-weight:800;color:#32ADE6;margin-bottom:10px">➕ Add Income Savings</div>
     <div class="label-sm" style="margin-bottom:6px">Name (channel or business)</div>
     <input class="modal-input" id="npName" placeholder="e.g. New Channel" oninput="shErr('')"/>
     <div class="label-sm" style="margin-bottom:6px">Save share %</div>
     <input class="modal-input" type="number" id="npPct" value="${splitPct}" min="0" max="100" oninput="shErr('')"/>
     <div class="label-sm" style="margin-bottom:6px">Target (optional)</div>
     <input class="modal-input" type="number" id="npTarget" placeholder="Leave empty for no target"/>
-    <div style="font-size:11px;color:var(--muted);margin:-2px 0 8px;line-height:1.5">It also shows up in the Money tab's source list, so money you add under it saves here.</div>
+    <div style="font-size:11px;color:#8A8A8A;margin:-2px 0 8px;line-height:1.5">It also shows up in the Money tab's source list, so money you add under it saves here.</div>
     ${SH_ERR}
-    <button onclick="saveNewPot()" style="${SH_BTN}background:var(--acc);border:none;color:var(--accbg)">Add it</button>
+    <button onclick="saveNewPot()" style="${SH_BTN}background:#32ADE6;border:none;color:#04121A">Add it</button>
     <button onclick="closeFhSheet()" class="btn-modal-cancel" style="width:100%;margin-top:8px">Cancel</button>`;
   openFhSheet();
 }
@@ -3567,20 +3541,20 @@ function openEditPot(src){
   const nm=getSource(src).name, c=incSav.cfg[src]||{};
   const outs=(incSav.moves||[]).filter(m=>String(m.src)===String(src)).slice().sort((a,b)=>a.d<b.d?1:-1);
   document.getElementById("fhSheetBody").innerHTML=`
-    <div style="font-size:16px;font-weight:800;color:var(--acc);margin-bottom:10px">✏️ ${nm}</div>
+    <div style="font-size:16px;font-weight:800;color:#32ADE6;margin-bottom:10px">✏️ ${nm}</div>
     <div class="label-sm" style="margin-bottom:6px">Name</div>
     <input class="modal-input" id="epName" value="${nm.replace(/"/g,'&quot;')}" oninput="shErr('')"/>
     <div class="label-sm" style="margin-bottom:6px">Save share %</div>
     <input class="modal-input" type="number" id="epPct" value="${srcPct(src)}" min="0" max="100" oninput="shErr('')"/>
-    <div style="font-size:11px;color:var(--muted);margin:-4px 0 10px">A new split counts for payments you add from now on. Old payments keep theirs.</div>
+    <div style="font-size:11px;color:#8A8A8A;margin:-4px 0 10px">A new split counts for payments you add from now on. Old payments keep theirs.</div>
     <div class="label-sm" style="margin-bottom:6px">Target (optional)</div>
     <input class="modal-input" type="number" id="epTarget" value="${c.target>0?c.target:''}" placeholder="Leave empty for no target"/>
     ${SH_ERR}
-    <button onclick="saveEditPot('${src}')" style="${SH_BTN}background:var(--acc);border:none;color:var(--accbg)">Save</button>
-    ${outs.length?`<div style="margin:16px 0 6px;font-size:12px;color:var(--text);font-weight:800">Take-outs and carry-overs</div>`+outs.map(m=>`<div class="row" style="padding:8px 0;border-bottom:1px solid var(--card2)">
-      <span style="font-size:12px;color:var(--muted)">${shortDate(m.d)} · ${m.kind==="out"?"took out":"carried in"}${m.note?' · '+m.note:''}</span>
+    <button onclick="saveEditPot('${src}')" style="${SH_BTN}background:#32ADE6;border:none;color:#04121A">Save</button>
+    ${outs.length?`<div style="margin:16px 0 6px;font-size:12px;color:#E5E5E5;font-weight:800">Take-outs and carry-overs</div>`+outs.map(m=>`<div class="row" style="padding:8px 0;border-bottom:1px solid #1E1E1E">
+      <span style="font-size:12px;color:#C9C9C9">${shortDate(m.d)} · ${m.kind==="out"?"took out":"carried in"}${m.note?' · '+m.note:''}</span>
       <span style="font-size:12.5px;font-weight:800;color:${m.kind==="out"?'#FF453A':'#30D158'}">${m.kind==="out"?'−':'+'}${fmt(m.a)}<b onclick="deletePotMove('${m.id}','${src}')" style="color:#FF453A;cursor:pointer;margin-left:9px;font-weight:400">🗑</b></span></div>`).join(""):''}
-    ${src!=="src_oth"?`<button onclick="removePot('${src}')" style="${SH_BTN}background:var(--card);border:1px solid #FF453A55;color:#FF453A;margin-top:16px">Remove this source</button>`:''}
+    ${src!=="src_oth"?`<button onclick="removePot('${src}')" style="${SH_BTN}background:#161616;border:1px solid #FF453A55;color:#FF453A;margin-top:16px">Remove this source</button>`:''}
     <button onclick="closeFhSheet()" class="btn-modal-cancel" style="width:100%;margin-top:8px">Close</button>`;
   openFhSheet();
 }
@@ -3679,11 +3653,11 @@ function refName(r){
 }
 function openHistory(o){ histF={c:"all",p:"all",q:"",r:(o&&o.r)?String(o.r):null,n:150}; paintHistory(); openFhSheet(); }
 function paintHistory(){
-  const chip=(on,lab,js)=>`<span onclick="${js}" style="flex:none;font-size:11.5px;font-weight:700;padding:7px 10px;border-radius:9px;cursor:pointer;background:${on?'var(--acc)':'var(--card)'};color:${on?'#000':'var(--muted)'};border:1px solid ${on?'var(--acc)':'var(--line)'}">${lab}</span>`;
+  const chip=(on,lab,js)=>`<span onclick="${js}" style="flex:none;font-size:11.5px;font-weight:700;padding:7px 10px;border-radius:9px;cursor:pointer;background:${on?'#FFD60A':'#161616'};color:${on?'#000':'#C9C9C9'};border:1px solid ${on?'#FFD60A':'#2A2A2A'}">${lab}</span>`;
   document.getElementById("fhSheetBody").innerHTML=`
-    <div class="row" style="margin-bottom:10px"><span style="font-size:16px;font-weight:800;color:var(--acc)">📜 History${histF.r?' · '+refName(histF.r):''}</span>
-      <span onclick="closeFhSheet()" style="font-size:18px;color:var(--muted);cursor:pointer;padding:2px 6px">✕</span></div>
-    ${histF.r?`<button onclick="histF.r=null;paintHistory()" style="width:100%;margin-bottom:10px;padding:9px;border-radius:10px;background:var(--card);border:1px solid var(--line);color:var(--text);font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">Show all history</button>`:''}
+    <div class="row" style="margin-bottom:10px"><span style="font-size:16px;font-weight:800;color:#FFD60A">📜 History${histF.r?' · '+refName(histF.r):''}</span>
+      <span onclick="closeFhSheet()" style="font-size:18px;color:#8A8A8A;cursor:pointer;padding:2px 6px">✕</span></div>
+    ${histF.r?`<button onclick="histF.r=null;paintHistory()" style="width:100%;margin-bottom:10px;padding:9px;border-radius:10px;background:#161616;border:1px solid #333;color:#E5E5E5;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">Show all history</button>`:''}
     <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:6px">${HCATS.map(k=>chip(histF.c===k[0],(k[2]?k[2]+' ':'')+k[1],`histF.c='${k[0]}';histF.n=150;paintHistory()`)).join("")}</div>
     <div style="display:flex;gap:6px;margin-bottom:8px">${[["week","This Week"],["month","This Month"],["year","This Year"],["all","All time"]].map(k=>chip(histF.p===k[0],k[1],`histF.p='${k[0]}';histF.n=150;paintHistory()`)).join("")}</div>
     <input class="modal-input" id="histQ" placeholder="Search history" value="${(histF.q||'').replace(/"/g,'&quot;')}" oninput="histF.q=this.value;histF.n=150;paintHistList()"/>
@@ -3698,15 +3672,15 @@ function paintHistList(){
   const el=document.getElementById("histList"); if(!el) return;
   const list=histFiltered();
   if(!list.length){ el.innerHTML=`<div class="empty-msg" style="padding:20px 0">Nothing recorded here yet.</div>`; return; }
-  let html=`<div style="font-size:11px;color:var(--muted);margin:2px 0 6px">${list.length} record${list.length!==1?'s':''}</div>`, day="";
+  let html=`<div style="font-size:11px;color:#8A8A8A;margin:2px 0 6px">${list.length} record${list.length!==1?'s':''}</div>`, day="";
   for(const h of list.slice(0,histF.n)){
-    if(h.d!==day){ day=h.d; html+=`<div style="font-size:11px;color:var(--acc);font-weight:800;margin:12px 0 4px">${longDate(h.d)}</div>`; }
+    if(h.d!==day){ day=h.d; html+=`<div style="font-size:11px;color:#FFD60A;font-weight:800;margin:12px 0 4px">${longDate(h.d)}</div>`; }
     html+=`<div style="display:flex;gap:9px;padding:8px 0;border-bottom:1px solid #1C1C1C">
       <div style="font-size:15px;line-height:1.2">${hIcon(h.c)}</div>
-      <div style="flex:1;min-width:0"><div style="font-size:12.5px;color:var(--text);line-height:1.45">${h.x}</div>
+      <div style="flex:1;min-width:0"><div style="font-size:12.5px;color:#E5E5E5;line-height:1.45">${h.x}</div>
         <div style="font-size:10.5px;color:#6A6A6A;margin-top:1px">${h.tm?h.tm:'earlier record'}</div></div></div>`;
   }
-  if(list.length>histF.n) html+=`<button onclick="histF.n+=150;paintHistList()" style="width:100%;margin-top:10px;padding:10px;border-radius:10px;background:var(--card);border:1px solid var(--line);color:var(--text);font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">Show more</button>`;
+  if(list.length>histF.n) html+=`<button onclick="histF.n+=150;paintHistList()" style="width:100%;margin-top:10px;padding:10px;border-radius:10px;background:#161616;border:1px solid #333;color:#E5E5E5;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">Show more</button>`;
   el.innerHTML=html;
 }
 
@@ -3823,7 +3797,7 @@ if('serviceWorker' in navigator){window.addEventListener('load',function(){navig
     e.preventDefault();deferred=e;
     if(standalone||document.getElementById('fhInstallBtn'))return;
     var b=document.createElement('button');b.id='fhInstallBtn';b.type='button';b.textContent='\u2B07 Install Finance Hub';
-    b.style.cssText='position:fixed;right:14px;bottom:96px;z-index:9999;border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:11px 16px;background:var(--acc);color:#000;font:800 13px Outfit,system-ui,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.45)';
+    b.style.cssText='position:fixed;right:14px;bottom:96px;z-index:9999;border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:11px 16px;background:#FFD700;color:#000;font:800 13px Outfit,system-ui,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.45)';
     b.addEventListener('click',function(){if(!deferred)return;deferred.prompt();deferred.userChoice.then(function(){deferred=null;b.remove();});});
     document.body.appendChild(b);
   });
