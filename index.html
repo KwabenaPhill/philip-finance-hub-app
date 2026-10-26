@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v15.3</title>
+<title>Philip's Finance Hub v15.4</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v15.3</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v15.4</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -4321,6 +4321,37 @@ body.look-soft .sx-chip{border:1px solid #D6DCE5}
 .sx-up{animation:sxUp .55s cubic-bezier(.2,.8,.2,1) both}
 @keyframes sxUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 body.look-soft .soft-title div:first-child{font-size:34px !important}
+/* v15.4: compact, less scrolling */
+body.look-soft .page{padding:14px 16px 10px}
+.sx-top{margin:0 0 10px}.sx-top h1{font-size:26px}.sx-top .sub{font-size:13px;margin-top:2px}
+body.look-soft .soft-title{padding:6px 2px 0 !important;margin:0 0 8px !important}
+body.look-soft .soft-title div:first-child{font-size:26px !important}
+body.look-soft .soft-title div:last-child{font-size:13px !important;margin-top:2px !important}
+.sx-h2{font-size:18px;margin:14px 0 8px}
+.sx-big{font-size:25px}
+.sx-dark{padding:13px 16px;border-radius:18px;margin-bottom:10px}
+.sx-dark .l{font-size:12px}
+.sx-card{padding:12px 15px;border-radius:18px;margin-bottom:10px}
+.sx-acc{min-height:84px;padding:11px;border-radius:16px}
+.sx-acc .sx-ic{width:34px !important;height:34px !important}.sx-acc .sx-ic svg{width:18px;height:18px}
+.sx-acc .v{font-size:17px}.sx-acc .k{font-size:13px}
+.sx-chip{padding:8px 10px}.sx-chip b{font-size:16px}
+.sx-pill{font-size:11px;padding:3px 9px}
+.sx-stat{padding:7px 4px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap}
+.sx-stat svg{width:16px;height:16px}.sx-stat b{font-size:17px;margin:0;display:inline}.sx-stat span{font-size:12px}
+.sx-stat > span:last-child{width:100%;margin-top:-2px}
+.sx-tx{padding:9px 0;gap:12px}.sx-ic{width:40px;height:40px}.sx-ic svg{width:20px;height:20px}
+.sx-row{padding:11px 0}
+.sx-btn{padding:13px;font-size:16px;margin-bottom:8px}.sx-btn2{padding:11px;font-size:15px;margin-bottom:8px}
+/* every switch and picker is deep violet so you know it is a tab */
+.sx-seg{background:#3B1F4A !important;border:none !important;padding:4px;margin-bottom:10px}
+.sx-seg button{color:#E4D9F0;padding:9px;font-weight:500}
+.sx-seg button.on{background:#fff;color:#3B1F4A}
+.sx-sel{background:#3B1F4A !important;border:none !important;margin-bottom:10px}
+.sx-sel select{color:#fff !important;padding:11px 40px 11px 44px;font-weight:500}
+.sx-sel select option{color:#3B1F4A;background:#fff}
+.sx-sel>svg:first-child,.sx-sel .chev{color:#fff}
+
 `;
 var st=document.createElement("style"); st.textContent=css; document.head.appendChild(st);
 })();
@@ -4469,7 +4500,7 @@ function sxBudgetTop(){
   var subsM=subsTotalMonthly(), spent=cats.reduce(function(s,c){return s+catSpentMonth(c.id,ym);},0)+((ym===cur)?subsM:0), planned=monthlyPlan, left=planned-spent;
   var wn=pg.querySelector(".week-nav");
   if(wn){ var a=document.createElement("div"); a.className="sx";
-    a.innerHTML='<div class="sx-card sx-up" style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px"><button onclick="selBudgetMonth=shiftMonth(selBudgetMonth,-1);renderBudget()" style="border:none;background:none;font:400 15px Lexend;color:var(--ink);cursor:pointer">‹ Prev</button><b style="font-weight:500;font-size:16px">'+monthLabel(ym)+'</b><button onclick="selBudgetMonth=shiftMonth(selBudgetMonth,1);renderBudget()" style="border:none;background:none;font:400 15px Lexend;color:'+(ym<cur?'var(--ink)':'var(--muted)')+';cursor:pointer">Next ›</button></div>';
+    a.innerHTML='<div class="sx-card sx-up" style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:#3B1F4A;border:none"><button onclick="selBudgetMonth=shiftMonth(selBudgetMonth,-1);renderBudget()" style="border:none;background:none;font:500 15px Lexend;color:#fff;cursor:pointer">‹ Prev</button><b style="font-weight:500;font-size:16px">'+monthLabel(ym)+'</b><button onclick="selBudgetMonth=shiftMonth(selBudgetMonth,1);renderBudget()" style="border:none;background:none;font:400 15px Lexend;color:'+(ym<cur?'#fff':'#9C88B5')+';cursor:pointer">Next ›</button></div>';
     var card=wn.nextElementSibling; wn.replaceWith(a);
     if(card&&card.classList.contains("card")){ var pc=planned>0?Math.min(100,spent/planned*100):0, b=document.createElement("div"); b.className="sx";
       b.innerHTML='<div class="sx-card sx-up"><div style="display:flex;justify-content:space-between"><span class="sx-k" style="font-size:15px">Planned</span><b style="font-weight:500;font-size:17px;color:var(--green)">GHS '+sxF(planned)+'</b></div><div style="display:flex;justify-content:space-between;margin-top:6px"><span class="sx-k" style="font-size:15px">Spent</span><b style="font-weight:500;font-size:17px;color:var(--red)">GHS '+sxF(spent)+'</b></div>'+
