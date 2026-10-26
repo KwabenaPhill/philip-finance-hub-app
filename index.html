@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v15.4</title>
+<title>Philip's Finance Hub v15.5</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v15.4</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v15.5</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -4048,7 +4048,7 @@ function softTitles(){
     if(pg.firstElementChild&&pg.firstElementChild.classList.contains("soft-title")) return;
     var d=document.createElement("div"); d.className="soft-title soft-head soft-up";
     d.style.cssText="padding:14px 4px 4px;margin:0 0 12px;overflow:visible";
-    d.innerHTML='<div style="font-size:32px;font-weight:500;color:#3B1F4A;line-height:1.1">'+SOFT_TITLES[t][0]+'</div><div style="color:#3F3849;font-size:13px;margin-top:4px">'+SOFT_TITLES[t][1]+'</div>';
+    d.style.display='flex'; d.style.justifyContent='space-between'; d.innerHTML='<div><div style="font-size:23px;font-weight:500;color:#3B1F4A;line-height:1.1">'+SOFT_TITLES[t][0]+'</div><div style="color:#3F3849;font-size:13px;margin-top:2px">'+SOFT_TITLES[t][1]+'</div></div><div class="sx-brand">PHILIP\'S<br>FINANCE HUB</div>';
     pg.insertBefore(d,pg.firstChild);
   });
 }
@@ -4344,9 +4344,14 @@ body.look-soft .soft-title div:last-child{font-size:13px !important;margin-top:2
 .sx-row{padding:11px 0}
 .sx-btn{padding:13px;font-size:16px;margin-bottom:8px}.sx-btn2{padding:11px;font-size:15px;margin-bottom:8px}
 /* every switch and picker is deep violet so you know it is a tab */
-.sx-seg{background:#3B1F4A !important;border:none !important;padding:4px;margin-bottom:10px}
-.sx-seg button{color:#E4D9F0;padding:9px;font-weight:500}
-.sx-seg button.on{background:#fff;color:#3B1F4A}
+.sx-seg{background:#fff !important;border:1.5px solid #3B1F4A !important;padding:4px;margin-bottom:10px}
+.sx-seg button{color:#3B1F4A;padding:9px;font-weight:500}
+.sx-seg button.on{background:#3B1F4A;color:#fff}
+.sx-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}.sx-top h1{font-size:23px !important}
+.sx-brand{font-size:10px;letter-spacing:1.5px;color:#3B1F4A;font-weight:600;text-align:right;line-height:1.3;opacity:.85;padding-top:4px}
+.sx-chip b{font-weight:600 !important;filter:brightness(.8)}
+.sx-acc .v,.sx-big,.sx-tx .a{font-weight:600 !important}
+body.look-soft .soft-title div:first-child{font-size:23px !important}
 .sx-sel{background:#3B1F4A !important;border:none !important;margin-bottom:10px}
 .sx-sel select{color:#fff !important;padding:11px 40px 11px 44px;font-weight:500}
 .sx-sel select option{color:#3B1F4A;background:#fff}
@@ -4358,7 +4363,7 @@ var st=document.createElement("style"); st.textContent=css; document.head.append
 function sxI(n,sz){ return '<svg viewBox="0 0 24 24" style="width:'+(sz||22)+'px;height:'+(sz||22)+'px">'+(SOFT_IC[n]||SOFT_IC.out)+'</svg>'; }
 function sxEsc(t){ return String(t==null?"":t).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
 function sxF(n){ return Math.round(n||0).toLocaleString(); }
-function sxTitle(t,s){ return '<div class="sx-top sx-up"><h1>'+t+'</h1><div class="sub">'+s+'</div></div>'; }
+function sxTitle(t,s){ return '<div class="sx-top sx-up"><div><h1>'+t+'</h1><div class="sub">'+s+'</div></div><div class="sx-brand">PHILIP\'S<br>FINANCE HUB</div></div>'; }
 function sxSeg(items){ return '<div class="sx-seg sx-up">'+items.map(function(i){ return '<button class="'+(i.on?'on':'')+'" onclick="'+i.go+'">'+i.label+'</button>'; }).join("")+'</div>'; }
 function sxSel(value,handler){
   return '<div class="sx-sel sx-up">'+sxI("cal",18)+'<select onchange="'+handler+'(this.value)" aria-label="Select time period">'+
@@ -4412,7 +4417,7 @@ function sxIncome(){
   var h='<div class="sx">'+sxTitle("Money","Money you received")+
     sxSeg([{label:"Income",on:true,go:"setMoneySide('income')"},{label:"Spending",go:"setMoneySide('spend')"}])+
     sxSel(spendPeriod,"setSpendPeriod")+
-    '<div class="sx-card sx-up" style="background:#C3EED9"><div class="sx-k">Money in · '+pr.label.toLowerCase()+'</div><div class="sx-big sx-in" style="margin-top:4px">GHS '+sxF(inTot)+'</div><div class="sx-k" style="margin-top:2px">'+list.length+' payment'+(list.length!==1?'s':'')+' received</div>'+
+    '<div class="sx-dark sx-up"><div class="l">Money in · '+pr.label.toLowerCase()+'</div><div class="sx-big" style="margin-top:4px">GHS '+sxF(inTot)+'</div><div class="l" style="margin-top:2px">'+list.length+' payment'+(list.length!==1?'s':'')+' received</div>'+
     '<div style="display:flex;gap:10px;margin-top:12px"><div class="sx-chip">Saved<b class="sx-in">'+sxF(saved)+'</b></div><div class="sx-chip">To spend<b style="color:#B56A08">'+sxF(live)+'</b></div></div></div>'+
     '<div class="sx-card sx-up"><div style="font-size:19px;font-weight:500;margin-bottom:12px">Add money you received</div>'+
     '<input class="sx-field" type="number" id="incAmt" placeholder="Amount (GHS)"/>'+
@@ -4509,6 +4514,7 @@ function sxBudgetTop(){
         '<button class="sx-btn2" style="margin:12px 0 0" onclick="setMonthlyPlan()">'+sxI("edit",17)+' '+(planned>0?'Edit monthly plan':'Set monthly plan')+'</button></div>';
       card.replaceWith(b); }
   }
+  pg.querySelectorAll(".wn-section-total").forEach(function(t){ if(/\/mo/.test(t.textContent)){ t.style.setProperty("color","#0B6B43","important"); t.style.setProperty("font-weight","700","important"); t.style.setProperty("font-size","15px","important"); _softSeen.add(t); } });
   pg.querySelectorAll(":scope > div > .section-title").forEach(function(t){ if(/Spending Categories/.test(t.textContent)){ var d=document.createElement("div"); d.className="sx"; d.innerHTML='<div class="sx-h2 sx-up">Spending categories</div>'; t.replaceWith(d); } });
   cats.forEach(function(cat){
     var head=pg.querySelector("[onclick^=\"budgetExpandedId=budgetExpandedId==='"+cat.id+"'\"]"); if(!head) return;
