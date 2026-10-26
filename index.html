@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v15.1</title>
+<title>Philip's Finance Hub v15.2</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v15.1</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v15.2</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -3918,7 +3918,7 @@ renderNotice();
 
 // ===== v15.0: APP LOOKS. "Soft" (default, banking-app style), "Bank card", "Classic". =====
 // Only changes how the app looks. Never touches saved records.
-var LOOK_KEY="pfhub_look_v1";
+var LOOK_KEY="pfhub_look_v2";
 function getLook(){ try{ var v=localStorage.getItem(LOOK_KEY); return (v==="bank"||v==="classic"||v==="soft")?v:"soft"; }catch(e){ return "soft"; } }
 var NAV_SVG={
   money:'<path d="M3 10l9-7 9 7v10a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',
