@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v13.9</title>
+<title>Philip's Finance Hub v15.0</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v13.9</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v15.0</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -3916,67 +3916,221 @@ renderMoney();
 renderSavings();
 renderNotice();
 
-// ===== v13.9: LOOK 1 "Bank card". Only changes how the app looks. Never touches saved records. =====
+// ===== v15.0: APP LOOKS. "Soft" (default, banking-app style), "Bank card", "Classic". =====
+// Only changes how the app looks. Never touches saved records.
 var LOOK_KEY="pfhub_look_v1";
-function getLook(){ try{ return localStorage.getItem(LOOK_KEY)||"bank"; }catch(e){ return "bank"; } }
+function getLook(){ try{ var v=localStorage.getItem(LOOK_KEY); return (v==="bank"||v==="classic"||v==="soft")?v:"soft"; }catch(e){ return "soft"; } }
 var NAV_SVG={
-  money:'<path d="M3 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2h-4a2 2 0 0 0 0 4h4v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M19 9h2v4h-2"/>',
+  money:'<path d="M3 10l9-7 9 7v10a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',
   debt:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h3"/>',
-  savings:'<path d="M3 21h18M4 10h16M5 10v8m4-8v8m6-8v8m4-8v8M12 3l8 5H4z"/>',
+  savings:'<path d="M5 11a7 6 0 0 1 13-2h2v4l-2 1v3h-3v-2H9v2H6v-3a6 6 0 0 1-1-3z"/><path d="M15 9h.01"/>',
   budget:'<path d="M12 3a9 9 0 1 0 9 9h-9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/>',
   wn:'<path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/>',
-  backup:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-2.9-1.2l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.7 1.7 0 0 0 3 15a1.7 1.7 0 0 0-1.6-1H1.3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 3 8.9a1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.7 1.7 0 0 0 8.4 4V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.6 1h.1a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.6 1z"/>'
+  backup:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1L7 17M17 7l2.1-2.1"/>'
 };
 var _navEmoji={};
+var SOFT_CSS=`
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600&display=swap');
+body.look-soft{background:#F3F8FA;color:#3B1F4A;overflow-x:hidden}
+body.look-soft, body.look-soft *{font-family:Lexend,sans-serif !important}
+body.look-soft .app-header{display:none}
+body.look-soft .bottom-nav{background:#fff;border-top:1px solid #E6EAF0}
+body.look-soft .nav-btn{color:#3B1F4A;font-size:10.5px;font-weight:400 !important}
+body.look-soft .nav-btn.active{color:#4FB3BF}
+body.look-soft .nav-btn::before{background:#4FB3BF;left:24%;right:24%;height:4px}
+body.look-soft .nav-icon svg, body.look-bank .nav-icon svg{width:22px;height:22px;display:block}
+body.look-soft .card, body.look-soft .goal-card, body.look-soft .savings-goal-card, body.look-soft .backup-card{border-radius:20px !important;box-shadow:0 2px 10px rgba(59,31,74,.04)}
+body.look-soft .page.active .card{animation:softUp .55s cubic-bezier(.2,.8,.2,1) both}
+body.look-soft .page.active .card:nth-of-type(2){animation-delay:.06s}
+body.look-soft .page.active .card:nth-of-type(3){animation-delay:.12s}
+body.look-soft .page.active .card:nth-of-type(4){animation-delay:.18s}
+body.look-soft .page.active .card:nth-of-type(n+5){animation-delay:.24s}
+@keyframes softUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+body.look-soft .bar-fill::after{display:none}
+body.look-soft input, body.look-soft select, body.look-soft textarea{background:#F3F6F9 !important;border:1px solid #E1E6EE !important;color:#3B1F4A !important;border-radius:12px !important}
+body.look-soft .modal-overlay{background:rgba(59,31,74,.35)}
+body.look-soft .modal-box{background:#fff !important;color:#3B1F4A;border-radius:24px !important}
+.soft-head{display:none}
+body.look-soft .soft-head{display:block;position:relative;margin:-14px -16px 6px;padding:22px 20px 4px;overflow:hidden}
+.soft-blob{position:absolute;border-radius:50%;pointer-events:none;animation:softFloat 7s ease-in-out infinite}
+.soft-blob.a{top:-80px;right:-80px;width:230px;height:230px;background:radial-gradient(circle at 35% 40%,#FFD36B,#F39A2B 55%,#E8502E)}
+.soft-blob.b{top:-30px;right:-130px;width:200px;height:200px;background:radial-gradient(circle at 40% 40%,#FFE08A,#F6A93B);opacity:.85;animation-delay:-3s}
+@keyframes softFloat{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-10px,12px) scale(1.05)}}
+.soft-top{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.soft-top h1{font-size:32px;font-weight:500;line-height:1.1;color:#3B1F4A}
+.soft-top .d{color:#6B6475;font-size:13px;margin-top:4px}
+.soft-bell{width:44px;height:44px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.06);color:#3B1F4A}
+.soft-head svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.soft-bal{position:relative;z-index:2;background:rgba(214,239,246,.8);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.85);border-radius:20px;padding:16px 18px}
+.soft-bal .k{font-size:13px;color:#6B6475}
+.soft-bal .v{font-size:29px;font-weight:500;margin-top:3px;display:flex;justify-content:space-between;align-items:center;color:#3B1F4A}
+.soft-bal .r{display:flex;gap:10px;margin-top:12px}
+.soft-chip{flex:1;background:#fff;border-radius:14px;padding:9px 12px;font-size:12px;color:#6B6475}
+.soft-chip b{display:block;font-size:15px;font-weight:500;margin-top:2px}
+.soft-h2{font-size:19px;font-weight:500;margin:18px 0 10px;color:#3B1F4A}
+.soft-qa{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.soft-tile{border:none;text-align:left;border-radius:18px;padding:13px 12px;font-size:14px;line-height:1.25;color:#3B1F4A;cursor:pointer}
+.soft-tile svg{width:27px;height:27px;margin-bottom:8px;display:block}
+.soft-rec{background:#fff;border-radius:20px;padding:2px 16px;margin-top:4px}
+.soft-tx{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #EEF1F5}
+.soft-tx:last-child{border:0}
+.soft-ic{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.soft-tx .n{flex:1;font-size:14px;color:#3B1F4A;min-width:0}.soft-tx .n small{display:block;color:#9A94A3;font-size:11.5px;margin-top:1px}
+.soft-tx .a{font-size:14px;font-weight:500}
+.soft-up{opacity:0;transform:translateY(14px);animation:softUp .6s cubic-bezier(.2,.8,.2,1) forwards}
+.look-pick{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.look-pick button{flex:1;min-width:90px;padding:11px;border-radius:11px;border:1px solid #333333;background:#161616;color:#E5E5E5;font:600 13px 'Outfit',sans-serif;cursor:pointer}
+.look-pick button.on{border-color:#4FB3BF;color:#4FB3BF}
+`;
+(function(){ var st=document.createElement("style"); st.id="softLookCss"; st.textContent=SOFT_CSS; document.head.appendChild(st); })();
+
+// ---- recolour engine: turns the dark colours of every screen into the soft light ones
+function _rgb(c){ var m=c&&c.match(/rgba?\(([^)]+)\)/); if(!m) return null; var p=m[1].split(",").map(parseFloat); return {r:p[0],g:p[1],b:p[2],a:p.length>3?p[3]:1}; }
+function _hsl(o){ var r=o.r/255,g=o.g/255,b=o.b/255,mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2,h=0,s=0;
+  if(mx!==mn){ var d=mx-mn; s=l>.5?d/(2-mx-mn):d/(mx+mn); h=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4; h*=60; } return {h:h,s:s,l:l}; }
+var _softSeen=new WeakSet(), _softBg=new WeakMap();
+function softPaint(root){
+  if(!document.body.classList.contains("look-soft")||!root) return;
+  var els=[root].concat(Array.prototype.slice.call(root.querySelectorAll("*")));
+  for(var i=0;i<els.length;i++){
+    var el=els[i]; if(_softSeen.has(el)) continue; _softSeen.add(el);
+    if(el.closest&&el.closest(".soft-head,.bottom-nav,svg")) continue;
+    var cs=getComputedStyle(el), bg=_rgb(cs.backgroundColor), orig=null;
+    if(bg&&bg.a>0.05){
+      orig=bg; var h=_hsl(bg);
+      if(h.l<0.3){
+        if(h.s<0.18){ el.style.setProperty("background-color", h.l<0.07?"#F3F6F9":(h.l<0.11?"#FFFFFF":"#F1F3F7"),"important"); }
+        else { el.style.setProperty("background-color","hsl("+Math.round(h.h)+",70%,94%)","important"); }
+      }
+    }
+    _softBg.set(el, orig||(el.parentElement&&_softBg.get(el.parentElement))||null);
+    if(cs.backgroundImage&&cs.backgroundImage!=="none"&&/rgb\(\s*(\d|[1-4]\d)\s*,/.test(cs.backgroundImage)&&!/linear-gradient\(135deg, rgb\(48/.test(cs.backgroundImage)) el.style.setProperty("background-image","none","important");
+    var bc=_rgb(cs.borderTopColor); if(bc&&parseFloat(cs.borderTopWidth)>0){ var bh=_hsl(bc); if(bh.l<0.3&&bh.s<0.25) el.style.setProperty("border-color","#E6EAF0","important"); else if(bh.l<0.3) el.style.setProperty("border-color","hsl("+Math.round(bh.h)+",60%,85%)","important"); }
+    var tc=_rgb(cs.color); if(!tc) continue; var th=_hsl(tc);
+    var under=_softBg.get(el), uh=under?_hsl(under):null;
+    var onColour=uh&&uh.l>=0.3&&uh.l<=0.8&&uh.s>0.35;
+    if(!onColour){
+      if(th.l>0.62&&th.s<0.2) el.style.setProperty("color", th.l>0.85?"#3B1F4A":"#6B6475","important");
+      else if(th.s>0.35&&th.l>0.42) el.style.setProperty("color","hsl("+Math.round(th.h)+","+Math.round(Math.min(th.s,.75)*100)+"%,38%)","important");
+      if(cs.webkitTextFillColor&&cs.webkitTextFillColor.indexOf("0, 0, 0, 0")>-1) { el.style.setProperty("-webkit-text-fill-color","#3B1F4A","important"); el.style.setProperty("background","none","important"); }
+    }
+    var fw=parseInt(cs.fontWeight,10); if(fw>=800) el.style.setProperty("font-weight","600","important"); else if(fw>=600) el.style.setProperty("font-weight","500","important");
+  }
+}
+var _softObs=null;
+function softWatch(){
+  if(_softObs) return;
+  _softObs=new MutationObserver(function(ms){
+    if(!document.body.classList.contains("look-soft")) return;
+    ms.forEach(function(m){ m.addedNodes.forEach(function(n){ if(n.nodeType===1) softPaint(n); }); });
+    softTitles();
+  });
+  _softObs.observe(document.body,{childList:true,subtree:true});
+}
+
 function applyLook(){
-  var bank=getLook()==="bank";
-  document.body.classList.toggle("look-bank",bank);
+  var lk=getLook();
+  document.body.classList.toggle("look-bank",lk==="bank");
+  document.body.classList.toggle("look-soft",lk==="soft");
   TABS.forEach(function(t){
     var b=document.getElementById("nav-"+t); if(!b) return;
     var ic=b.querySelector(".nav-icon"); if(!ic) return;
     if(!(t in _navEmoji)) _navEmoji[t]=ic.innerHTML;
-    ic.innerHTML=bank?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+NAV_SVG[t]+'</svg>':_navEmoji[t];
+    ic.innerHTML=lk!=="classic"?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+NAV_SVG[t]+'</svg>':_navEmoji[t];
+  });
+  if(lk==="soft"){ softWatch(); softPaint(document.body); softTitles(); }
+}
+var SOFT_TITLES={debt:["Plans","Pay it off, one day at a time"],savings:["Savings","All your pots at a glance"],budget:["Budget","Know where every cedi goes"],wn:["Lists","Wants and needs"],backup:["Settings","Backup, looks and income"]};
+function softTitles(){
+  if(!document.body.classList.contains("look-soft")) return;
+  Object.keys(SOFT_TITLES).forEach(function(t){
+    var pg=document.getElementById("page-"+t); if(!pg||!pg.firstChild) return;
+    if(pg.firstElementChild&&pg.firstElementChild.classList.contains("soft-title")) return;
+    var d=document.createElement("div"); d.className="soft-title soft-head soft-up";
+    d.style.cssText="padding:14px 4px 4px;margin:0 0 12px;overflow:visible";
+    d.innerHTML='<div style="font-size:32px;font-weight:500;color:#3B1F4A;line-height:1.1">'+SOFT_TITLES[t][0]+'</div><div style="color:#6B6475;font-size:13px;margin-top:4px">'+SOFT_TITLES[t][1]+'</div>';
+    pg.insertBefore(d,pg.firstChild);
   });
 }
 function setLook(v){
   try{ localStorage.setItem(LOOK_KEY,v); }catch(e){}
-  applyLook();
-  var a=document.querySelector(".nav-btn.active"); switchTab(a?a.id.slice(4):"money");
+  location.reload();
+}
+function _monthSpent(from,to){
+  var s=0;
+  try{
+    s=(spendData.entries||[]).filter(function(e){return inRange(e.date,from,to);}).reduce(function(a,e){return a+e.amount;},0)
+     +(D().log||[]).filter(function(l){return inRange(l.date,from,to);}).reduce(function(a,l){return a+l.amount;},0)
+     +(buyPlans||[]).flatMap(function(p){return p.log||[];}).filter(function(l){return !l.seed&&inRange(l.date,from,to);}).reduce(function(a,l){return a+l.amount;},0)
+     +(savGoals||[]).flatMap(function(g){return g.log||[];}).filter(function(l){return !l.seed&&inRange(l.date,from,to);}).reduce(function(a,l){return a+l.amount;},0);
+  }catch(e){}
+  return s;
 }
 function bankCardHTML(){
   if(getLook()!=="bank") return "";
-  var from=TODAY.slice(0,8)+"01", to=TODAY, inTot=0, spent=0;
-  try{ inTot=incomeTotal(from,to); }catch(e){}
-  try{
-    spent=(spendData.entries||[]).filter(function(e){return inRange(e.date,from,to);}).reduce(function(s,e){return s+e.amount;},0)
-      +(D().log||[]).filter(function(l){return inRange(l.date,from,to);}).reduce(function(s,l){return s+l.amount;},0)
-      +(buyPlans||[]).flatMap(function(p){return p.log||[];}).filter(function(l){return !l.seed&&inRange(l.date,from,to);}).reduce(function(s,l){return s+l.amount;},0)
-      +(savGoals||[]).flatMap(function(g){return g.log||[];}).filter(function(l){return !l.seed&&inRange(l.date,from,to);}).reduce(function(s,l){return s+l.amount;},0);
-  }catch(e){}
-  var left=inTot-spent, h=new Date().getHours();
-  var hi=h<12?"Good morning":(h<17?"Good afternoon":"Good evening");
+  var from=TODAY.slice(0,8)+"01", inTot=0; try{ inTot=incomeTotal(from,TODAY); }catch(e){}
+  var spent=_monthSpent(from,TODAY), left=inTot-spent, f=function(n){return Math.round(n).toLocaleString();};
   var mon=new Date(TODAY).toLocaleString("en-GB",{month:"long"});
-  var f=function(n){return Math.round(n).toLocaleString();};
-  return '<div style="font-size:13px;color:#8A97AB;font-weight:600;margin:2px 2px 8px">'+hi+', Philip</div>'+
-    '<div class="bank-card"><div class="bk-lbl">Left this month · '+mon+'</div>'+
-    '<div class="bk-big" style="color:'+(left<0?'#F7C1C1':'#fff')+'">GH₵ '+f(left)+'</div>'+
+  return '<div class="bank-card"><div class="bk-lbl">Left this month · '+mon+'</div><div class="bk-big">GH₵ '+f(left)+'</div>'+
     '<div class="bk-row"><div class="bk-box"><span class="bk-lbl">Money in</span><b style="color:#9FE1CB">+'+f(inTot)+'</b></div>'+
     '<div class="bk-box"><span class="bk-lbl">Spent</span><b style="color:#F7C1C1">-'+f(spent)+'</b></div></div></div>';
 }
+var _softHidden=false;
+try{ _softHidden=localStorage.getItem("pfhub_hide_bal_v1")==="1"; }catch(e){}
+function softToggleHide(){ _softHidden=!_softHidden; try{localStorage.setItem("pfhub_hide_bal_v1",_softHidden?"1":"0");}catch(e){} renderMoney(); }
+function softQuick(x){
+  if(x==="add"){ moneySide="income"; renderMoney(); setTimeout(function(){ var i=document.getElementById("incAmt"); if(i){ i.scrollIntoView({behavior:"smooth",block:"center"}); i.focus(); } },120); }
+  else if(x==="spend"){ moneySide="spend"; renderMoney(); setTimeout(function(){ var t=document.querySelector("#page-money .soft-head"); if(t&&t.nextElementSibling) t.nextElementSibling.scrollIntoView({behavior:"smooth"}); },120); }
+  else switchTab("savings");
+}
+function softHeadHTML(){
+  if(getLook()!=="soft") return "";
+  var from=TODAY.slice(0,8)+"01", inTot=0; try{ inTot=incomeTotal(from,TODAY); }catch(e){}
+  var spent=_monthSpent(from,TODAY), left=inTot-spent, f=function(n){return Math.round(n).toLocaleString();};
+  var h=new Date().getHours(), hi=h<12?"Good morning":(h<17?"Good afternoon":"Good evening");
+  var day=new Date(TODAY+"T12:00:00").toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"});
+  var mask=function(t){return _softHidden?"*****":t;};
+  var rec=[];
+  try{ (incomeData.entries||[]).forEach(function(e){ rec.push({d:e.date,n:getSource(e.src).name,s:"Income",a:e.amount,in:true}); }); }catch(e){}
+  try{ (spendData.entries||[]).forEach(function(e){ rec.push({d:e.date,n:e.desc||getCat(e.cat).label,s:getCat(e.cat).label,a:e.amount,in:false}); }); }catch(e){}
+  rec.sort(function(a,b){return a.d<b.d?1:-1;}); rec=rec.slice(0,4);
+  var ico={inc:'<path d="M12 19V5M5 12l7-7 7 7"/>',out:'<path d="M12 5v14M5 12l7 7 7-7"/>'};
+  var recHTML=rec.length?rec.map(function(r){ return '<div class="soft-tx"><div class="soft-ic" style="background:'+(r.in?'#E3F8EF;color:#1F9D6B':'#FFF0DA;color:#D98A1C')+'"><svg viewBox="0 0 24 24">'+(r.in?ico.inc:ico.out)+'</svg></div><div class="n">'+String(r.n).replace(/</g,"&lt;")+'<small>'+r.s+' · '+(typeof shortDate==="function"?shortDate(r.d):r.d)+'</small></div><div class="a" style="color:'+(r.in?'#1F9D6B':'#D9534F')+'">'+(r.in?'+':'-')+mask(f(r.a))+'</div></div>'; }).join("")
+    :'<div style="padding:16px 0;color:#9A94A3;font-size:13px">Nothing yet. Tap Add money or Log spend.</div>';
+  return '<div class="soft-head"><div class="soft-blob a"></div><div class="soft-blob b"></div>'+
+    '<div class="soft-top soft-up"><div><h1>Hello,<br>Philip</h1><div class="d">'+hi+' · '+day+'</div></div><div class="soft-bell"><svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></div></div>'+
+    '<div class="soft-bal soft-up" style="animation-delay:.08s"><div class="k">Left this month</div><div class="v"><span class="soft-count" data-to="'+Math.round(left)+'">GHS '+(_softHidden?"*****":"0")+'</span><span onclick="softToggleHide()" style="cursor:pointer"><svg viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'+(_softHidden?'<path d="M3 3l18 18"/>':'')+'</svg></span></div>'+
+    '<div class="r"><div class="soft-chip">Money in<b style="color:#1F9D6B">+'+mask(f(inTot))+'</b></div><div class="soft-chip">Spent<b style="color:#D9534F">-'+mask(f(spent))+'</b></div></div></div>'+
+    '<div class="soft-h2 soft-up" style="animation-delay:.14s">Quick actions</div>'+
+    '<div class="soft-qa soft-up" style="animation-delay:.18s">'+
+      '<button class="soft-tile" style="background:#EDF4FC" onclick="softQuick(\'add\')"><svg viewBox="0 0 24 24" style="color:#4BA9C9"><path d="M12 5v14M5 12h14"/></svg>Add money</button>'+
+      '<button class="soft-tile" style="background:#FFF0DA" onclick="softQuick(\'spend\')"><svg viewBox="0 0 24 24" style="color:#E59A22"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M16 15h2"/></svg>Log spend</button>'+
+      '<button class="soft-tile" style="background:#E3F8EF" onclick="softQuick(\'save\')"><svg viewBox="0 0 24 24" style="color:#1F9D6B"><path d="M5 11a7 6 0 0 1 13-2h2v4l-2 1v3h-3v-2H9v2H6v-3a6 6 0 0 1-1-3z"/><path d="M15 9h.01"/></svg>Save</button></div>'+
+    '<div class="soft-h2 soft-up" style="animation-delay:.22s">Recent</div><div class="soft-rec soft-up" style="animation-delay:.26s">'+recHTML+'</div>'+
+    '<div class="soft-h2" style="margin-bottom:8px">Details</div></div>';
+}
+function softCount(){
+  if(_softHidden) return;
+  document.querySelectorAll(".soft-count").forEach(function(el){
+    if(el.dataset.done) return; el.dataset.done="1";
+    var to=+el.dataset.to||0, t0=null;
+    function step(t){ if(!t0)t0=t; var p=Math.min((t-t0)/1100,1), e=1-Math.pow(1-p,3); el.textContent="GHS "+Math.round(to*e).toLocaleString(); if(p<1) requestAnimationFrame(step); }
+    setTimeout(function(){ requestAnimationFrame(step); },300);
+  });
+}
 (function(){
   var oldToggle=moneyToggleHTML;
-  moneyToggleHTML=function(){ return bankCardHTML()+oldToggle.apply(this,arguments); };
+  moneyToggleHTML=function(){ setTimeout(softCount,0); return softHeadHTML()+bankCardHTML()+oldToggle.apply(this,arguments); };
   var oldBackup=renderBackup;
   renderBackup=function(){
     oldBackup.apply(this,arguments);
     var pg=document.getElementById("page-backup"); if(!pg) return;
-    var lk=getLook();
-    var div=document.createElement("div");
+    var lk=getLook(), div=document.createElement("div");
     div.className="card"; div.style.marginTop="10px";
+    var b=function(id,lab){ return '<button class="'+(lk===id?"on":"")+'" onclick="setLook(\''+id+'\')">'+lab+'</button>'; };
     div.innerHTML='<div style="font-size:14px;font-weight:800;color:#E5E5E5">App look</div>'+
       '<div style="font-size:11px;color:#8A8A8A;margin-top:3px">Only changes how the app looks. Your records never change.</div>'+
-      '<div class="look-pick"><button class="'+(lk==="bank"?"on":"")+'" onclick="setLook(\'bank\')">1. Bank card</button>'+
-      '<button class="'+(lk==="classic"?"on":"")+'" onclick="setLook(\'classic\')">Classic</button></div>';
+      '<div class="look-pick">'+b("soft","Soft (new)")+b("bank","Bank card")+b("classic","Classic")+'</div>';
     pg.insertBefore(div,pg.firstChild);
   };
   applyLook();
