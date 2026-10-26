@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v15.7</title>
+<title>Philip's Finance Hub v15.7.1</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v15.7</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v15.7.1</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -4321,6 +4321,11 @@ body.look-soft .sx-chip{border:1px solid #D6DCE5}
 .sx-up{animation:sxUp .55s cubic-bezier(.2,.8,.2,1) both}
 @keyframes sxUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 body.look-soft .soft-title div:first-child{font-size:34px !important}
+/* v15.7: no animations, whiter page */
+body.look-soft *,body.look-soft *::before,body.look-soft *::after{animation:none !important;transition:none !important}
+body.look-soft button:active,body.look-soft .goal-card:active,body.look-soft .savings-goal-card:active{transform:none !important;filter:none !important}
+body.look-soft .sx-up,body.look-soft .soft-up{opacity:1 !important;transform:none !important}
+body.look-soft{background:#F2F4F8 !important}
 /* v15.4: compact, less scrolling */
 body.look-soft .page{padding:14px 16px 10px}
 .sx-top{margin:0 0 10px}.sx-top h1{font-size:26px}.sx-top .sub{font-size:13px;margin-top:2px}
@@ -4483,8 +4488,8 @@ function sxSavingsTop(){
   if(cards[0]){ var a=document.createElement("div"); a.className="sx"; a.innerHTML='<div class="sx-card sx-up" style="background:#C6E5F0"><div class="sx-k">In your income pots now</div><div class="sx-big" style="color:#17708E;margin-top:4px">GHS '+sxF(inPots)+'</div><div class="sx-k" style="margin-top:2px">Every payment\'s save share lands here by itself</div></div>'; cards[0].replaceWith(a); }
   if(cards[1]){ var b=document.createElement("div"); b.className="sx";
     var chip=function(l,v,bg,c){ return '<div class="sx-chip" style="background:'+bg+'">'+l+'<b style="color:'+c+'">'+sxF(v)+'</b></div>'; };
-    b.innerHTML='<div class="sx-card sx-up"><div class="sx-k">Net saved · '+labels[isavPeriod]+'</div><div class="sx-big" style="color:'+(net>=0?'var(--green)':'var(--red)')+';margin:4px 0 12px">GHS '+sxF(net)+'</div><div class="sx-grid2">'+
-      chip("Earned",T.earned,"var(--grey)","var(--ink)")+chip("Saved",T.saved,"var(--mint)","var(--green)")+chip("Spend share",T.spend,"var(--peach)","#8F5406")+chip("Taken out",T.out,"#F8CFCF","var(--red)")+'</div></div>';
+    b.innerHTML='<div class="sx-dark sx-up"><div class="l">Net saved · '+labels[isavPeriod]+'</div><div class="sx-big" style="margin:4px 0 12px">GHS '+sxF(net)+'</div><div class="sx-grid2">'+
+      chip("Earned",T.earned,"#fff","#3B1F4A")+chip("Saved",T.saved,"#fff","#0B6B43")+chip("Spend share",T.spend,"#fff","#8F5406")+chip("Taken out",T.out,"#fff","#B0201C")+'</div></div>';
     cards[1].replaceWith(b); }
   pg.querySelectorAll(".section-title").forEach(function(t){ if(/Your pots/.test(t.textContent)){ t.parentElement.outerHTML='<div class="sx"><div class="sx-h2 sx-up">Your pots</div></div>'; } });
   pg.querySelectorAll("button[onclick^=\"openTakeOut\"]").forEach(function(btn){
@@ -4521,6 +4526,7 @@ function sxBudgetTop(){
     var nm=head.querySelector(":scope > div > div"); var ic=sxCatIcon(cat), ico=head.querySelector("span"); if(ico){ var bub=document.createElement("div"); bub.className="sx"; bub.innerHTML=sxBubble(ic.n,ic.bg,ic.c); ico.replaceWith(bub); }
     if(nm){ nm.style.cssText+=";color:#3B1F4A !important;font-size:17px !important;font-weight:400 !important"; _shaped.add(nm); _softSeen.add(nm); var sb=nm.nextElementSibling; if(sb){ sb.style.cssText+=";color:#5F5869 !important;font-size:13px !important"; _softSeen.add(sb); } }
     var card=head.closest(".card"); if(card){ card.style.setProperty("padding","14px","important"); card.style.setProperty("border-radius","18px","important"); }
+    if(card){ var dl=card.querySelector("button[onclick^=\"deleteCat\"]"); if(dl) dl.remove(); }
     var lg=card&&card.querySelector("button.btn-sm"); if(lg){ lg.className="sx-mini"; lg.removeAttribute("style"); _shaped.add(lg); _softSeen.add(lg); }
   });
   sxFill();
@@ -4559,6 +4565,7 @@ function sxSettings(){
     '<div class="sx-row" onclick="openHistory()">'+sxBubble("hist","var(--peach)","#B56A08",44)+'<div class="n">History<small>Everything you\'ve done · '+histData.length+' record'+(histData.length!==1?'s':'')+'</small></div><span class="sx-chev">›</span></div>'+
     '<div class="sx-row" onclick="_sxLookOpen=!_sxLookOpen;renderBackup()">'+sxBubble("edit","var(--lav)","#5E3A8C",44)+'<div class="n">App look<small>Soft · Bank card · Classic</small></div><span class="sx-chev">'+(_sxLookOpen?'⌄':'›')+'</span></div>'+
     (_sxLookOpen?'<div style="display:flex;gap:8px;padding:0 0 14px">'+lb("soft","Soft")+lb("bank","Bank card")+lb("classic","Classic")+'</div>':'')+'</div>'+
+    (function(){ var cs=(typeof spendCats!=="undefined"?spendCats:[]).filter(function(c){return !c.fixed;}); if(!cs.length) return ""; return '<div class="sx-h2">Spending categories</div><div class="sx-card" style="padding:4px 18px">'+cs.map(function(c){ var ic=sxCatIcon(c); return '<div class="sx-tx">'+sxBubble(ic.n,ic.bg,ic.c)+'<div class="n"><div>'+sxEsc(c.label)+'</div></div><button onclick="deleteCat(\''+c.id+'\');setTimeout(renderBackup,50)" style="border:none;background:#F8CFCF;color:#B0201C;border-radius:10px;padding:8px 12px;font:500 13px Lexend;cursor:pointer">Delete</button></div>'; }).join("")+'</div>'; })()+
     '<div class="sx-card sx-up" style="padding:4px 18px"><div class="sx-row" onclick="openResetSheet()">'+sxBubble("trash","#F8CFCF","var(--red)",44)+'<div class="n" style="color:var(--red)">Reset Finance Hub<small>Only clears Finance Hub. Other apps never touched.</small></div></div></div></div>';
   document.getElementById("page-backup").innerHTML=h;
 }
