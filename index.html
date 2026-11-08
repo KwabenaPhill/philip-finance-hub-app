@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v17.3</title>
+<title>Philip's Finance Hub v17.4</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v17.3</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v17.4</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -4245,9 +4245,9 @@ function softShape(root){
     c.style.setProperty("border-radius","20px","important"); c.style.setProperty("padding","18px 18px","important");
     c.querySelectorAll("*").forEach(function(x){ x.style.setProperty("color","#fff","important"); });
     if(c.matches("[onclick^='dtOpenEdit']")&&_D()){ c.style.setProperty("padding","12px 16px","important"); c.style.setProperty("display","grid","important"); c.style.setProperty("grid-template-columns","1fr 1fr 1fr","important"); c.style.setProperty("gap","6px 8px","important"); c.style.setProperty("align-items","center","important"); c.style.setProperty("background","linear-gradient(225deg,#4E2A66,#2B1D35)","important"); c.style.setProperty("border","1px solid #3A2E44","important"); c.style.setProperty("cursor","pointer","important");
-      Array.prototype.forEach.call(c.children,function(x,i){ var col="#FFFFFF"; if(i===0) col="#FFD60A"; if(i===2){ var tt=x.textContent.trim(); col=/^-/.test(tt)?"#FF4D5E":/^\+/.test(tt)?"#22DD66":"#FFFFFF"; } if(i===4) col="#C9C2CF";
+      Array.prototype.forEach.call(c.children,function(x,i){ var col="#FFFFFF"; if(i===0) col="#FFD60A"; if(i===1) col="#38B6FF"; if(i===3) col="#FFB020"; if(i===2){ var tt=x.textContent.trim(); col=/^-/.test(tt)?"#FF4D5E":/^\+/.test(tt)?"#22DD66":"#FFFFFF"; } if(i===4) col="#E2DCE8";
         x.style.setProperty("color",col,"important"); x.querySelectorAll("*").forEach(function(y){ y.style.setProperty("color",col,"important"); }); x.style.setProperty("font-weight",i===0?"800":"600","important"); x.style.setProperty("font-size",i===0?"20px":"13px","important"); x.style.setProperty("white-space","nowrap","important"); x.style.setProperty("min-width","0","important"); x.style.setProperty("margin","0","important");
-        if(i===0) x.style.setProperty("grid-column","1 / 3","important"); if(i===4){ x.style.setProperty("grid-column","3","important"); x.style.setProperty("grid-row","1","important"); x.style.setProperty("justify-self","end","important"); } if(i>0&&i<4){ x.style.setProperty("grid-row","2","important"); x.style.setProperty("text-align","center","important"); x.style.setProperty("background","rgba(255,255,255,.07)","important"); x.style.setProperty("border-radius","10px","important"); x.style.setProperty("padding","6px 4px","important"); } }); }
+        if(i===0) x.style.setProperty("grid-column","1 / 3","important"); if(i===4){ x.style.setProperty("grid-column","3","important"); x.style.setProperty("grid-row","1","important"); x.style.setProperty("justify-self","end","important"); } if(i>0&&i<4){ x.style.setProperty("grid-row","2","important"); x.style.setProperty("text-align","center","important"); var tn=(col==="#FFFFFF"?"255,255,255":col==="#38B6FF"?"56,182,255":col==="#FFB020"?"255,176,32":col==="#22DD66"?"34,221,102":"255,77,94"); x.style.setProperty("background","rgba("+tn+",.16)","important"); x.style.setProperty("border","1px solid rgba("+tn+",.45)","important"); x.style.setProperty("border-radius","10px","important"); x.style.setProperty("padding","6px 4px","important"); } }); }
     else if(c.matches("[onclick^='dtOpenEdit']")){ c.style.setProperty("flex-wrap","wrap","important"); c.style.setProperty("row-gap","8px","important"); var f=c.firstElementChild; if(f) f.style.cssText+=";font-size:24px !important;font-weight:500 !important;width:100%"; }
   });
   _qsa(root,".spend-big-amt").forEach(function(x){ x.style.setProperty("font-size","32px","important"); x.style.setProperty("font-weight","500","important"); });
@@ -4618,6 +4618,8 @@ function sxSettings(){
     '<div class="sx-row" onclick="_sxLookOpen=!_sxLookOpen;renderBackup()">'+sxBubble("edit","var(--lav)","#3F1747",44)+'<div class="n">App look<small>Dark · Violet · Navy · Emerald · Black · Teal · Wine · Classic</small></div><span class="sx-chev">'+(_sxLookOpen?'⌄':'›')+'</span></div>'+
     (_sxLookOpen?'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 0 14px">'+lb("dark","Dark")+Object.keys(SX_THEMES).map(function(k){return lb(k,SX_THEMES[k][0]);}).join("")+lb("classic","Classic")+'</div>':'')+'</div>'+
     (function(){ var cs=(typeof spendCats!=="undefined"?spendCats:[]).filter(function(c){return !c.fixed;}); if(!cs.length) return ""; return '<div class="sx-h2">Spending categories</div><div class="sx-card" style="padding:4px 18px">'+cs.map(function(c){ var ic=sxCatIcon(c); return '<div class="sx-tx">'+sxBubble(ic.n,ic.bg,ic.c)+'<div class="n"><div>'+sxEsc(c.label)+'</div></div><button onclick="deleteCat(\''+c.id+'\');setTimeout(renderBackup,50)" style="border:none;background:#F8CFCF;color:#B0201C;border-radius:10px;padding:8px 12px;font:500 13px Lexend;cursor:pointer">Delete</button></div>'; }).join("")+'</div>'; })()+
+    '<div class="sx-card sx-up" style="padding:4px 18px"><div class="sx-row" onclick="dtOpenEdit()">'+sxBubble("target","var(--mint,#173B2E)","#FFD60A",44)+'<div class="n">Daily target<small>'+sxF(dtRateToday())+'/day for savings and plans</small></div><span class="sx-chev">›</span></div>'+
+    '<div class="sx-row" onclick="setMonthlyPlan()">'+sxBubble("pie","var(--mint,#173B2E)","#22DD66",44)+'<div class="n">Monthly budget plan<small>GHS '+sxF(monthlyPlan||0)+' a month</small></div><span class="sx-chev">›</span></div></div>'+
     (typeof srcBub==='function'&&sources.length?'<div class="sx-card sx-up" style="padding:4px 18px"><div class="sx-row" onclick="ppLogoSheet()">'+sxBubble("yt","var(--mint,#173B2E)","var(--green,#2FE39A)",44)+'<div class="n">Channel logos<small>Add or change a logo for each income source</small></div><span class="sx-chev">›</span></div></div>':'')+
     '<div class="sx-card sx-up" style="padding:4px 18px"><div class="sx-row" onclick="openResetSheet()">'+sxBubble("trash","#F8CFCF","var(--red)",44)+'<div class="n" style="color:var(--red)">Reset Finance Hub<small>Only clears Finance Hub. Other apps never touched.</small></div></div></div></div>';
   document.getElementById("page-backup").innerHTML=h;
@@ -4757,6 +4759,15 @@ function srcLogoPick(id){
       im.src=rd.result; }; rd.readAsDataURL(f); };
   inp.click();
 }
+// v17.4: daily target opens a clear edit box anywhere (Savings card, Plans button, Settings)
+function dtOpenEdit(){
+  var old=document.getElementById('ppSheet'); if(old) old.remove();
+  document.body.insertAdjacentHTML('beforeend','<div id="ppSheet" onclick="if(event.target.id===\'ppSheet\')this.remove()"><div class="pp-sh"><div class="pp-sh-t">Daily target</div><div class="pp-hsub" style="margin:-4px 0 8px">How much you aim to put away each day (GH\u20b5). Now: '+sxF(dtRateToday())+'/day</div>'+
+    '<input id="ppRate" type="number" inputmode="decimal" value="'+dtRateToday()+'"><button class="pp-sh-go" onclick="ppSaveRate()">Save daily target</button><button class="pp-sh-x" onclick="document.getElementById(\'ppSheet\').remove()">Close</button></div></div>');
+  setTimeout(function(){ var i=document.getElementById('ppRate'); if(i){ i.focus(); i.select(); } },200);
+}
+function ppSaveRate(){ var n=parseFloat((document.getElementById('ppRate')||{}).value); if(!n||n<=0){ showToast('Enter a valid daily amount','#FF453A'); return; }
+  dtSetRate(n); document.getElementById('ppSheet').remove(); try{ switchTab(ppActive()); }catch(e){} showToast('Daily target set to GH\u20b5 '+Math.round(n).toLocaleString()); }
 // v17.2: quick buttons that always do something
 function ppFocusLog(){ var pg=document.querySelector('.page.active'); var i=pg&&[].slice.call(pg.querySelectorAll('input')).filter(function(x){ return /Enter amount/i.test(x.placeholder||''); })[0];
   if(i){ i.scrollIntoView({behavior:'smooth',block:'center'}); setTimeout(function(){ i.focus(); },350); } else showToast(planSide==='debt'?'Add a debt first':'Add a buy plan first','#FF9F0A'); }
@@ -5086,6 +5097,8 @@ function ppSaveIncome(){
   '.pp-ring{width:92px!important;height:92px!important;flex:none}.pp-ring div{width:76px!important;height:76px!important;font-size:25px!important}.pp-ring small{font-size:11px!important}'+
   '.pp-mini span{white-space:nowrap!important;overflow:visible;text-overflow:clip;display:block;font-size:10.5px!important;letter-spacing:.05em}.pp-mini b{font-size:19px!important;white-space:nowrap}.pp-mini>div{min-width:0}'+
   '.pp-sh .sx-ic:not(.pp-logo-img){background:#173B2E!important;color:#2FE39A!important}.pp-sh .sx-ic svg{filter:none!important}'+
+  '.sav-streak-box .ssb-icon,.streak-box .sb-icon{display:none!important}.sav-streak-box,.streak-box{padding:10px 6px!important}.sav-streak-box .ssb-val,.streak-box .sb-val{font-size:22px!important;line-height:1.1}.sav-streak-box .ssb-label,.streak-box .sb-label{font-size:10px!important;margin-top:2px!important}'+
+  '.sx-stat>span:first-child{display:none!important}.sx-stat{padding:10px 6px!important}'+
   '.pp-hrow{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(127,127,127,.18)}.pp-hrow .sx-ic{width:40px;height:40px}.pp-hsub{font-size:12px;color:#9A94A0;margin-top:2px}';
   document.head.appendChild(c);
 })();
