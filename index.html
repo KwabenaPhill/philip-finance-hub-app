@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v17.2</title>
+<title>Philip's Finance Hub v17.3</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v17.2</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v17.3</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -5080,11 +5080,25 @@ function ppSaveIncome(){
   D+'.pp-subtot{color:#22DD66!important;font-weight:800!important}'+
   D+'.pp-qa .pp-q span svg{width:30px!important;height:30px!important}'+'.pp-qa .pp-q span{margin-bottom:6px!important}'+
   // v17.2 bigger numbers, chip labels on one line
-  '.pp-v{font-size:38px!important;line-height:1.1!important}.pp-ring{width:108px!important;height:108px!important;flex:none}.pp-ring div{width:86px!important;height:86px!important;font-size:27px!important}.pp-ring small{font-size:12px!important}'+
-  '.pp-mini span{white-space:nowrap!important;overflow:hidden;text-overflow:ellipsis;display:block;font-size:10.5px!important;letter-spacing:.05em}.pp-mini b{font-size:19px!important;white-space:nowrap}.pp-mini>div{min-width:0}'+
+  // v17.3 one line always: amount, labels and sub line never wrap; ring normal size, % inside it big
+  '.pp-hero .pp-row{flex-wrap:nowrap!important;gap:12px!important}.pp-hero .pp-row>div:first-child{flex:1 1 auto;min-width:0}'+
+  '.pp-v{font-size:34px!important;line-height:1.15!important;white-space:nowrap!important}.pp-l,.pp-g{white-space:nowrap!important;text-overflow:clip!important;overflow:visible!important}'+
+  '.pp-ring{width:92px!important;height:92px!important;flex:none}.pp-ring div{width:76px!important;height:76px!important;font-size:25px!important}.pp-ring small{font-size:11px!important}'+
+  '.pp-mini span{white-space:nowrap!important;overflow:visible;text-overflow:clip;display:block;font-size:10.5px!important;letter-spacing:.05em}.pp-mini b{font-size:19px!important;white-space:nowrap}.pp-mini>div{min-width:0}'+
   '.pp-sh .sx-ic:not(.pp-logo-img){background:#173B2E!important;color:#2FE39A!important}.pp-sh .sx-ic svg{filter:none!important}'+
   '.pp-hrow{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(127,127,127,.18)}.pp-hrow .sx-ic{width:40px;height:40px}.pp-hsub{font-size:12px;color:#9A94A0;margin-top:2px}';
   document.head.appendChild(c);
+})();
+</script>
+<script>
+// v17.3: shrink text just enough so amounts, labels and lines always stay on ONE line
+(function(){
+  function fit(el,min){ var cs=getComputedStyle(el), f=parseFloat(el.dataset.ppf||cs.fontSize); el.dataset.ppf=f; el.style.removeProperty('font-size'); var w=el.clientWidth; if(!w) return; var n=0;
+    while(el.scrollWidth>w+1&&f>min&&n<40){ f-=0.5; el.style.setProperty('font-size',f+'px','important'); n++; } }
+  function run(){ var pg=document.querySelector('.page.active'); if(!pg) return;
+    pg.querySelectorAll('.pp-v').forEach(function(e){ fit(e,20); }); pg.querySelectorAll('.pp-l,.pp-g').forEach(function(e){ fit(e,9); }); pg.querySelectorAll('.pp-mini span').forEach(function(e){ fit(e,8); }); pg.querySelectorAll('.pp-mini b').forEach(function(e){ fit(e,12); }); }
+  var t=0; function q(){ if(t) return; t=requestAnimationFrame(function(){ t=0; try{ run(); }catch(e){} }); }
+  new MutationObserver(q).observe(document.body,{childList:true,subtree:true}); window.addEventListener('resize',q); q();
 })();
 </script>
 <script>
