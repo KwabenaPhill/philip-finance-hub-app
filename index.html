@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v17.5</title>
+<title>Philip's Finance Hub v17.6</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v17.5</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v17.6</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -4759,6 +4759,19 @@ function srcLogoPick(id){
       im.src=rd.result; }; rd.readAsDataURL(f); };
   inp.click();
 }
+// v17.6: daily target card in the same style as Total progress, with streak, days ahead and days saved in one line
+function ppDailyCard(){
+  var d=dtStats(), clear=dtDaysToClear(), pc=d.rate>0?Math.min(100,Math.round(d.todayGot/d.rate*100)):0, sd={};
+  try{ sd=getSavStreakData(); }catch(e){}
+  var bal=d.behind>0?'<b style="color:#FF4D5E">'+d.behind+' day'+(d.behind!==1?'s':'')+' behind</b>':d.ahead>0?'<b style="color:#22DD66">'+d.ahead+' day'+(d.ahead!==1?'s':'')+' ahead</b>':'<b style="color:#fff">On track</b>';
+  return '<div class="sx-card pp-dtc" onclick="ppDtEdit()" style="cursor:pointer;margin-bottom:12px">'+
+    '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><span style="font-size:20px;font-weight:700;color:#fff;white-space:nowrap">Daily target</span><span style="font-size:15px;color:#CFC9D5;white-space:nowrap">'+sxF(d.rate)+'/day \u270e</span></div>'+
+    '<div class="sx-prog" style="margin:12px 0 10px"><i style="display:block;height:100%;border-radius:99px;width:'+pc+'%;background:'+ppPctCol(pc)+'"></i></div>'+
+    '<div style="display:flex;justify-content:space-between;gap:8px;font-size:15px;white-space:nowrap"><span style="color:#22DD66">GHS '+sxF(d.todayGot)+' today</span><span style="color:'+(clear>0?'#FF4D5E':'#22DD66')+'">'+(clear>0?clear+' days to clear':'All clear')+'</span></div>'+
+    '<div style="display:flex;justify-content:space-between;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid #2C2C2E;font-size:13px;color:#CFC9D5;white-space:nowrap">'+
+      '<span>Streak <b style="color:#fff">'+(sd.streak||0)+'</b></span>'+bal+'<span>Saved <b style="color:#38B6FF">'+(sd.totalCredits||0)+'</b> days</span></div></div>';
+}
+function ppDtEdit(){ dtOpenEdit(); }
 // v17.4: daily target opens a clear edit box anywhere (Savings card, Plans button, Settings)
 function dtOpenEdit(){
   var old=document.getElementById('ppSheet'); if(old) old.remove();
@@ -4916,6 +4929,7 @@ function ppDecorate(pg){
     if(tab==='budget'&&_D()){ [].slice.call(pg.querySelectorAll('.sx-ic')).forEach(function(ic){ if(ic.closest('.pp-new,.pp-tophd')) return; var c=getComputedStyle(ic).color, m=/rgba?\((\d+)\D+(\d+)\D+(\d+)/.exec(c); if(!m) return; var r=+m[1],g=+m[2],b=+m[3], lu=(0.299*r+0.587*g+0.114*b)/255;
       ic.classList.add('pp-solid'); var mx=Math.max(r,g,b)/255,mn=Math.min(r,g,b)/255,hh=0,dd=mx-mn; if(dd){ var R=r/255,G=g/255,B=b/255; hh=mx===R?((G-B)/dd)%6:mx===G?(B-R)/dd+2:(R-G)/dd+4; hh=Math.round(hh*60); if(hh<0) hh+=360; }
       var deep=dd<0.08?'hsl(270,10%,38%)':'hsl('+hh+',85%,'+(hh>40&&hh<75?'40%':'44%')+')'; ic.style.setProperty('background',deep,'important'); ic.style.setProperty('color','#fff','important'); lu=0; r=g=b=0; ic.style.setProperty('box-shadow','0 4px 14px rgba('+r+','+g+','+b+',.35)','important'); }); }
+    if(tab==='savings'&&savSide!=='income'){ var od=[].slice.call(pg.querySelectorAll("[onclick^='dtOpenEdit']")).filter(function(x){ return !x.closest('.pp-new,.pp-qa'); })[0]; if(od){ od.insertAdjacentHTML('beforebegin',ppDailyCard()); od.remove(); } var sg=pg.querySelector('.sav-streak-grid'); if(sg) sg.style.setProperty('display','none','important'); }
     if(tab==='budget'&&_D()){ [].slice.call(pg.querySelectorAll('.pp-subtot')).forEach(function(x){ x.style.setProperty('color','#22DD66','important'); x.style.setProperty('font-weight','800','important'); }); }
     if((tab==='savings'||tab==='debt')&&_D()){ [].slice.call(pg.querySelectorAll('.bar-fill')).forEach(function(f){ var w=parseFloat(f.style.width); if(!isNaN(w)) f.style.setProperty('background',ppPctCol(w),'important'); }); }
     if(tab==='backup'){
