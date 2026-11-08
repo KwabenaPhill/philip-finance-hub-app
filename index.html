@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v16.1</title>
+<title>Philip's Finance Hub v16.2</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v16.1</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v16.2</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -4708,7 +4708,7 @@ function ppPer(v){ spendPeriod=v; try{ switchTab(ppActive()); }catch(e){} }
 function ppHeader(tab){
   var sel='';
   if(tab!=='backup'){ try{ sel=sxSel(spendPeriod,'ppPer'); }catch(e){} }
-  return '<div class="pp-tophd"><div class="pp-brand"><span class="pp-logo">₵</span><b>'+(PP_NAMES[tab]||'')+'</b></div>'+sel+'</div>';
+  return '<div class="pp-tophd"><div class="pp-brand"><span class="pp-logo">\u20b5</span><b>'+(PP_NAMES[tab]||'')+'</b></div>'+sel+'</div>';
 }
 function ppDecorate(pg){
   if(!pg||pg.dataset.ppBusy) return; pg.dataset.ppBusy='1';
@@ -4765,7 +4765,7 @@ function ppSaveSpend(){
   var note=document.getElementById('ppNote').value.trim(), d=document.getElementById('ppDate').value||TODAY;
   spendData.entries.push({id:uid('sp_'),date:d,desc:note||getCat(cat).label,cat:cat,amount:amt});
   saveSpend(); document.getElementById('ppSheet').remove();
-  try{ switchTab(ppActive()); }catch(e){ renderMoney(); } showToast('✅ GHS '+amt.toLocaleString()+' spending added');
+  try{ switchTab(ppActive()); }catch(e){ renderMoney(); } showToast('\u2705 GHS '+amt.toLocaleString()+' spending added');
 }
 function ppSaveIncome(){
   var amt=parseFloat(document.getElementById('ppAmt').value);
@@ -4773,7 +4773,7 @@ function ppSaveIncome(){
   var e=addIncome(amt,document.getElementById('ppSrc').value,document.getElementById('ppDate').value||TODAY,document.getElementById('ppNote').value);
   document.getElementById('ppSheet').remove();
   try{ renderSavings(); }catch(x){} try{ renderHome(); }catch(x){} try{ switchTab(ppActive()); }catch(x){ renderMoney(); }
-  showToast('✅ GHS '+Math.round(amt).toLocaleString()+' in · '+Math.round(e.build||0).toLocaleString()+' saved, '+Math.round(e.live||0).toLocaleString()+' to spend');
+  showToast('\u2705 GHS '+Math.round(amt).toLocaleString()+' in \u00b7 '+Math.round(e.build||0).toLocaleString()+' saved, '+Math.round(e.live||0).toLocaleString()+' to spend');
 }
 (function(){
   var css=document.createElement('style');
