@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v16.5</title>
+<title>Philip's Finance Hub v16.6</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v16.5</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v16.6</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -4695,7 +4695,7 @@ function ppTop(){
 </script>
 <script>
 
-// ===== v16.4 (Philip, 8 Nov 2026): AFFINITY COLOURS, deeper (white pages, deep plum cards, small orange glow, pastel buttons). v16.3: EVERY TAB LIKE THE APPROVED PREVIEW ("Finance Hub new look").
+// ===== v16.6 (Philip, 8 Nov 2026): lighter violet, no orange glow. v16.4 AFFINITY COLOURS, deeper (white pages, deep plum cards, small orange glow, pastel buttons). v16.3: EVERY TAB LIKE THE APPROVED PREVIEW ("Finance Hub new look").
 // Header: coloured icon per tab + name + purple "This week" pill. Each tab: bright purple card with ring and 3 numbers,
 // 3 quick buttons, then its own lists. Readable colours. Drawn in the same frame as the page (smooth tab change).
 var PP_NAMES={money:'Money',debt:'Plans',savings:'Savings',budget:'Budget',wn:'Lists',backup:'Settings'};
@@ -4857,17 +4857,17 @@ function ppSaveIncome(){
   try{ if(localStorage.getItem('pp_aff_v1')!=='1'){ localStorage.setItem('pp_aff_v1','1'); if(localStorage.getItem(LOOK_KEY)!=='soft'){ localStorage.setItem(LOOK_KEY,'soft'); location.reload(); return; } } }catch(e){}
   var css=document.createElement('style');
   css.textContent='[id^=page-] .soft-title,[id^=page-] .soft-head,[id^=page-] .sx-top{display:none!important}'+
-  'body.look-soft{--acc:#3A1242!important}'+
+  'body.look-soft{--acc:#6A4085!important}'+
   '.pp-tophd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 12px}'+
   '.pp-tophd .sx-sel{margin:0!important;width:auto!important;flex:none;background:#F1ECF3!important;border:none!important;border-radius:20px!important;padding:4px 10px!important;height:auto!important;min-height:0!important;box-shadow:none!important}'+
   '.pp-tophd .sx-sel select{color:#3A1242!important;background:transparent!important;font-weight:700!important;font-size:12.5px!important;width:auto!important;padding:2px 2px!important;height:auto!important;text-align:left!important}.pp-tophd .sx-sel svg{display:none}'+
   '.pp-brand{display:flex;align-items:center;gap:10px;font-size:23px;font-weight:800;color:#2B0F33}.pp-logo{width:40px;height:40px;border-radius:50%;display:grid;place-items:center}'+
-  '.pp-hero,.pp-new .pp-hero,body.look-soft .pp-hero{position:relative;overflow:hidden;background:linear-gradient(150deg,#3A1242,#24092B)!important;color:#fff!important;border:none!important;box-shadow:0 8px 22px rgba(58,18,66,.28);border-radius:22px;padding:17px;margin-bottom:12px;color:#fff}'+
-  '.pp-hero:before{content:"";position:absolute;right:-38px;top:-42px;width:112px;height:112px;border-radius:50%;background:radial-gradient(circle,#F59E0B,#E4572E 72%);opacity:.85}'+
+  '.pp-hero,.pp-new .pp-hero,body.look-soft .pp-hero{position:relative;overflow:hidden;background:linear-gradient(150deg,#8A5BA6,#6A4085)!important;color:#fff!important;border:none!important;box-shadow:0 6px 18px rgba(106,64,133,.22);border-radius:22px;padding:17px;margin-bottom:12px;color:#fff}'+
+  '.pp-hero:before{display:none!important}'+
   '.pp-hero>*{position:relative;z-index:1}'+
   '.pp-row{display:flex;justify-content:space-between;align-items:center;gap:10px}.pp-l{font-size:11.5px!important;font-weight:700;letter-spacing:.6px;text-transform:none;color:#EBDDF0!important}'+
   '.pp-v{font-size:30px!important;font-weight:800;margin:4px 0 3px;color:#fff!important}.pp-g{font-size:12px;font-weight:600;color:#7EF0B8!important}'+
-  '.pp-ring{width:80px;height:80px;border-radius:50%;display:grid;place-items:center;flex:none}.pp-ring div{width:64px;height:64px;border-radius:50%;background:#2A0C31!important;display:grid;place-items:center;text-align:center;font-weight:800;font-size:14px;color:#fff;line-height:1.1}.pp-ring small{display:block;font-size:9px;color:#EBDDF0;font-weight:600}'+
+  '.pp-ring{width:80px;height:80px;border-radius:50%;display:grid;place-items:center;flex:none}.pp-ring div{width:64px;height:64px;border-radius:50%;background:#5C3676!important;display:grid;place-items:center;text-align:center;font-weight:800;font-size:14px;color:#fff;line-height:1.1}.pp-ring small{display:block;font-size:9px;color:#EBDDF0;font-weight:600}'+
   '.pp-mini{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;border:none!important;margin-top:13px;padding:0}.pp-mini>div{background:rgba(255,255,255,.12);border-radius:12px;padding:8px}.pp-mini span{display:block;font-size:9.5px;font-weight:700;letter-spacing:.7px;color:#EBDDF0!important}.pp-mini b{display:block;font-size:16px;font-weight:800;margin-top:3px}'+
   '.pp-qa .pp-q:nth-child(1){background:#D6ECFA!important}.pp-qa .pp-q:nth-child(2){background:#FFE0B8!important}.pp-qa .pp-q:nth-child(3){background:#C9F2DF!important}.pp-qa .pp-q:nth-child(1) span{color:#0E7FA8!important}.pp-qa .pp-q:nth-child(2) span{color:#C2410C!important}.pp-qa .pp-q:nth-child(3) span{color:#0F9D58!important}.pp-qa{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:12px}.pp-q{border:none!important;border-radius:16px;padding:12px 10px;font-weight:700;font-size:12.5px;color:#2B0F33!important;cursor:pointer;font-family:inherit;text-align:left}.pp-q span{display:block;margin-bottom:7px;font-size:20px;color:#3A1242}'+
   '.pp-card{background:#F3F1F6!important;border:none!important;color:#2B0F33}.pp-donut div{background:#F3F1F6!important;color:#2B0F33}.pp-donut b{color:#2B0F33!important}.pp-ch span{color:#C2410C!important}.pp-leg{color:#2B0F33}'+
@@ -4875,7 +4875,7 @@ function ppSaveIncome(){
   '#ppSheet{position:fixed;inset:0;background:rgba(43,15,51,.45);z-index:10000;display:flex;align-items:flex-end}'+
   '.pp-sh{width:100%;background:#fff;border-radius:22px 22px 0 0;padding:18px 16px 26px}'+
   '.pp-sh-t{font-size:19px;font-weight:800;margin-bottom:12px;color:#2B0F33}.pp-sh input,.pp-sh select{width:100%;box-sizing:border-box;background:#F3F1F6;border:1px solid #E5E0EA;border-radius:13px;padding:13px;color:#2B0F33;font:inherit;font-size:15px;margin-bottom:9px}'+
-  '.pp-sh-go{width:100%;border:none;border-radius:14px;padding:14px;background:#3A1242;color:#fff;font:inherit;font-size:15px;font-weight:700;margin-top:4px}.pp-sh-x{width:100%;border:none;background:none;color:#7A6A80;padding:12px;font:inherit;font-size:14px}';
+  '.pp-sh-go{width:100%;border:none;border-radius:14px;padding:14px;background:#6A4085;color:#fff;font:inherit;font-size:15px;font-weight:700;margin-top:4px}.pp-sh-x{width:100%;border:none;background:none;color:#7A6A80;padding:12px;font:inherit;font-size:14px}';
   document.head.appendChild(css);
   // quick buttons on Money open the sheet (not another screen)
   var oT=ppTop; ppTop=function(){ return oT.apply(this,arguments).replace("switchTab('budget')","ppSheet('spend')").replace("setMoneySide('income')\" class=\"pp-q\"","ppSheet('income')\" class=\"pp-q\""); };
