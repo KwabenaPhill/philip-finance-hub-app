@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v17.8</title>
+<title>Philip's Finance Hub v17.9</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v17.8</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v17.9</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -4677,7 +4677,7 @@ function ppTop(){
     '<div class="pp-hero"><div class="pp-row"><div><div class="pp-l">Available to spend · '+pr.label.toLowerCase()+'</div><div class="pp-v">GHS '+Math.round(avail).toLocaleString()+'</div>'+
     '<div class="pp-g" style="color:'+(avail>=0?'#30D158':'#FF453A')+'">'+(inc>0?(avail>=0?'↑ ':'↓ ')+pct+'% of income left':'Add your income to see what is left')+'</div></div>'+
     '<div class="pp-ring" style="background:conic-gradient('+ppPctCol(pct)+' 0 '+pct+'%,rgba(255,255,255,.08) '+pct+'% 100%)"><div>'+pct+'%<small>left</small></div></div></div>'+
-    '<div class="pp-mini"><div style="'+ppTint('#22DD66')+'"><span>INCOME</span><b style="color:#22DD66">'+ppNum(inc)+'</b></div><div style="'+ppTint('#FF4D5E')+'"><span>SPENT</span><b style="color:#FF4D5E">'+ppNum(spent)+'</b></div><div style="'+ppTint('#38B6FF')+'"><span>MOVED</span><b style="color:#38B6FF">'+ppNum(moved)+'</b></div></div></div>'+
+    '<div class="pp-mini"><div style="'+ppTint('#22DD66')+'"><span>INCOME</span><b style="color:#22DD66">'+ppNum(inc)+'</b></div><div style="'+ppTint('#38B6FF')+'"><span>MOVED</span><b style="color:#38B6FF">'+ppNum(moved)+'</b></div><div style="'+ppTint('#FF4D5E')+'"><span>SPENT</span><b style="color:#FF4D5E">'+ppNum(spent)+'</b></div></div></div>'+
     '<div class="pp-qa">'+q(ppI('up','#FF4D5E',30),'Add spending',"ppSheet('spend')")+q(ppI('minus','#FFB020',30),'Clear manually',"ppClearSheet()")+q(ppI('list','#C77DFF',30),'Transactions',"var t=document.getElementById('ppTx');if(t)t.scrollIntoView({behavior:'smooth'})")+'</div>'+
     '<div class="pp-card"><div class="pp-ch">Spending by category<span>'+pr.label+'</span></div><div class="pp-row" style="gap:16px">'+
     '<div class="pp-donut" style="background:conic-gradient('+grad+')"><div><small>SPENT</small><b>'+ppNum(spent)+'</b></div></div>'+
@@ -4844,7 +4844,10 @@ function ppClearSel(){
   try{ rec("spend","Cleared "+gone.length+" manual spending entr"+(gone.length===1?"y":"ies")+" ("+fmtC(tot)+")",tot,null); }catch(e){}
   document.getElementById('ppSheet').remove(); renderMoney(); renderBudget(); showToast('Cleared '+gone.length);
 }
+var PP_RANK={SAVED:0,INCOME:0,PAID:0,EARNED:0,PLANNED:0,BOUGHT:0,LEFT:2,SPENT:2,OWED:2,'TAKEN OUT':2,'TO SPEND':2,WANTS:2};
 function ppHero(l,v,g,ring,mini){
+  // v17.9: same colour order on every tab: green first, blue middle, red last
+  if(mini&&mini.length===3){ mini=mini.map(function(m,i){ return [m,i]; }).sort(function(a,b){ var ra=PP_RANK[a[0][0]]===undefined?1:PP_RANK[a[0][0]], rb=PP_RANK[b[0][0]]===undefined?1:PP_RANK[b[0][0]]; return ra-rb||a[1]-b[1]; }).map(function(x,i){ return [x[0][0],x[0][1],['#22DD66','#38B6FF','#FF4D5E'][i]]; }); }
   return '<div class="pp-hero"><div class="pp-row"><div style="min-width:0"><div class="pp-l">'+l+'</div><div class="pp-v">'+v+'</div>'+(g?'<div class="pp-g">'+g+'</div>':'')+'</div>'+
     (ring?'<div class="pp-ring" style="background:conic-gradient('+ppPctCol(ring[0],/spent/i.test(ring[1]))+' 0 '+ring[0]+'%,rgba(255,255,255,.12) '+ring[0]+'% 100%)"><div>'+ring[0]+'%<small>'+ring[1]+'</small></div></div>':'')+'</div>'+
     '<div class="pp-mini">'+mini.map(function(m){ return '<div style="'+ppTint(m[2])+'"><span>'+m[0]+'</span><b style="color:'+m[2]+'">'+m[1]+'</b></div>'; }).join('')+'</div></div>';
@@ -5017,7 +5020,7 @@ function ppSaveIncome(){
   '.pp-qa .pp-q:nth-child(1){background:#D6ECFA!important}.pp-qa .pp-q:nth-child(2){background:#FFE0B8!important}.pp-qa .pp-q:nth-child(3){background:#C9F2DF!important}.pp-qa .pp-q:nth-child(1) span{color:#0E7FA8!important}.pp-qa .pp-q:nth-child(2) span{color:#C2410C!important}.pp-qa .pp-q:nth-child(3) span{color:#0F9D58!important}.pp-qa{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:12px}.pp-q{border:none!important;border-radius:16px;padding:12px 10px;font-weight:700;font-size:12.5px;color:#3F1747!important;cursor:pointer;font-family:inherit;text-align:left}.pp-q span{display:block;margin-bottom:7px;font-size:20px;color:#3F1747}'+
   '.pp-card{background:#F6F3F7!important;border:none!important;color:#3F1747}.pp-donut div{background:#F6F3F7!important;color:#3F1747}.pp-donut b{color:#3F1747!important}.pp-ch span{color:#C2410C!important}.pp-leg{color:#3F1747}'+
   'body #page-backup .pp-reset.pp-reset,body.look-soft #page-backup .sx-card.pp-reset{background:#FFE4E6!important;border:1px solid #FDA4AF!important}body #page-backup .pp-reset *{color:#B91C1C!important}'+
-  '#ppSheet{position:fixed;inset:0;background:rgba(43,15,51,.45);z-index:10000;display:flex;align-items:flex-end}'+
+  '#ppSheet{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10000;display:flex;align-items:flex-end}'+
   '.pp-sh{width:100%;background:#fff;border-radius:22px 22px 0 0;padding:18px 16px 26px}'+
   '.pp-sh-t{font-size:19px;font-weight:800;margin-bottom:12px;color:#3F1747}.pp-sh input,.pp-sh select{width:100%;box-sizing:border-box;background:#F6F3F7;border:1px solid #E9E1EB;border-radius:13px;padding:13px;color:#3F1747;font:inherit;font-size:15px;margin-bottom:9px}'+
   '.pp-sh-go{width:100%;border:none;border-radius:14px;padding:14px;background:#3F1747;color:#fff;font:inherit;font-size:15px;font-weight:700;margin-top:4px}.pp-sh-x{width:100%;border:none;background:none;color:#817487;padding:12px;font:inherit;font-size:14px}';
@@ -5132,7 +5135,7 @@ function ppSaveIncome(){
   '.pp-v{font-size:34px!important;line-height:1.15!important;white-space:nowrap!important}.pp-l,.pp-g{white-space:nowrap!important;text-overflow:clip!important;overflow:visible!important}'+
   '.pp-ring{width:92px!important;height:92px!important;flex:none}.pp-ring div{width:76px!important;height:76px!important;font-size:25px!important}.pp-ring small{font-size:11px!important}'+
   '.pp-mini span{white-space:nowrap!important;overflow:visible;text-overflow:clip;display:block;font-size:10.5px!important;letter-spacing:.05em}.pp-mini b{font-size:19px!important;white-space:nowrap}.pp-mini>div{min-width:0}'+
-  '.pp-sh .sx-ic:not(.pp-logo-img){background:#173B2E!important;color:#2FE39A!important}.pp-sh .sx-ic svg{filter:none!important}'+
+  '.pp-sh .sx-ic:not(.pp-logo-img){background:#26262A!important}.pp-sh .sx-ic svg{filter:none!important;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}'+
   '.sav-streak-box .ssb-icon,.streak-box .sb-icon{display:none!important}.sav-streak-box,.streak-box{padding:10px 6px!important}.sav-streak-box .ssb-val,.streak-box .sb-val{font-size:22px!important;line-height:1.1}.sav-streak-box .ssb-label,.streak-box .sb-label{font-size:10px!important;margin-top:2px!important}'+
   '.sx-stat>span:first-child{display:none!important}.sx-stat{padding:10px 6px!important}'+
   '.pp-gone{display:none!important}'+
