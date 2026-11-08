@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v16.8</title>
+<title>Philip's Finance Hub v16.9</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v16.8</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v16.9</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -4648,7 +4648,7 @@ function ppTop(){
   var q=function(ic,l,go){ return '<button onclick="'+go+'" class="pp-q"><span>'+ic+'</span>'+l+'</button>'; };
   return '<div class="pp-hd"><div><div class="pp-t1">Money overview</div><div class="pp-t2">Your numbers, your plan.</div></div></div>'+
     '<div class="pp-hero"><div class="pp-row"><div><div class="pp-l">Available to spend · '+pr.label.toLowerCase()+'</div><div class="pp-v">GHS '+Math.round(avail).toLocaleString()+'</div>'+
-    '<div class="pp-g" style="color:'+(avail>=0?'#30D158':'#FF453A')+'">'+(inc>0?(avail>=0?'↑ ':'↓ ')+pct+'% of income left':'Add your income to see what is left')+'</div></div>'+
+    '</div></div>'+
     '<div class="pp-ring" style="background:conic-gradient(#A982B5 0 '+pct+'%,rgba(255,255,255,.08) '+pct+'% 100%)"><div>'+pct+'%<small>left</small></div></div></div>'+
     '<div class="pp-mini"><div><span>INCOME</span><b style="color:#30D158">'+ppNum(inc)+'</b></div><div><span>SPENT</span><b style="color:#FF6B5E">'+ppNum(spent)+'</b></div><div><span>BUDGET LEFT</span><b style="color:#4DD0E1">'+ppNum(bl)+'</b></div></div></div>'+
     '<div class="pp-qa">'+q('⊖','Add spending',"switchTab('budget')")+q('⊕','Add income',"setMoneySide('income')")+q('⇄','Transactions',"var t=document.getElementById('ppTx');if(t)t.scrollIntoView({behavior:'smooth'})")+'</div>'+
@@ -4695,7 +4695,7 @@ function ppTop(){
 </script>
 <script>
 
-// ===== v16.8 (Philip, 8 Nov 2026): Affinity-matched solid plum violet. Violet colours only; layout, features and saved data unchanged. v16.4 AFFINITY COLOURS, deeper (white pages, deep plum cards, small orange glow, pastel buttons). v16.3: EVERY TAB LIKE THE APPROVED PREVIEW ("Finance Hub new look").
+// ===== v16.9 (Philip, 8 Nov 2026): balanced deep-plum and light-violet cards; remove repeated summary figures. No data/schema changes. v16.4 AFFINITY COLOURS, deeper (white pages, deep plum cards, small orange glow, pastel buttons). v16.3: EVERY TAB LIKE THE APPROVED PREVIEW ("Finance Hub new look").
 // Header: coloured icon per tab + name + purple "This week" pill. Each tab: bright purple card with ring and 3 numbers,
 // 3 quick buttons, then its own lists. Readable colours. Drawn in the same frame as the page (smooth tab change).
 var PP_NAMES={money:'Money',debt:'Plans',savings:'Savings',budget:'Budget',wn:'Lists',backup:'Settings'};
@@ -4731,10 +4731,10 @@ function ppTabTop(tab){
       var d=dtStats(), t=sideTracker(planSide), pr=ppProg(document.getElementById('page-debt')), tot=pr.paid+pr.left, pc=tot>0?Math.round(pr.paid/tot*100):0;
       var bal=t.daysBehind>0?t.daysBehind+' days behind':t.daysAhead>0?t.daysAhead+' days ahead':'on track';
       var tag=ppN(d.rate)+'/day \u00b7 '+bal;
-      if(planSide==='buy') return ppHero('Buy plans','GHS '+ppN(tot),pr.n+' thing'+(pr.n!==1?'s':'')+' to buy \u00b7 '+ppN(pr.paid)+' saved \u00b7 '+tag,[pc,'saved','#FFCB6B'],
+      if(planSide==='buy') return ppHero('Buy plans','GHS '+ppN(tot),pr.n+' thing'+(pr.n!==1?'s':'')+' to buy \u00b7 '+tag,[pc,'saved','#FFCB6B'],
         [['TOTAL',ppN(tot),'#FFCB6B'],['SAVED',ppN(pr.paid),'#7EF0B8'],['LEFT',ppN(pr.left),'#FF9AA5']])+
         ppQA([['plus','Add buy plan',"ppClickText(/Add (new )?buy plan/i)"],['check','Log saving',"ppScrollTo(/^(To buy|Your|Total progress)/i)"],['target','Daily target','dtOpenEdit()']]);
-      return ppHero('You owe','GHS '+ppN(pr.left),pr.n+' debt'+(pr.n!==1?'s':'')+' \u00b7 '+ppN(pr.paid)+' paid so far \u00b7 '+tag,[pc,'paid','#FF9AA5'],
+      return ppHero('You owe','GHS '+ppN(pr.left),pr.n+' debt'+(pr.n!==1?'s':'')+' \u00b7 '+tag,[pc,'paid','#FF9AA5'],
         [['OWED',ppN(tot),'#FF9AA5'],['PAID',ppN(pr.paid),'#7EF0B8'],['STREAK',t.streak+' days','#FFCB6B']])+
         ppQA([['plus','Add debt',"ppClickText(/Add (new )?debt/i)"],['check','Log payment',"ppScrollTo(/^(Your debts|Total progress)/i)"],['target','Daily target','dtOpenEdit()']]);
     }
@@ -4745,20 +4745,20 @@ function ppTabTop(tab){
           ppQA([['plus','New goal','openSavModal()'],['wallet','Add income',"ppSheet('income')"],['savings','Income pots',"setSavSide('income')"]]); }
       var from=rangeFrom(isavPeriod), per=potRows(from,''), T=per.reduce(function(a,r){return {earned:a.earned+r.earned,saved:a.saved+r.saved+r.carry,out:a.out+r.out};},{earned:0,saved:0,out:0});
       var inPots=potRows('','').reduce(function(a,r){return a+r.net;},0), pc=T.earned>0?Math.min(100,Math.round(T.saved/T.earned*100)):0;
-      return ppHero('In your income pots now','GHS '+ppN(inPots),'+GHS '+ppN(T.saved-T.out)+' '+({week:'this week',month:'this month',year:'this year',lifetime:'lifetime'}[isavPeriod]||''),[pc,'saved','#8BE6EE'],
+      return ppHero('In your income pots now','GHS '+ppN(inPots),'',[pc,'saved','#8BE6EE'],
         [['EARNED',ppN(T.earned),'#7EF0B8'],['SAVED',ppN(T.saved),'#8BE6EE'],['TAKEN OUT',ppN(T.out),'#FF9AA5']])+
         ppQA([['wallet','Add income',"ppSheet('income')"],['up','Take out',"ppScrollTo(/^Your pots/i)"],['savings','New pot','openNewPot()']]);
     }
     if(tab==='budget'){
       var ym=selBudgetMonth, cur=TODAY.slice(0,7), cats=budgetCats(), subs=subsTotalMonthly();
       var spent=cats.reduce(function(s,c){return s+catSpentMonth(c.id,ym);},0)+((ym===cur)?subs:0), planned=monthlyPlan||0, pc=planned>0?Math.min(100,Math.round(spent/planned*100)):0;
-      return ppHero('Budget left \u00b7 '+monthLabel(ym),'GHS '+ppN(planned-spent),'GHS '+ppN(planned)+' planned',[pc,'spent','#FFCB6B'],
+      return ppHero('Budget left \u00b7 '+monthLabel(ym),'GHS '+ppN(planned-spent),'',[pc,'spent','#FFCB6B'],
         [['PLANNED',ppN(planned),'#7EF0B8'],['SPENT',ppN(spent),'#FF9AA5'],['SUBSCRIPTIONS',ppN(subs),'#F0E7F7']])+
         ppQA([['up','Log spending',"ppSheet('spend')"],['edit','Set plan',"ppClickText(/Set monthly plan|Set plan|Edit plan/i)"],['plus','Category','openCatModal()']]);
     }
     if(tab==='wn'){
       var wT=WNtotal(wnData.wants), nT=WNtotal(wnData.needs), n=wnData.wants.length+wnData.needs.length;
-      return ppHero('Wants and needs','GHS '+ppN(wT+nT),n+' item'+(n!==1?'s':'')+' to buy',null,[['WANTS',ppN(wT),'#F0E7F7'],['NEEDS',ppN(nT),'#8BE6EE'],['ITEMS',n,'#fff']])+
+      return ppHero('Wants and needs','GHS '+ppN(wT+nT),'',null,[['WANTS',ppN(wT),'#F0E7F7'],['NEEDS',ppN(nT),'#8BE6EE'],['ITEMS',n,'#fff']])+
         ppQA([['plus','Add want',"wnSetTab('wants');setTimeout(wnOpenAdd,60)"],['plus','Add need',"wnSetTab('needs');setTimeout(wnOpenAdd,60)"],['cart','Make buy plan',"ppClickText(/Combine items/i)"]]);
     }
     if(tab==='money' && typeof moneySide!=='undefined' && moneySide==='income'){
@@ -4876,7 +4876,17 @@ function ppSaveIncome(){
   '.pp-sh{width:100%;background:#fff;border-radius:22px 22px 0 0;padding:18px 16px 26px}'+
   '.pp-sh-t{font-size:19px;font-weight:800;margin-bottom:12px;color:#3F1747}.pp-sh input,.pp-sh select{width:100%;box-sizing:border-box;background:#F6F3F7;border:1px solid #E9E1EB;border-radius:13px;padding:13px;color:#3F1747;font:inherit;font-size:15px;margin-bottom:9px}'+
   '.pp-sh-go{width:100%;border:none;border-radius:14px;padding:14px;background:#3F1747;color:#fff;font:inherit;font-size:15px;font-weight:700;margin-top:4px}.pp-sh-x{width:100%;border:none;background:none;color:#817487;padding:12px;font:inherit;font-size:14px}';
-  document.head.appendChild(css);
+  css.textContent +=
+  '#page-money .pp-hero,#page-savings .pp-hero,#page-budget .pp-hero{background:#EADCF2!important;color:#35143D!important;box-shadow:0 5px 16px rgba(63,23,71,.10)!important}'+
+  '#page-money .pp-hero .pp-l,#page-savings .pp-hero .pp-l,#page-budget .pp-hero .pp-l{color:#674A70!important}'+
+  '#page-money .pp-hero .pp-v,#page-savings .pp-hero .pp-v,#page-budget .pp-hero .pp-v{color:#35143D!important}'+
+  '#page-money .pp-hero .pp-g,#page-savings .pp-hero .pp-g,#page-budget .pp-hero .pp-g{color:#16845B!important}'+
+  '#page-money .pp-hero .pp-ring div,#page-savings .pp-hero .pp-ring div,#page-budget .pp-hero .pp-ring div{background:#F7F0FA!important;color:#35143D!important}'+
+  '#page-money .pp-hero .pp-ring small,#page-savings .pp-hero .pp-ring small,#page-budget .pp-hero .pp-ring small{color:#674A70!important}'+
+  '#page-money .pp-hero .pp-mini>div,#page-savings .pp-hero .pp-mini>div,#page-budget .pp-hero .pp-mini>div{background:rgba(63,23,71,.09)!important}'+
+  '#page-money .pp-hero .pp-mini span,#page-savings .pp-hero .pp-mini span,#page-budget .pp-hero .pp-mini span{color:#674A70!important}'+
+  '.pp-card{background:#F0E6F5!important;border:1px solid #E2D2EA!important;color:#3F1747!important}';
+document.head.appendChild(css);
   // quick buttons on Money open the sheet (not another screen)
   var oT=ppTop; ppTop=function(){ return oT.apply(this,arguments).replace("switchTab('budget')","ppSheet('spend')").replace("setMoneySide('income')\" class=\"pp-q\"","ppSheet('income')\" class=\"pp-q\""); };
   // draw the header in the SAME frame as each page (smooth tab change, no jump)
