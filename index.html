@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v18.0</title>
+<title>Philip's Finance Hub v18.1</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v18.0</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v18.1</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -4928,6 +4928,11 @@ function ppSaveIncome(){
   '.v18dock{position:fixed!important;left:14px!important;right:14px!important;bottom:14px!important;width:auto!important;border-radius:33px!important;background:#1C1C1E!important;border:none!important;box-shadow:0 8px 24px rgba(0,0,0,.6)!important;padding:6px!important;height:auto!important}'+
   '.v18dock .nav-btn{border-radius:24px!important;color:#fff!important;background:transparent!important}.v18dock .nav-btn *{color:#fff!important;opacity:1!important}.v18dock .nav-btn.active{background:#3A3A3C!important}.v18dock .nav-btn:before,.v18dock .nav-btn:after{display:none!important}'+
   '#ppSheet .pp-sh{background:#1C1C1E!important}#ppSheet .pp-sh-t{color:#fff!important}#ppSheet input,#ppSheet select{background:#2A2A2E!important;color:#fff!important;border:none!important}#ppSheet .pp-sh-go{background:#fff!important;color:#000!important}';
+  css.textContent+=
+  'html body.look-soft [id^=page-] .pp-hero.pp-hero.pp-hero,html body [id^=page-] .pp-hero.pp-hero.pp-hero{background:radial-gradient(circle at 88% 0%,rgba(168,85,247,.34),transparent 62%) #000!important;background-color:#000!important;border:none!important;box-shadow:none!important}'+
+  'html body.look-soft [id^=page-] .pp-tophd .sx-sel.sx-sel,html body [id^=page-] .pp-tophd .sx-sel.sx-sel{background:#1C1C1E!important;background-color:#1C1C1E!important;border:none!important;box-shadow:none!important}'+
+  'html body.look-soft [id^=page-] .pp-donut div.pp-donut div,html body [id^=page-] .pp-donut>div{background:#1C1C1E!important;color:#fff!important}html body [id^=page-] .pp-donut b{color:#fff!important}'+
+  'html body .v18dock.v18dock{transform:none!important;max-width:none!important;margin:0!important}';
   document.head.appendChild(css);
   var b=document.querySelector('.nav-btn'); if(b&&b.parentElement) b.parentElement.classList.add('v18dock');
   var mt=document.querySelector('meta[name="theme-color"]'); if(mt) mt.setAttribute('content','#000000');
