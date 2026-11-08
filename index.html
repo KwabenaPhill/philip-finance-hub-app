@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v18.2</title>
+<title>Philip's Finance Hub v16.9</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v18.2</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v16.9</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -3919,7 +3919,10 @@ renderNotice();
 // ===== v15.0: APP LOOKS. "Soft" (default, banking-app style), "Bank card", "Classic". =====
 // Only changes how the app looks. Never touches saved records.
 var LOOK_KEY="pfhub_look_v3";
-function getLook(){ try{ var v=localStorage.getItem(LOOK_KEY); return (v==="bank"||v==="classic"||v==="soft"||v==="dark"||SX_THEMES[v])?v:"dark"; }catch(e){ return "dark"; } }
+function getLook(){ try{ var v=localStorage.getItem(LOOK_KEY); v=(v==="bank"||v==="classic"||v==="soft"||v==="dark"||SX_THEMES[v])?v:"dark";
+  // v16.9: when the phone is in dark mode, the violet look uses the app's own Dark colours (phone dark mode was darkening the light look and hiding text)
+  if(v==="soft"&&window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches) v="dark";
+  return v; }catch(e){ return "dark"; } }
 var SX_THEMES={soft:["Violet","var(--acc,#3F1747)","#4FB3BF"],navy:["Navy","#123A7A","#3D8BFF"],emerald:["Emerald","#0B5D45","#1FB57A"],black:["Black","#151519","#F2A33A"],teal:["Teal","#0E5A6B","#18A7C2"],wine:["Wine","#6B1235","#E0457B"]};
 function _D(){ return document.body.classList.contains("soft-dark"); }
 var NAV_SVG={
@@ -4036,6 +4039,7 @@ function applyLook(){
   document.body.classList.toggle("look-soft",lk==="dark"||!!SX_THEMES[lk]);
   var th=SX_THEMES[lk]; if(th){ document.body.style.setProperty("--acc",th[1]); document.body.style.setProperty("--acc2",th[2]); }
   document.body.classList.toggle("soft-dark",lk==="dark");
+  try{ var mcs=document.querySelector('meta[name="color-scheme"]'); if(mcs) mcs.setAttribute("content",lk==="dark"?"only dark":"only light"); document.documentElement.style.colorScheme=lk==="dark"?"only dark":"only light"; }catch(e){}
   TABS.forEach(function(t){
     var b=document.getElementById("nav-"+t); if(!b) return;
     var ic=b.querySelector(".nav-icon"); if(!ic) return;
@@ -4634,13 +4638,27 @@ function sxSettings(){
 function ppOn(){ try{ return localStorage.getItem('fhLayout')!=='classic'; }catch(e){ return true; } }
 function ppSetLayout(x){ try{ localStorage.setItem('fhLayout',x); }catch(e){} renderMoney(); }
 function ppNum(v){ v=Math.round(v||0); return Math.abs(v)>=10000?(v/1000).toFixed(v%1000?1:0)+'k':v.toLocaleString(); }
+// v16.9: in dark look, very dark category colours become bright so dots and donut slices show
+function ppDkCol(col,id){
+  try{
+    if(!document.body.classList.contains('soft-dark')) return col;
+    var m=/^#?([0-9a-f]{6})$/i.exec(String(col||'').trim()); if(!m) return col;
+    var n=parseInt(m[1],16), r=(n>>16)&255, g=(n>>8)&255, b=n&255;
+    if((0.2126*r+0.7152*g+0.0722*b)/255>0.3) return col;
+    var pal={buy:'#BF5AF2',wants:'#FF5CA8',personal:'#64D2FF',needs:'#5AC8FA'};
+    if(pal[id]) return pal[id];
+    var alt=['#BF5AF2','#FF5CA8','#64D2FF','#FFD60A','#30D158','#FF9F0A'], h=0, k=String(id||col);
+    for(var i=0;i<k.length;i++) h=(h*31+k.charCodeAt(i))>>>0;
+    return alt[h%alt.length];
+  }catch(e){ return col; }
+}
 function ppTop(){
   var pr=periodRange(), all=getPeriodEntries(), arch=archiveForPeriod();
   var spent=all.reduce(function(s,e){return s+e.amount;},0)+arch.debt+arch.sav+arch.wants+arch.needs+arch.budget;
   var inc=0; try{ inc=incomeTotal(pr.from,pr.to)||0; }catch(e){}
   var bl=0; try{ var ym=TODAY.slice(0,7), cats=budgetCats(); var bs=cats.reduce(function(s,c){return s+catSpentMonth(c.id,ym);},0)+(typeof subsTotalMonthly==='function'?subsTotalMonthly():0); bl=(monthlyPlan||0)-bs; }catch(e){}
   var avail=inc-spent, pct=inc>0?Math.max(0,Math.min(100,Math.round(avail/inc*100))):0;
-  var byCat={}; all.forEach(function(e){ var c=getCat(e.cat)||{label:e.cat,color:'#8A5BA6'}; var k=c.label||e.cat; if(!byCat[k]) byCat[k]={l:k,a:0,c:c.color||'#8A5BA6'}; byCat[k].a+=e.amount; });
+  var byCat={}; all.forEach(function(e){ var c=getCat(e.cat)||{label:e.cat,color:'#8A5BA6'}; var k=c.label||e.cat; if(!byCat[k]) byCat[k]={l:k,a:0,c:ppDkCol(c.color||'#8A5BA6',e.cat)}; byCat[k].a+=e.amount; });
   var cats=Object.keys(byCat).map(function(k){return byCat[k];}).sort(function(a,b){return b.a-a.a;});
   var tot=cats.reduce(function(s,c){return s+c.a;},0), at=0;
   var grad=tot>0?cats.map(function(c){ var a=at; at+=c.a/tot*100; return c.c+' '+a.toFixed(2)+'% '+at.toFixed(2)+'%'; }).join(','):'var(--line,#2a2a2e) 0 100%';
@@ -4890,53 +4908,81 @@ function ppSaveIncome(){
 })();
 
 </script>
-
-
 <script>
-// ===== v18.0 (Philip, 8 Nov 2026; v18.2 = his OLD layout, only the black colours): STYLE A (Ledger black). Black page, big centred number with purple glow,
-// dark boxes, 2 big dark buttons, clean lists, floating bottom bar. Replaces the v17 light look.
+// v16.9 DARK CONTRAST FIX: in the dark look, any text too dark to read on its
+// background is lightened (same colour family, brighter). Only changes how text
+// looks on screen. Never touches saved data or storage.
 (function(){
-  try{ if(localStorage.getItem('v18_dark')!=='1'){ localStorage.setItem('v18_dark','1'); if(localStorage.getItem(LOOK_KEY)!=='dark'){ localStorage.setItem(LOOK_KEY,'dark'); location.reload(); return; } } }catch(e){}
-  var css=document.createElement('style');
-  css.textContent=
-  'html,html body,html body.look-soft{background:#000!important;color:#fff!important}'+
-  'html body [id^=page-]{background:#000!important;color:#fff!important}'+
-  'html body [id^=page-] .sx-card,html body [id^=page-] .sx-acc,html body [id^=page-] .card,html body [id^=page-] .history-card,html body [id^=page-] .pp-card,html body [id^=page-] .wn-item,html body [id^=page-] .goal-card,html body [id^=page-] .savings-goal-card{background:#1C1C1E!important;border:none!important;box-shadow:none!important;color:#fff!important}'+
-  'html body [id^=page-] small,html body [id^=page-] .sx-small,html body [id^=page-] .sx-small span,html body [id^=page-] .sx-k,html body [id^=page-] .entry-meta{color:#A1A1AA!important;font-size:13px!important}'+
-  'html body [id^=page-] input,html body [id^=page-] select{background:#2A2A2E!important;color:#fff!important;border:none!important}'+
-  /* header */
-  '.pp-brand{color:#fff!important;font-size:26px!important;font-weight:800!important}.pp-logo{background:#1C1C1E!important}.pp-logo svg{stroke:#fff!important}'+
-  '.pp-tophd .sx-sel{background:#1C1C1E!important;border:none!important;border-radius:22px!important;padding:6px 12px!important}.pp-tophd .sx-sel select{color:#fff!important;background:transparent!important;font-weight:700!important;font-size:13px!important}'+
-  /* switch */
-  'html body .sx-seg{background:#1C1C1E!important;border:none!important;border-radius:22px!important}html body .sx-seg button{color:#A1A1AA!important;background:transparent!important;border-radius:18px!important;font-weight:700!important}html body .sx-seg button.on{background:#3A3A3C!important;color:#fff!important}'+
-  /* hero */
-  'html body .pp-hero,html body .pp-new .pp-hero{background:radial-gradient(circle at 88% 0%,rgba(168,85,247,.34),transparent 62%)!important;border:none!important;box-shadow:none!important;border-radius:22px!important;padding:17px!important;margin-bottom:12px!important}'+
-  'html body .pp-hero:before{display:none!important}.pp-hero .pp-ring div{background:#1C1C1E!important;color:#fff!important}.pp-hero .pp-ring small{color:#A1A1AA!important}'+
-  '.pp-hero .pp-l{color:#A1A1AA!important;font-size:14px!important;text-transform:none!important;letter-spacing:0!important;font-weight:600!important}'+
-  '.pp-hero .pp-v{font-size:32px!important;font-weight:800!important;letter-spacing:-1px;color:#fff!important}.pp-hero .pp-g{color:#4ADE80!important;font-size:14px!important;font-weight:700!important}'+
-  '.pp-hero .pp-mini{gap:8px!important;margin-top:16px!important;border:none!important}.pp-hero .pp-mini>div{background:#2A2A2E!important;border-radius:12px!important;padding:8px!important}'+
-  '.pp-hero .pp-mini span{color:#A1A1AA!important;font-size:11.5px!important;letter-spacing:0!important;text-transform:none!important;font-weight:600!important}.pp-hero .pp-mini b{font-size:18px!important}'+
-  /* 2 big dark buttons */
-  
-  'html body .pp-qa .pp-q,html body .pp-qa .pp-q:nth-child(1),html body .pp-qa .pp-q:nth-child(2),html body .pp-qa .pp-q:nth-child(3){background:#1C1C1E!important;color:#fff!important;border:none!important;border-radius:18px!important;font-weight:700!important}'+
-  'html body .pp-qa .pp-q span,html body .pp-qa .pp-q:nth-child(1) span,html body .pp-qa .pp-q:nth-child(2) span,html body .pp-qa .pp-q:nth-child(3) span{color:#C4A1FF!important}html body .pp-qa .pp-q svg{stroke:#C4A1FF!important}'+
-  /* section titles + buttons */
-  'html body [id^=page-] .section-title,html body [id^=page-] .sx-h2{color:#fff!important}'+
-  'html body [id^=page-] .sx-btn,html body [id^=page-] .sx-mini:not(.g){background:#3A3A3C!important;color:#fff!important;border:none!important}html body [id^=page-] .sx-btn2,html body [id^=page-] .sx-mini.g{background:#1C1C1E!important;color:#fff!important;border:1px solid #3A3A3C!important}'+
-  'html body #page-backup .pp-reset{background:#2A0F12!important;border:1px solid #7F1D1D!important}html body #page-backup .pp-reset *{color:#F87171!important}'+
-  /* floating bottom bar */
-  '.v18dock{background:#0C0C0E!important;border-top:1px solid #222!important}.v18dock .nav-btn,.v18dock .nav-btn *{color:#A1A1AA!important}.v18dock .nav-btn.active,.v18dock .nav-btn.active *{color:#C4A1FF!important}'+
-  '#ppSheet .pp-sh{background:#1C1C1E!important}#ppSheet .pp-sh-t{color:#fff!important}#ppSheet input,#ppSheet select{background:#2A2A2E!important;color:#fff!important;border:none!important}#ppSheet .pp-sh-go{background:#fff!important;color:#000!important}';
-  css.textContent+=
-  'html body.look-soft [id^=page-] .pp-hero.pp-hero.pp-hero,html body [id^=page-] .pp-hero.pp-hero.pp-hero{background:radial-gradient(circle at 88% 0%,rgba(168,85,247,.34),transparent 62%) #1C1C1E!important;background-color:#1C1C1E!important;border:none!important;box-shadow:none!important}'+
-  'html body.look-soft [id^=page-] .pp-tophd .sx-sel.sx-sel,html body [id^=page-] .pp-tophd .sx-sel.sx-sel{background:#1C1C1E!important;background-color:#1C1C1E!important;border:none!important;box-shadow:none!important}'+
-  'html body.look-soft [id^=page-] .pp-donut div.pp-donut div,html body [id^=page-] .pp-donut>div{background:#1C1C1E!important;color:#fff!important}html body [id^=page-] .pp-donut b{color:#fff!important}'+
-  '';
-  document.head.appendChild(css);
-  var b=document.querySelector('.nav-btn'); if(b&&b.parentElement) b.parentElement.classList.add('v18dock');
-  var mt=document.querySelector('meta[name="theme-color"]'); if(mt) mt.setAttribute('content','#000000');
+  function D(){ return document.body.classList.contains('soft-dark'); }
+  function rgb(s){ var m=/rgba?\(\s*([\d.]+)[ ,]+([\d.]+)[ ,]+([\d.]+)(?:[ ,/]+([\d.]+))?/.exec(s||''); return m?{r:+m[1],g:+m[2],b:+m[3],a:m[4]===undefined?1:+m[4]}:null; }
+  function lum(c){ function f(v){ v/=255; return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4); } return 0.2126*f(c.r)+0.7152*f(c.g)+0.0722*f(c.b); }
+  function ratio(a,b){ var x=lum(a),y=lum(b); return (Math.max(x,y)+0.05)/(Math.min(x,y)+0.05); }
+  function hsl(c){ var r=c.r/255,g=c.g/255,b=c.b/255,mx=Math.max(r,g,b),mn=Math.min(r,g,b),h=0,s=0,l=(mx+mn)/2,d=mx-mn;
+    if(d){ s=l>0.5?d/(2-mx-mn):d/(mx+mn); h=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4; h*=60; } return {h:h,s:s,l:l}; }
+  function bgOf(el){
+    for(var e=el;e&&e.nodeType===1;e=e.parentElement){
+      var cs=getComputedStyle(e), c=rgb(cs.backgroundColor);
+      if(c&&c.a>0.5) return c;
+      if(cs.backgroundImage&&cs.backgroundImage!=='none'){ var g=rgb(cs.backgroundImage); if(g) return g; }
+    }
+    return {r:0,g:0,b:0,a:1};
+  }
+  function ownText(el){ for(var n=el.firstChild;n;n=n.nextSibling){ if(n.nodeType===3&&n.nodeValue.trim()) return true; } return /^(INPUT|SELECT|TEXTAREA)$/.test(el.tagName); }
+  function fix(root){
+    if(!D()||!root||root.nodeType!==1) return;
+    var els=[root].concat(Array.prototype.slice.call(root.querySelectorAll('*')));
+    for(var i=0;i<els.length;i++){
+      var el=els[i]; if(!ownText(el)||(el.closest&&el.closest('svg'))) continue;
+      var cs=getComputedStyle(el), tc=rgb(cs.color); if(!tc||tc.a<0.2) continue;
+      var bg=bgOf(el); if(ratio(tc,bg)>=3.2) continue;
+      if(lum(bg)>0.4) continue; // dark text on a light chip is fine
+      var h=hsl(tc), nc=h.s>0.25?'hsl('+Math.round(h.h)+','+Math.round(Math.min(Math.max(h.s,0.6),0.85)*100)+'%,74%)':'#D8D8D8';
+      el.style.setProperty('color',nc,'important');
+    }
+  }
+  var q=[], t=0;
+  function run(){ t=0; var list=q; q=[]; list.forEach(function(n){ if(n.isConnected) fix(n); }); }
+  function add(n){ q.push(n); if(!t) t=requestAnimationFrame(run); }
+  new MutationObserver(function(ms){
+    if(!D()) return;
+    ms.forEach(function(m){ if(m.type==='attributes'){ if(m.target===document.body) add(document.body); return; } m.addedNodes.forEach(function(n){ if(n.nodeType===1) add(n); }); });
+  }).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ add(document.body); }); else add(document.body);
 })();
-
+</script>
+<script>
+// v16.9 DARK STYLE: the premium dark look Philip uses on his phone, with stronger,
+// brighter colours so every label and number stands out. Colours only.
+(function(){
+  var D='body.soft-dark ';
+  var c=document.createElement('style');
+  c.textContent=
+  D+'.pp-hero{background:linear-gradient(225deg,#4E2A66 0%,#2B1D35 45%,#1A1A1E 100%)!important;border:1px solid #3A2E44!important;box-shadow:0 8px 24px rgba(0,0,0,.5)!important}'+
+  D+'.pp-l{color:#C9C2CF!important}'+D+'.pp-v{color:#fff!important}'+
+  D+'.pp-mini>div{background:rgba(255,255,255,.07)!important;border:1px solid rgba(255,255,255,.06)}'+D+'.pp-mini span{color:#B9B2BF!important}'+
+  D+'.pp-ring div{background:#1C1A20!important;color:#fff!important}'+D+'.pp-ring small{color:#C9C2CF!important}'+
+  D+'.pp-qa .pp-q{background:#1C1C1E!important;border:1px solid #2C2C2E!important;color:#fff!important}'+
+  D+'.pp-qa .pp-q span{color:#C38BFF!important}'+
+  D+'.pp-logo{background:#1C1C1E!important}'+D+'.pp-logo svg,'+D+'.sx-ic svg{filter:brightness(2.2) saturate(1.5)!important}'+
+  D+'.pp-card{background:#1C1C1E!important;border:1px solid #2C2C2E!important;color:#fff!important}'+
+  D+'.pp-ch{color:#fff!important}'+D+'.pp-ch span{color:#FF9F0A!important}'+
+  D+'.pp-donut div{background:#1C1C1E!important;color:#B9B2BF!important}'+D+'.pp-donut b{color:#fff!important}'+
+  D+'.pp-leg{color:#fff!important}'+D+'.pp-leg p{font-weight:700}'+D+'.pp-leg span{color:#E8E2EC!important;font-weight:600}'+
+  D+'.sx-seg{background:#1C1C1E!important;border:1px solid #2C2C2E!important}'+D+'.sx-seg button{color:#A9A3AE!important}'+D+'.sx-seg button.on{background:#3A3A3C!important;color:#fff!important}'+
+  D+'.sx-sel{background:#1C1C1E!important;border:1px solid #2C2C2E!important}'+D+'.sx-sel select{color:#fff!important}'+
+  D+'.sx-btn{background:#3A3A3C!important;color:#fff!important}'+D+'.sx-mini{background:#3A3A3C!important;color:#fff!important}'+
+  D+'.sx-btn2{border-color:#3A3A3C!important;color:#fff!important}'+
+  D+'.sx-card,'+D+'.sx-acc,'+D+'.card,'+D+'.wn-item{background:#1C1C1E!important;border-color:#2C2C2E!important}'+
+  D+'.sx-acc .k{color:#B9B2BF!important}'+D+'.sx-acc .v{color:#fff!important}'+
+  D+'.sx-ic{background:#2C2C2E!important}'+
+  D+'.section-title{color:#fff!important}'+D+'.wn-section-total{filter:none}'+
+  D+'.nav-btn.active{color:#C38BFF!important}';
+  document.head.appendChild(c);
+})();
+</script>
+<script>
+// v16.9: follow the phone when it switches between light and dark
+try{ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){ try{ applyLook(); switchTab(ppActive()); }catch(e){} }); }catch(e){}
 </script>
 <script>
 // v111: installable app. Registers the offline file. Does not touch any saved data.
