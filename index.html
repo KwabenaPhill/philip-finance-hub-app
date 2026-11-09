@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v18.8</title>
+<title>Philip's Finance Hub v18.9</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v18.8</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v18.9</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -1356,6 +1356,13 @@ function paceUnits(o, paid, total){
   if(aheadBy>=1-1e-9) return {units:Math.floor(aheadBy+1e-9), short:0, word};
   return {units:0, short:0, word};
 }
+// v18.9: saving score. Only money saved counts: the saving share of each income, minus anything taken out of a pot.
+// Income itself, spending and debt payments never count.
+function savScoreMap(){ const m={}; const add=(d,a)=>{ if(!d||!a) return; m[d]=(m[d]||0)+a; };
+  (incomeData.entries||[]).forEach(e=>add(e.date,e.build||0));
+  ((incSav&&incSav.moves)||[]).forEach(x=>{ if(x.kind==='out') add(x.d,-(x.a||0)); });
+  return m; }
+function savScore(){ const d=dtStats(savScoreMap()); return {ahead:d.ahead,behind:d.behind,rate:d.rate}; }
 // v18.8: ahead or behind in cedis. Only money you log to a plan counts, compared with what the plan says by today.
 function paceMoney(o, paid, total){
   const amt=(o.planAmt>0)?o.planAmt:(o.planDaily||o.dailyTarget||0);
@@ -4476,7 +4483,9 @@ function sxSpend(){
     {n:"pie",l:"Budget",bg:"#FFDCA8",c:"#B56A08",a:all.filter(function(e){return ['debt','sav','wants','needs','buy'].indexOf(e.cat)<0;}).reduce(function(s,e){return s+e.amount;},0)+arch.budget}];
   if(!SOFT_IC.pie) SOFT_IC.pie='<path d="M12 3a9 9 0 1 0 9 9h-9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/>';
   var n=all.length+arch.count;
-  var list=all.slice().sort(function(a,b){var ai=typeof a.id==='number'?a.id:0,bi=typeof b.id==='number'?b.id:0;return b.date.localeCompare(a.date)||(bi-ai);});
+  // v18.9: money taken out of an income pot is listed too (moved back to spend, not spent)
+  var _pr=periodRange(), outs=((incSav&&incSav.moves)||[]).filter(function(m){ return m.kind==='out'&&inRange(m.d,_pr.from,_pr.to); }).map(function(m){ var nm=''; try{ nm=getSource(m.src).name; }catch(e){} return {id:m.id,date:m.d,desc:'Took out \u00b7 '+nm,amount:m.a,potout:true,note:m.note}; });
+  var list=all.concat(outs).sort(function(a,b){var ai=typeof a.id==='number'?a.id:0,bi=typeof b.id==='number'?b.id:0;return b.date.localeCompare(a.date)||(bi-ai);});
   var h='<div class="sx">'+sxTitle("Money","Where your money went")+
     sxSeg([{label:"Income",go:"setMoneySide('income')"},{label:"Spending",on:true,go:"setMoneySide('spend')"}])+
     sxSel(spendPeriod,"setSpendPeriod")+
@@ -4484,6 +4493,7 @@ function sxSpend(){
     '<div class="sx-grid2 sx-up" style="margin-bottom:6px">'+boxes.map(function(b){ return '<div class="sx-acc" style="background:'+b.bg+'">'+sxBubble(b.n,"#fff",b.c,42)+'<div><div class="k">'+b.l+'</div><div class="v">GHS '+sxF(b.a)+'</div></div></div>'; }).join("")+'</div>'+
     '<div class="sx-h2 sx-up" style="display:flex;justify-content:space-between;align-items:baseline">Transactions<span style="font-size:14px;color:var(--ink2)">GHS '+sxF(total)+'</span></div>'+
     '<div class="sx-card sx-up" style="padding:4px 18px">'+(list.length?list.map(function(e){
+      if(e.potout) return '<div class="sx-tx">'+sxBubble("pig","#C6E5F0","#1C7891")+'<div class="n"><div>'+sxEsc(e.desc)+'</div><small>Moved from savings \u00b7 '+(typeof shortDate==="function"?shortDate(e.date):e.date)+(e.note?' \u00b7 '+sxEsc(e.note):'')+'</small></div><div class="a" style="color:#38B6FF">'+sxF(e.amount)+'</div>'+'</div>';
       var cat=getCat(e.cat), ic=sxCatIcon(cat);
       return '<div class="sx-tx">'+sxBubble(ic.n,ic.bg,ic.c)+'<div class="n"><div>'+sxEsc(e.desc)+'</div><small>'+sxEsc(cat.label)+' · '+(typeof shortDate==="function"?shortDate(e.date):e.date)+(e.auto?' · Auto':'')+'</small></div><div class="a sx-out">-'+sxF(e.amount)+'</div>'+'</div>';
     }).join(""):'<div style="padding:18px 0;color:var(--muted);text-align:center">No transactions this period.</div>')+
@@ -4952,15 +4962,25 @@ function ppHideOld(pg,tab){
   hideSel.forEach(function(s){ [].slice.call(pg.querySelectorAll(s)).forEach(function(e){ if(e.closest('.pp-new')) return; var box=e.closest('.sx-up')||e; if(s==='.sx-stat') box=e.parentElement; box.style.display='none'; }); });
   if(tab==='savings'){ [].slice.call(pg.querySelectorAll('.sx-card')).forEach(function(c){ if(/^\s*In your income pots now/.test(c.innerText||'')) c.style.display='none'; }); }
   if(tab==='budget'){ [].slice.call(pg.querySelectorAll('.sx-card')).forEach(function(c){ if(!c.closest('.pp-new') && /Planned/.test(c.innerText||'') && /Spent/.test(c.innerText||'') && (c.innerText||'').length<300) c.style.display='none'; }); }
+  // v18.9: the Plans pill shows payments behind, so the red box is not repeated
+  if(tab==='debt'){ [].slice.call(pg.querySelectorAll('div')).forEach(function(d){ if(d.closest('.pp-new')) return; var t=(d.innerText||''); if(d.children.length<=3&&/payments? behind!/.test(t)&&/to catch up/.test(t)&&t.length<140) d.style.display='none'; }); }
   // v18.7: Add Category and Add Subscription live in Settings now
   if(tab==='budget'){ [].slice.call(pg.querySelectorAll('button')).forEach(function(b){ var o=b.getAttribute('onclick')||''; if(!b.closest('.pp-new,.pp-qa') && /^\s*(openCatModal|openSubModal)\(\s*\)/.test(o)) b.style.display='none'; }); }
   if(tab==='wn'){ [].slice.call(pg.querySelectorAll('.sx-grid2')).forEach(function(c){ if(/Wants total/.test(c.innerText||'')) c.style.display='none'; }); }
 }
 // v18.7: daily score pill (top right) and small W M Y All chips inside the top card
-function ppAheadPill(tab){ var w='all'; if(tab==='debt') w=(planSide==='buy'?'buy':'debt'); else if(tab==='savings'&&savSide!=='income') w='sav';
-  var n=0; try{ n=paceMoneyFor(w); }catch(e){} var t, c;
-  if(n>0){ t='+GH\u20b5 '+n.toLocaleString()+' ahead'; c='g'; } else if(n<0){ t='\u2212GH\u20b5 '+(-n).toLocaleString()+' behind'; c='r'; } else { t='On track'; c='n'; }
-  return '<button class="pp-ahead pp-ahead-'+c+'" onclick="ppDtEdit()">'+t+'</button>'; }
+function ppAheadPill(tab){ var t='On track', c='n', go='ppDtEdit()';
+  try{
+    if(tab==='debt'){ var tr=sideTracker(planSide); if(tr.daysBehind>0){ t=tr.daysBehind+' behind'; c='r'; } go='ppCatchUp()'; }
+    else { var sc=savScore(); if(sc.ahead>0){ t='+'+sc.ahead+' ahead'; c='g'; } else if(sc.behind>0){ t=sc.behind+' behind'; c='r'; } }
+  }catch(e){}
+  return '<button class="pp-ahead pp-ahead-'+c+'" onclick="'+go+'">'+t+'</button>'; }
+// v18.9: Plans pill opens the catch-up right here
+function ppCatchUp(){ var tr=sideTracker(planSide), old=document.getElementById('ppSheet'); if(old) old.remove();
+  var nm=planSide==='buy'?'buy plans':'debts';
+  var body=tr.daysBehind>0?'<div class="pp-sh-t">'+tr.daysBehind+' payment'+(tr.daysBehind!==1?'s':'')+' behind</div><div style="font-size:14px;color:#CFC9D5;margin-bottom:12px">Log GH\u20b5 '+tr.catchUp.toLocaleString()+' to catch up on your '+nm+'.</div><input id="ppCU" type="number" inputmode="decimal" value="'+tr.catchUp+'"><button class="pp-sh-go" onclick="var a=parseFloat(document.getElementById(\'ppCU\').value);document.getElementById(\'ppSheet\').remove();if(a>0)openLogPicker(planSide,a);">Log payment</button>'
+    :'<div class="pp-sh-t">On track</div><div style="font-size:14px;color:#CFC9D5;margin-bottom:12px">No payments missed on your '+nm+'.</div>';
+  document.body.insertAdjacentHTML('beforeend','<div id="ppSheet" onclick="if(event.target.id===\'ppSheet\')this.remove()"><div class="pp-sh">'+body+'<button class="pp-sh-x" onclick="document.getElementById(\'ppSheet\').remove()">Close</button></div></div>'); }
 function ppAddChips(pg,tab){
   var tabs=null, per=false, cur='';
   if(tab==='money'){ tabs=[['income','Income',"setMoneySide('income')"],['spend','Spending',"setMoneySide('spend')"]]; cur=moneySide; per=true; }
