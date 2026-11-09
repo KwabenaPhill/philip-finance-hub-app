@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v18.9</title>
+<title>Philip's Finance Hub v19.0</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v18.9</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v19.0</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -1563,7 +1563,10 @@ let incomeData=(function(){ try{ const r=localStorage.getItem(INC_KEY); if(r) re
 let sources=(function(){ try{ const r=localStorage.getItem(SRC_KEY); if(r){const a=JSON.parse(r); if(Array.isArray(a)&&a.length) return a;} }catch(e){} return JSON.parse(JSON.stringify(DEFAULT_SOURCES)); })();
 let splitPct=(function(){ const v=parseFloat(localStorage.getItem(SPLIT_KEY)); return (v>=0&&v<=100)?v:70; })();
 function saveIncome(){ localStorage.setItem(INC_KEY, JSON.stringify(incomeData)); }
-function saveSources(){ localStorage.setItem(SRC_KEY, JSON.stringify(sources)); }
+// v19.0: "Other" always stays last, new sources go above it
+function srcOtherLast(){ try{ var i=sources.findIndex(function(x){return x.id==='src_oth';}); if(i>=0&&i<sources.length-1){ var o=sources.splice(i,1)[0]; sources.push(o); } }catch(e){} }
+srcOtherLast();
+function saveSources(){ srcOtherLast(); localStorage.setItem(SRC_KEY, JSON.stringify(sources)); }
 function saveSplit(){ localStorage.setItem(SPLIT_KEY, String(splitPct)); }
 function getSource(id){ return sources.find(x=>String(x.id)===String(id)) || {id:"src_oth",name:"Other"}; }
 
@@ -2551,6 +2554,7 @@ function renderWN(){
 // ===== SPENDING / MONEY TAB =====
 const SPEND_KEY="pfhub_spend_v1";
 const SPEND_CATS_KEY="pfhub_spend_cats_v1";
+const CORE_CATS=['debt','sav','buy','wants','needs','subs'];
 const DEFAULT_CATS=[
   {id:"debt",   label:"Debt Paid",    icon:"💳",color:"#FF453A",fixed:true},
   {id:"sav",    label:"Savings",      icon:"🏦",color:"#32ADE6",fixed:true},
@@ -2578,9 +2582,10 @@ function loadSpendCats(){
       // Remove duplicate savings entries (old broken versions added id:"savings")
       loaded = loaded.filter(x=>!(x.label==="Savings" && x.id!=="sav"));
       DEFAULT_CATS.forEach(function(def,idx){
-        const existing=loaded.find(x=>x.id===def.id);
-        if(existing){ existing.icon=def.icon; existing.label=def.label; existing.color=def.color; existing.fixed=true; }
-        else { loaded.splice(idx,0,JSON.parse(JSON.stringify(def))); }
+        // v19.0: only the built-in core stays locked; Food, Airtime, Betting and the rest can be deleted and stay deleted
+        const existing=loaded.find(x=>x.id===def.id), core=CORE_CATS.indexOf(def.id)>=0;
+        if(existing){ existing.icon=def.icon; existing.label=def.label; existing.color=def.color; existing.fixed=core; }
+        else if(core){ loaded.splice(idx,0,JSON.parse(JSON.stringify(def))); }
       });
       return loaded;
     }
@@ -3413,9 +3418,9 @@ function importData(event){
         // Repair: ensure all fixed cats are present with correct icons
         spendCats = spendCats.filter(x=>!(x.label==="Savings" && x.id!=="sav"));
         DEFAULT_CATS.forEach(function(def,idx){
-          const ex=spendCats.find(x=>x.id===def.id);
-          if(ex){ ex.icon=def.icon; ex.label=def.label; ex.color=def.color; ex.fixed=true; }
-          else { spendCats.splice(idx,0,JSON.parse(JSON.stringify(def))); }
+          const ex=spendCats.find(x=>x.id===def.id), core=CORE_CATS.indexOf(def.id)>=0;
+          if(ex){ ex.icon=def.icon; ex.label=def.label; ex.color=def.color; ex.fixed=core; }
+          else if(core){ spendCats.splice(idx,0,JSON.parse(JSON.stringify(def))); }
         });
         saveSpendCats();
       }
@@ -4652,7 +4657,7 @@ function sxSettings(){
     '<div style="display:flex;gap:8px;margin-top:14px"><button class="sx-mini" style="flex:1;padding:13px" onclick="exportData()">'+sxI("dl",17)+' Export</button><button class="sx-mini g" style="flex:1;padding:13px" onclick="triggerImport()">'+sxI("ul",17)+' Restore</button></div></div>'+
     '<div class="sx-card sx-up" style="padding:4px 18px">'+
     '<div class="sx-row" onclick="ppMoneySheet()">'+sxBubble("coins","var(--mint,#173B2E)","#22DD66",44)+'<div class="n">Money settings<small>Income split, daily target, monthly budget</small></div><span class="sx-chev">›</span></div>'+
-    '<div class="sx-row" onclick="openCatModal()">'+sxBubble("plus","var(--mint,#173B2E)","#FFB020",44)+'<div class="n">Add category<small>A new spending category for Budget</small></div><span class="sx-chev">›</span></div>'+
+    '<div class="sx-row" onclick="ppCatSheet()">'+sxBubble("plus","var(--mint,#173B2E)","#FFB020",44)+'<div class="n">Categories<small>Add your own or delete the ones you don\'t use</small></div><span class="sx-chev">›</span></div>'+
     '<div class="sx-row" onclick="openSubModal()">'+sxBubble("repeat","var(--mint,#173B2E)","#38B6FF",44)+'<div class="n">Add subscription<small>'+(typeof subs!=='undefined'?subs.filter(function(x){return !x.cancelled;}).length:0)+' active \u00b7 GH\u20b5 '+(typeof subsTotalMonthly==='function'?subsTotalMonthly():0).toLocaleString()+'/mo</small></div><span class="sx-chev">›</span></div>'+
     (typeof srcBub==='function'&&sources.length?'<div class="sx-row" onclick="ppLogoSheet()">'+sxBubble("yt","var(--mint,#173B2E)","var(--green,#2FE39A)",44)+'<div class="n">Channel logos<small>A logo for each income source</small></div><span class="sx-chev">›</span></div>':'')+
     '<div class="sx-row" onclick="openHistory()">'+sxBubble("hist","var(--peach)","#B56A08",44)+'<div class="n">History<small>Everything you\'ve done · '+histData.length+' record'+(histData.length!==1?'s':'')+'</small></div><span class="sx-chev">›</span></div>'+
@@ -4975,6 +4980,12 @@ function ppAheadPill(tab){ var t='On track', c='n', go='ppDtEdit()';
     else { var sc=savScore(); if(sc.ahead>0){ t='+'+sc.ahead+' ahead'; c='g'; } else if(sc.behind>0){ t=sc.behind+' behind'; c='r'; } }
   }catch(e){}
   return '<button class="pp-ahead pp-ahead-'+c+'" onclick="'+go+'">'+t+'</button>'; }
+// v19.0: manage spending categories (add or delete) from Settings
+function ppCatSheet(){ var old=document.getElementById('ppSheet'); if(old) old.remove();
+  var cs=spendCats.filter(function(c){ return !c.fixed; });
+  var rows=cs.length?cs.map(function(c){ var ic=sxCatIcon(c); return '<div class="pp-hrow">'+sxBubble(ic.n,ic.bg,ic.c,36)+'<div style="flex:1;min-width:0;font-weight:600">'+sxEsc(c.label)+'</div><button onclick="ppCatDel(\''+c.id+'\')" style="border:none;background:#3A1E2A;color:#FF4D5E;border-radius:10px;padding:8px 12px;font:inherit;font-size:13px;font-weight:700;cursor:pointer">Delete</button></div>'; }).join(''):'<div style="color:#A9A3AE;font-size:14px;padding:8px 0">No categories yet.</div>';
+  document.body.insertAdjacentHTML('beforeend','<div id="ppSheet" onclick="if(event.target.id===\'ppSheet\')this.remove()"><div class="pp-sh" style="max-height:82vh;overflow:auto"><div class="pp-sh-t">Categories</div><button class="pp-sh-go" style="margin:0 0 12px!important" onclick="document.getElementById(\'ppSheet\').remove();openCatModal()">+ Add category</button>'+rows+'<div style="font-size:12px;color:#A9A3AE;margin-top:10px">Debt Paid, Savings, Buy Plans, Wants, Needs and Subscriptions are built in and stay. Spending already logged is kept when you delete a category.</div><button class="pp-sh-x" onclick="document.getElementById(\'ppSheet\').remove()">Close</button></div></div>'); }
+function ppCatDel(id){ deleteCat(id); try{ if(document.getElementById('page-backup').classList.contains('active')) renderBackup(); }catch(e){} ppCatSheet(); }
 // v18.9: Plans pill opens the catch-up right here
 function ppCatchUp(){ var tr=sideTracker(planSide), old=document.getElementById('ppSheet'); if(old) old.remove();
   var nm=planSide==='buy'?'buy plans':'debts';
@@ -4986,10 +4997,11 @@ function ppAddChips(pg,tab){
   if(tab==='money'){ tabs=[['income','Income',"setMoneySide('income')"],['spend','Spending',"setMoneySide('spend')"]]; cur=moneySide; per=true; }
   else if(tab==='savings'){ tabs=[['income','Income',"setSavSide('income')"],['goals','Goals',"setSavSide('goals')"]]; cur=(savSide==='income'?'income':'goals'); per=(savSide==='income'); }
   else if(tab==='debt'){ tabs=[['buy','Buy',"setPlanSide('buy')"],['debt','Debt',"setPlanSide('debt')"]]; cur=planSide; }
+  else if(tab==='wn'){ tabs=[['wants','Wants',"wnSetTab('wants')"],['needs','Needs',"wnSetTab('needs')"]]; cur=wnTab; }
   if(!tabs) return;
   var hero=pg.querySelector('.pp-new .pp-hero')||pg.querySelector('.pp-hero'); if(!hero||hero.querySelector('.pp-chrow')) return;
   // the big switch above the card is no longer needed
-  [].slice.call(pg.querySelectorAll('.sx-seg')).forEach(function(sg){ if(!sg.closest('.pp-new,.pp-hero')&&/(Income|Spending|Goals|Buy|Debt)/.test(sg.innerText||'')) sg.style.display='none'; });
+  [].slice.call(pg.querySelectorAll('.sx-seg')).forEach(function(sg){ if(!sg.closest('.pp-new,.pp-hero')&&/(Income|Spending|Goals|Buy|Debt|Wants|Needs)/.test(sg.innerText||'')) sg.style.display='none'; });
   var row=document.createElement('div'); row.className='pp-chrow';
   var h='<div class="pp-tabs">'+tabs.map(function(x){ return '<button class="'+(cur===x[0]?'on':'')+'" onclick="'+x[2]+'">'+x[1]+'</button>'; }).join('')+'</div>';
   if(per){ var pc=tab==='savings'?isavPeriod:spendPeriod;
