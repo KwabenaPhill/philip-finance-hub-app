@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v19.5</title>
+<title>Philip's Finance Hub v19.6</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v19.5</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v19.6</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -5020,6 +5020,11 @@ function ppAddChips(pg,tab){
     h+='<div class="pp-chips">'+[['week','W'],['month','M'],['year','Y'],['lifetime','All']].map(function(x){ return '<button class="'+(pc===x[0]?'on':'')+'" onclick="ppPer(\''+x[0]+'\')">'+x[1]+'</button>'; }).join('')+'</div>';
     var l=hero.querySelector('.pp-l'); if(l) l.textContent=(l.textContent||'').split(' \u00b7 ')[0]; }
   row.innerHTML=h; hero.insertBefore(row,hero.firstChild);
+  // v19.6: tabs and W M Y All always stay on one line; shrink a little until they fit
+  var fit=function(){ try{ var bs=[].slice.call(row.querySelectorAll('button')), f=12.5, n=0;
+    bs.forEach(function(b){ b.style.removeProperty('font-size'); b.style.removeProperty('padding'); });
+    while(row.scrollWidth>row.clientWidth+1&&f>8.5&&n<20){ f-=0.5; n++; bs.forEach(function(b){ var chip=!!b.closest('.pp-chips'); b.style.setProperty('font-size',(chip?f-1.5:f)+'px','important'); b.style.setProperty('padding',(chip?Math.max(2,f*0.3):Math.max(4,f*0.45))+'px '+(chip?Math.max(4,f*0.45):Math.max(6,f*0.75))+'px','important'); }); } }catch(e){} };
+  fit(); requestAnimationFrame(fit);
 }
 // v19.4: income by source, same style as Spending by category
 function ppIncChart(list,inT,label){
@@ -5256,7 +5261,7 @@ function ppSaveIncome(){
   // v18.7 ahead pill and period chips
   '.pp-ahead{border-radius:99px;padding:6px 13px;font:inherit;font-size:13.5px;font-weight:700;white-space:nowrap;cursor:pointer;flex:none}.pp-ahead-g{background:#123A24;color:#30D158;border:1px solid #2E7D46}.pp-ahead-r{background:#3A1E2A;color:#FF4D5E;border:1px solid #8A2E45}.pp-ahead-n{background:#1C1C1E;color:#fff;border:1px solid #3A3A3C}'+
   'html body .pp-chips{flex-wrap:nowrap;gap:3px!important;margin-left:auto}html body .pp-chips button{padding:4px 7px!important;font-size:11px!important}html body .pp-tabs button{padding:6px 11px!important;font-size:12.5px!important}'+
-  '.pp-chrow{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;max-width:100%}.pp-chips{display:flex;gap:4px;flex:none}.pp-chips button{border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:4px 8px;font:inherit;font-size:11.5px;font-weight:700;color:#C9C2CF;background:transparent;cursor:pointer}.pp-chips button.on{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.3)}'+
+  '.pp-chrow{display:flex;flex-wrap:nowrap;justify-content:space-between;align-items:center;gap:6px;margin-bottom:10px;max-width:100%;min-width:0}.pp-chrow>*{flex:none}.pp-chips{display:flex;gap:4px;flex:none}.pp-chips button{border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:4px 8px;font:inherit;font-size:11.5px;font-weight:700;color:#C9C2CF;background:transparent;cursor:pointer}.pp-chips button.on{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.3)}'+
   '.pp-tabs{display:flex;gap:4px;background:rgba(0,0,0,.28);border-radius:99px;padding:3px;flex:none}.pp-tabs button{border:none;border-radius:99px;padding:6px 13px;font:inherit;font-size:13px;font-weight:700;color:#C9C2CF;background:transparent;cursor:pointer;white-space:nowrap}.pp-tabs button.on{background:#5B2A86;color:#fff;box-shadow:0 2px 8px rgba(91,42,134,.45)}'+
   // v18.8 stat boxes: one soft violet style, bigger numbers (they still shrink to fit)
   'html body .pp-mini>div{background:rgba(191,148,228,.13)!important;border:1px solid rgba(191,148,228,.28)!important}html body .pp-mini span{color:#CFC3DA!important}html body .pp-mini b{font-size:23px!important;font-weight:800!important;line-height:1.15!important}'+
