@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v19.2</title>
+<title>Philip's Finance Hub v19.3</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v19.2</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v19.3</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -4727,7 +4727,7 @@ function ppTop(){
     (inc>0?'':'<div class="pp-g" style="color:#30D158">Add your income to see what is left</div>')+'</div>'+
     '<div class="pp-ring" style="background:conic-gradient('+(typeof ppPctCol==='function'?ppPctCol(pct):'#22DD66')+' 0 '+pct+'%,rgba(255,255,255,.08) '+pct+'% 100%)"><div>'+pct+'%<small>left</small></div></div></div>'+
     '<div class="pp-mini"><div style="'+ppTint('#22DD66')+'"><span>INCOME</span><b style="color:#22DD66">'+ppNum(inc)+'</b></div><div style="'+ppTint('#38B6FF')+'"><span>MOVED</span><b style="color:#38B6FF">'+ppNum(moved)+'</b></div><div style="'+ppTint('#FF4D5E')+'"><span>SPENT</span><b style="color:#FF4D5E">'+ppNum(spent)+'</b></div></div></div>'+
-    '<div class="pp-qa">'+q(ppI('up','#FF4D5E',30),'Add spending',"ppSheet('spend')")+q(ppI('minus','#FFB020',30),'Clear manually',"ppClearSheet()")+q(ppI('list','#C77DFF',30),'Transactions',"var t=document.getElementById('ppTx');if(t)t.scrollIntoView({behavior:'smooth'})")+'</div>'+
+    '<div class="pp-qa" style="grid-template-columns:1fr">'+q(ppI('up','#FF4D5E',30),'Add spending',"ppSheet('spend')")+'</div>'+
     '<div class="pp-card"><div class="pp-ch">Spending by category<span>'+pr.label+'</span></div><div class="pp-row" style="gap:16px">'+
     '<div class="pp-donut" style="background:conic-gradient('+grad+')"><div><small>SPENT</small><b>'+ppNum(spent)+'</b></div></div>'+
     '<div class="pp-leg">'+(cats.length?cats.slice(0,6).map(function(c){return '<p><span><i style="background:'+c.c+'"></i>'+sxEsc(c.l)+'</span>'+ppNum(c.a)+'</p>';}).join(''):'<p style="color:var(--muted,#8a8a90)">No spending yet</p>')+'</div></div></div>';
@@ -4921,21 +4921,21 @@ function ppTabTop(tab){
       var tag='';
       if(planSide==='buy') return ppHero('Buy plans','GHS '+ppN(tot),pr.n+' thing'+(pr.n!==1?'s':'')+' to buy',[pc,'saved','#FFB627'],
         [['TOTAL',ppN(tot),'#FFB627'],['SAVED',ppN(pr.paid),'#22DD66'],['LEFT',ppN(pr.left),'#FF4D5E']])+
-        ppQA([['plus','Add buy plan',"ppClickText(/Add (new )?buy plan/i)"],['check','Log saving',"ppFocusLog()"],['list','Merge',"ppClickText(/Merge buy plans/i);setTimeout(ppShowMerge,150)"]]);
+        ppQA([['plus','Add buy plan',"ppClickText(/Add (new )?buy plan/i)"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"');
       return ppHero('You owe','GHS '+ppN(pr.left),pr.n+' debt'+(pr.n!==1?'s':''),[pc,'paid','#FF4D5E'],
         [['OWED',ppN(tot),'#FF4D5E'],['PAID',ppN(pr.paid),'#22DD66'],['STREAK',t.streak+' days','#FFB627']])+
-        ppQA([['plus','Add debt',"ppClickText(/Add (new )?debt/i)"],['check','Log payment',"ppFocusLog()"],['list','Merge',"ppClickText(/Merge debts/i);setTimeout(ppShowMerge,150)"]]);
+        ppQA([['plus','Add debt',"ppClickText(/Add (new )?debt/i)"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"');
     }
     if(tab==='savings'){
       if(savSide!=='income'){ var gs=(typeof savGoals!=='undefined'&&savGoals)||[], tg=0, sd=0; gs.forEach(function(g){ tg+=+(g.target||g.amount||0); sd+=+(g.saved||0); });
         return ppHero('Saved in goals','GHS '+ppN(sd),gs.length+' goal'+(gs.length!==1?'s':''),[tg>0?Math.round(sd/tg*100):0,'done','#38B6FF'],
           [['TARGET',ppN(tg),'#38B6FF'],['SAVED',ppN(sd),'#22DD66'],['LEFT',ppN(tg-sd),'#FF4D5E']])+
-          ppQA([['plus','New goal','openSavModal()'],['check','Log saving',"ppFocusLog()"],['up','Take out',"ppTakeOutPick()"]]); }
+          ppQA([['plus','New goal','openSavModal()']]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"'); }
       var from=rangeFrom(isavPeriod), per=potRows(from,''), T=per.reduce(function(a,r){return {earned:a.earned+r.earned,saved:a.saved+r.saved+r.carry,out:a.out+r.out};},{earned:0,saved:0,out:0});
       var inPots=potRows('','').reduce(function(a,r){return a+r.net;},0), pc=T.earned>0?Math.min(100,Math.round(T.saved/T.earned*100)):0;
       return ppHero('In your income pots now','GHS '+ppN(inPots),'',[pc,'saved','#38B6FF'],
         [['EARNED',ppN(T.earned),'#22DD66'],['SAVED',ppN(T.saved),'#38B6FF'],['TAKEN OUT',ppN(T.out),'#FF4D5E']])+
-        ppQA([['wallet','Add income',"ppSheet('income')"],['up','Take out',"ppTakeOutPick()"],['savings','New pot','openNewPot()']]);
+        ppQA([['up','Take out',"ppTakeOutPick()"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"');
     }
     if(tab==='budget'){
       var ym=selBudgetMonth, cur=TODAY.slice(0,7), cats=budgetCats(), subs=subsTotalMonthly();
@@ -4948,14 +4948,14 @@ function ppTabTop(tab){
       var ub=function(l){ return (l||[]).filter(function(i){ return !i.bought; }); }, bo=function(l){ return (l||[]).filter(function(i){ return i.bought; }); };
       var wT=WNtotal(ub(wnData.wants)), nT=WNtotal(ub(wnData.needs)), n=ub(wnData.wants).length+ub(wnData.needs).length, bT=WNtotal(bo(wnData.wants).concat(bo(wnData.needs)));
       return ppHero('Wants and needs','GHS '+ppN(wT+nT),n+' item'+(n!==1?'s':'')+' to buy',null,[['WANTS',ppN(wT),'#FF5CA8'],['NEEDS',ppN(nT),'#38B6FF'],['BOUGHT',ppN(bT),'#22DD66']])+
-        ppQA([['plus','Add want',"wnSetTab('wants');setTimeout(ppWnAdd,60)"],['plus','Add need',"wnSetTab('needs');setTimeout(ppWnAdd,60)"],['cart','Make buy plan',"ppClickText(/Combine items/i)"]]);
+        ppQA([['plus','Add want',"wnSetTab('wants');setTimeout(ppWnAdd,60)"],['plus','Add need',"wnSetTab('needs');setTimeout(ppWnAdd,60)"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr 1fr"');
     }
     if(tab==='money' && typeof moneySide!=='undefined' && moneySide==='income'){
       var pr=periodRange(), list=incomeData.entries.filter(function(e){return inRange(e.date,pr.from,pr.to);});
       var inT=incomeTotal(pr.from,pr.to), sv=list.reduce(function(a,e){return a+(e.build||0);},0), lv=list.reduce(function(a,e){return a+(e.live||0);},0);
       return ppHero('Money in \u00b7 '+pr.label.toLowerCase(),'GHS '+ppN(inT),list.length+' payment'+(list.length!==1?'s':''),[inT>0?Math.round(sv/inT*100):0,'saved','#22DD66'],
         [['SAVED',ppN(sv),'#22DD66'],['TO SPEND',ppN(lv),'#FFB627'],['SOURCES',sources.length,'#C77DFF']])+
-        ppQA([['wallet','Add income',"ppSheet('income')"],['savings','Income pots','openNewPot()'],['list','History','ppIncHistory()']]);
+        ppQA([['wallet','Add income',"ppSheet('income')"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"');
     }
   }catch(e){ console.log(e); }
   return '';
