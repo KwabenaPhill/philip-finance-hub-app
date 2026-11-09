@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v19.3</title>
+<title>Philip's Finance Hub v19.4</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v19.3</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v19.4</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -4715,7 +4715,8 @@ function ppTop(){
   var bl=0; try{ var ym=TODAY.slice(0,7), cats=budgetCats(); var bs=cats.reduce(function(s,c){return s+catSpentMonth(c.id,ym);},0)+wnSpentMonth(ym)+(typeof subsTotalMonthly==='function'?subsTotalMonthly():0); bl=(monthlyPlan||0)-bs; }catch(e){}
   // v18.5: Available = income - saved to pots + taken out of pots - moved - spent
   var potIn=0, potOut=0; try{ incomeData.entries.filter(function(e){return inRange(e.date,pr.from,pr.to);}).forEach(function(e){ potIn+=(e.build||0); }); (incSav.moves||[]).filter(function(m){return m.kind==='out'&&inRange(m.d,pr.from,pr.to);}).forEach(function(m){ potOut+=(m.a||0); }); }catch(e){}
-  var avail=inc-potIn+potOut-moved-spent, pct=inc>0?Math.max(0,Math.min(100,Math.round(avail/inc*100))):0;
+  // v19.4: Out shows your spending money only: TO SPEND (spend share of income + money taken out of pots) - MOVED - SPENT = Available
+  var toSpend=inc-potIn+potOut, avail=toSpend-moved-spent, pct=toSpend>0?Math.max(0,Math.min(100,Math.round(avail/toSpend*100))):0;
   var byCat={}; all.filter(function(e){return !isMove(e);}).forEach(function(e){ var c=getCat(e.cat)||{label:e.cat,color:'#8A5BA6'}; var k=c.label||e.cat; if(!byCat[k]) byCat[k]={l:k,a:0,c:ppDkCol(c.color||'#8A5BA6',e.cat)}; byCat[k].a+=e.amount; });
   var cats=Object.keys(byCat).map(function(k){return byCat[k];}).sort(function(a,b){return b.a-a.a;});
   var tot=cats.reduce(function(s,c){return s+c.a;},0), at=0;
@@ -4726,7 +4727,7 @@ function ppTop(){
     '<div class="pp-hero"><div class="pp-row"><div><div class="pp-l">Available to spend · '+pr.label.toLowerCase()+'</div><div class="pp-v">GHS '+Math.round(avail).toLocaleString()+'</div>'+
     (inc>0?'':'<div class="pp-g" style="color:#30D158">Add your income to see what is left</div>')+'</div>'+
     '<div class="pp-ring" style="background:conic-gradient('+(typeof ppPctCol==='function'?ppPctCol(pct):'#22DD66')+' 0 '+pct+'%,rgba(255,255,255,.08) '+pct+'% 100%)"><div>'+pct+'%<small>left</small></div></div></div>'+
-    '<div class="pp-mini"><div style="'+ppTint('#22DD66')+'"><span>INCOME</span><b style="color:#22DD66">'+ppNum(inc)+'</b></div><div style="'+ppTint('#38B6FF')+'"><span>MOVED</span><b style="color:#38B6FF">'+ppNum(moved)+'</b></div><div style="'+ppTint('#FF4D5E')+'"><span>SPENT</span><b style="color:#FF4D5E">'+ppNum(spent)+'</b></div></div></div>'+
+    '<div class="pp-mini"><div style="'+ppTint('#22DD66')+'"><span>TO SPEND</span><b style="color:#22DD66">'+ppNum(toSpend)+'</b></div><div style="'+ppTint('#38B6FF')+'"><span>MOVED</span><b style="color:#38B6FF">'+ppNum(moved)+'</b></div><div style="'+ppTint('#FF4D5E')+'"><span>SPENT</span><b style="color:#FF4D5E">'+ppNum(spent)+'</b></div></div></div>'+
     '<div class="pp-qa" style="grid-template-columns:1fr">'+q(ppI('up','#FF4D5E',30),'Add spending',"ppSheet('spend')")+'</div>'+
     '<div class="pp-card"><div class="pp-ch">Spending by category<span>'+pr.label+'</span></div><div class="pp-row" style="gap:16px">'+
     '<div class="pp-donut" style="background:conic-gradient('+grad+')"><div><small>SPENT</small><b>'+ppNum(spent)+'</b></div></div>'+
@@ -4955,7 +4956,7 @@ function ppTabTop(tab){
       var inT=incomeTotal(pr.from,pr.to), sv=list.reduce(function(a,e){return a+(e.build||0);},0), lv=list.reduce(function(a,e){return a+(e.live||0);},0);
       return ppHero('Money in \u00b7 '+pr.label.toLowerCase(),'GHS '+ppN(inT),list.length+' payment'+(list.length!==1?'s':''),[inT>0?Math.round(sv/inT*100):0,'saved','#22DD66'],
         [['SAVED',ppN(sv),'#22DD66'],['TO SPEND',ppN(lv),'#FFB627'],['SOURCES',sources.length,'#C77DFF']])+
-        ppQA([['wallet','Add income',"ppSheet('income')"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"');
+        ppQA([['wallet','Add income',"ppSheet('income')"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"')+ppIncChart(list,inT,pr.label);
     }
   }catch(e){ console.log(e); }
   return '';
@@ -5021,6 +5022,17 @@ function ppAddChips(pg,tab){
     var l=hero.querySelector('.pp-l'); if(l) l.textContent=(l.textContent||'').split(' \u00b7 ')[0]; }
   row.innerHTML=h; hero.insertBefore(row,hero.firstChild);
 }
+// v19.4: income by source, same style as Spending by category
+function ppIncChart(list,inT,label){
+  if(!list.length||!(inT>0)) return '';
+  var pal=['#22DD66','#38B6FF','#FFB020','#FF5CA8','#BF5AF2','#64D2FF','#FF9F0A','#30D158','#FFD60A','#FF4D5E'], by={}, order=[];
+  list.forEach(function(e){ var k=e.src||'src_oth'; if(!(k in by)){ by[k]=0; order.push(k); } by[k]+=(e.amount||0); });
+  var rows=order.map(function(k,i){ var nm=''; try{ nm=getSource(k).name; }catch(x){} return {n:nm||'Other',a:by[k]}; }).sort(function(a,b){return b.a-a.a;});
+  rows.forEach(function(r,i){ r.c=pal[i%pal.length]; });
+  var at=0, grad=rows.map(function(r){ var a=at; at+=r.a/inT*100; return r.c+' '+a.toFixed(2)+'% '+at.toFixed(2)+'%'; }).join(',');
+  return '<div class="pp-card"><div class="pp-ch">Income by source<span>'+label+'</span></div><div class="pp-row" style="gap:16px">'+
+    '<div class="pp-donut" style="background:conic-gradient('+grad+')"><div><small>IN</small><b>'+ppNum(inT)+'</b></div></div>'+
+    '<div class="pp-leg">'+rows.slice(0,6).map(function(r){ return '<p><span><i style="background:'+r.c+'"></i>'+sxEsc(r.n)+'</span>'+ppNum(r.a)+'</p>'; }).join('')+'</div></div></div>'; }
 // v19.2: five tabs with one job each. Money = In, Out, Budget. Debts alone. Save = Pots, Goals, Buy.
 var _ppLastMoney='income', _ppLastSave='pots';
 function goMoney(sub){ sub=sub||_ppLastMoney; _ppLastMoney=sub; if(sub==='budget'){ switchTab('budget'); } else { moneySide=sub; switchTab('money'); } }
