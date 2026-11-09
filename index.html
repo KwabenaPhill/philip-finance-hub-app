@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v18.6</title>
+<title>Philip's Finance Hub v18.7</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v18.6</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v18.7</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -1416,11 +1416,15 @@ function dtPaidByDate(){
   return map;
 }
 function dtPaidToday(){ return dtPaidByDate()[TODAY]||0; }
+// v18.7: savings goals only (for the Goals tab card)
+function dtPaidGoals(){ const map={}; for(const g of (savGoals||[])) for(const l of (g.log||[])) if(!l.seed&&l.date&&l.amount>0) map[l.date]=(map[l.date]||0)+l.amount; return map; }
+function dtGoalsStart(){ let st=''; for(const g of (savGoals||[])){ const c=[g.planStart].concat((g.log||[]).filter(l=>!l.seed).map(l=>l.date)).filter(Boolean).sort()[0]; if(c&&(!st||c<st)) st=c; } return st; }
+function dtGoalsLeft(){ let r=0; for(const g of (savGoals||[])){ if(g.completed) continue; const l=(g.target||0)-(g.saved||0); if(l>0) r+=l; } return r; }
 // Each day converts into "days covered" at the rate that applied THAT day,
 // so changing the rate never rewrites what you already earned.
-function dtStats(){
-  const paid=dtPaidByDate();
-  const start=dtStart();
+function dtStats(paidMap,startOverride){
+  const paid=paidMap||dtPaidByDate();
+  const start=(startOverride&&startOverride>dtStart())?startOverride:dtStart();
   const days=Math.max(daysBetween(start,TODAY),0)+1;
   let units=0, unitsFinished=0, missed=0;
   const cur=new Date(start);
@@ -4616,6 +4620,8 @@ function sxSettings(){
     '<div style="display:flex;gap:8px;margin-top:14px"><button class="sx-mini" style="flex:1;padding:13px" onclick="exportData()">'+sxI("dl",17)+' Export</button><button class="sx-mini g" style="flex:1;padding:13px" onclick="triggerImport()">'+sxI("ul",17)+' Restore</button></div></div>'+
     '<div class="sx-card sx-up" style="padding:4px 18px">'+
     '<div class="sx-row" onclick="ppMoneySheet()">'+sxBubble("coins","var(--mint,#173B2E)","#22DD66",44)+'<div class="n">Money settings<small>Income split, daily target, monthly budget</small></div><span class="sx-chev">›</span></div>'+
+    '<div class="sx-row" onclick="openCatModal()">'+sxBubble("plus","var(--mint,#173B2E)","#FFB020",44)+'<div class="n">Add category<small>A new spending category for Budget</small></div><span class="sx-chev">›</span></div>'+
+    '<div class="sx-row" onclick="openSubModal()">'+sxBubble("repeat","var(--mint,#173B2E)","#38B6FF",44)+'<div class="n">Add subscription<small>'+(typeof subs!=='undefined'?subs.filter(function(x){return !x.cancelled;}).length:0)+' active \u00b7 GH\u20b5 '+(typeof subsTotalMonthly==='function'?subsTotalMonthly():0).toLocaleString()+'/mo</small></div><span class="sx-chev">›</span></div>'+
     (typeof srcBub==='function'&&sources.length?'<div class="sx-row" onclick="ppLogoSheet()">'+sxBubble("yt","var(--mint,#173B2E)","var(--green,#2FE39A)",44)+'<div class="n">Channel logos<small>A logo for each income source</small></div><span class="sx-chev">›</span></div>':'')+
     '<div class="sx-row" onclick="openHistory()">'+sxBubble("hist","var(--peach)","#B56A08",44)+'<div class="n">History<small>Everything you\'ve done · '+histData.length+' record'+(histData.length!==1?'s':'')+'</small></div><span class="sx-chev">›</span></div>'+
     '<div class="sx-row" onclick="_sxLookOpen=!_sxLookOpen;renderBackup()">'+sxBubble("edit","var(--lav)","#3F1747",44)+'<div class="n">App look<small>Dark · Violet · Navy · Emerald · Black · Teal · Wine · Classic</small></div><span class="sx-chev">'+(_sxLookOpen?'⌄':'›')+'</span></div>'+
@@ -4769,11 +4775,14 @@ function srcLogoPick(id){
 // v17.6: daily target card in the same style as Total progress, with streak, days ahead and days saved in one line
 function ppDailyCard(){
   // v18.6: one shared daily target for debts, buy plans and goals; streak and days now use the same numbers as the rest of the card
-  var d=dtStats(), clear=dtDaysToClear(), pc=d.rate>0?Math.min(100,Math.round(d.todayGot/d.rate*100)):0, sd={streak:d.streak||0,totalCredits:Math.floor((d.units||0)+1e-9)};
+  // v18.7: on the Goals tab this card counts savings goals only (debts and buy plans stay on Plans)
+  var gl=dtGoalsLeft(), gst=dtGoalsStart();
+  if(!(savGoals||[]).length||!gst){ return '<div class="sx-card pp-dtc" onclick="ppDtEdit()" style="cursor:pointer;margin-bottom:12px"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><span style="font-size:20px;font-weight:700;color:#fff;white-space:nowrap">Daily target</span><span style="font-size:15px;color:#CFC9D5;white-space:nowrap">'+sxF(dtRateToday())+'/day \u270e</span></div><div style="font-size:12.5px;color:#A9A3AE;margin-top:2px">Savings goals only</div><div style="font-size:14px;color:#CFC9D5;margin-top:12px">Add a goal to start tracking it here.</div></div>'; }
+  var d=dtStats(dtPaidGoals(),gst), clear=(d.rate>0&&gl>0)?Math.ceil(gl/d.rate):0, pc=d.rate>0?Math.min(100,Math.round(d.todayGot/d.rate*100)):0, sd={streak:d.streak||0,totalCredits:Math.floor((d.units||0)+1e-9)};
   var bal=d.behind>0?'<b style="color:#FF4D5E">'+d.behind+' day'+(d.behind!==1?'s':'')+' behind</b>':d.ahead>0?'<b style="color:#22DD66">'+d.ahead+' day'+(d.ahead!==1?'s':'')+' ahead</b>':'<b style="color:#fff">On track</b>';
   return '<div class="sx-card pp-dtc" onclick="ppDtEdit()" style="cursor:pointer;margin-bottom:12px">'+
     '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><span style="font-size:20px;font-weight:700;color:#fff;white-space:nowrap">Daily target</span><span style="font-size:15px;color:#CFC9D5;white-space:nowrap">'+sxF(d.rate)+'/day \u270e</span></div>'+
-    '<div style="font-size:12.5px;color:#A9A3AE;margin-top:2px;white-space:nowrap">Debts, buy plans and goals</div>'+
+    '<div style="font-size:12.5px;color:#A9A3AE;margin-top:2px;white-space:nowrap">Savings goals only</div>'+
     '<div class="sx-prog" style="margin:12px 0 10px"><i style="display:block;height:100%;border-radius:99px;width:'+pc+'%;background:'+ppPctCol(pc)+'"></i></div>'+
     '<div style="display:flex;justify-content:space-between;gap:8px;font-size:15px;white-space:nowrap"><span style="color:#22DD66">GHS '+sxF(d.todayGot)+' today</span><span style="color:'+(clear>0?'#FF4D5E':'#22DD66')+'">'+(clear>0?clear+' days to clear':'All clear')+'</span></div>'+
     '<div style="display:flex;justify-content:space-between;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid #2C2C2E;font-size:13px;color:#CFC9D5;white-space:nowrap">'+
@@ -4894,7 +4903,7 @@ function ppTabTop(tab){
       var spent=cats.reduce(function(s,c){return s+catSpentMonth(c.id,ym);},0)+wnSpentMonth(ym)+((ym===cur)?subs:0), planned=monthlyPlan||0, pc=planned>0?Math.min(100,Math.round(spent/planned*100)):0;
       return ppHero('Budget left \u00b7 '+monthLabel(ym),'GHS '+ppN(planned-spent),'',[pc,'spent','#FFB627'],
         [['PLANNED',ppN(planned),'#22DD66'],['SPENT',ppN(spent),'#FF4D5E'],['SUBS / MO',ppN(subs),'#22DD66']])+
-        ppQA([['up','Log spending',"ppSheet('spend')"],['list','Subscription',"openSubModal()"],['plus','Category','openCatModal()']]);
+        ppQA([['up','Log spending',"ppSheet('spend')"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"');
     }
     if(tab==='wn'){
       var ub=function(l){ return (l||[]).filter(function(i){ return !i.bought; }); }, bo=function(l){ return (l||[]).filter(function(i){ return i.bought; }); };
@@ -4920,7 +4929,21 @@ function ppHideOld(pg,tab){
   hideSel.forEach(function(s){ [].slice.call(pg.querySelectorAll(s)).forEach(function(e){ if(e.closest('.pp-new')) return; var box=e.closest('.sx-up')||e; if(s==='.sx-stat') box=e.parentElement; box.style.display='none'; }); });
   if(tab==='savings'){ [].slice.call(pg.querySelectorAll('.sx-card')).forEach(function(c){ if(/^\s*In your income pots now/.test(c.innerText||'')) c.style.display='none'; }); }
   if(tab==='budget'){ [].slice.call(pg.querySelectorAll('.sx-card')).forEach(function(c){ if(!c.closest('.pp-new') && /Planned/.test(c.innerText||'') && /Spent/.test(c.innerText||'') && (c.innerText||'').length<300) c.style.display='none'; }); }
+  // v18.7: Add Category and Add Subscription live in Settings now
+  if(tab==='budget'){ [].slice.call(pg.querySelectorAll('button')).forEach(function(b){ var o=b.getAttribute('onclick')||''; if(!b.closest('.pp-new,.pp-qa') && /^\s*(openCatModal|openSubModal)\(\s*\)/.test(o)) b.style.display='none'; }); }
   if(tab==='wn'){ [].slice.call(pg.querySelectorAll('.sx-grid2')).forEach(function(c){ if(/Wants total/.test(c.innerText||'')) c.style.display='none'; }); }
+}
+// v18.7: daily score pill (top right) and small W M Y All chips inside the top card
+function ppAheadPill(){ var d=dtStats(), t, c; if(d.ahead>0){ t='+'+d.ahead+' ahead'; c='g'; } else if(d.behind>0){ t='\u2212'+d.behind+' behind'; c='r'; } else { t='On track'; c='n'; }
+  return '<button class="pp-ahead pp-ahead-'+c+'" onclick="ppDtEdit()">'+t+'</button>'; }
+function ppAddChips(pg,tab){
+  if(!(tab==='money'||(tab==='savings'&&savSide==='income'))) return;
+  var hero=pg.querySelector('.pp-hero'); if(!hero||hero.querySelector('.pp-chips')) return;
+  var cur=tab==='savings'?isavPeriod:spendPeriod, l=hero.querySelector('.pp-l');
+  var row=document.createElement('div'); row.className='pp-chrow';
+  if(l){ l.textContent=(l.textContent||'').split(' \u00b7 ')[0]; row.appendChild(l); }
+  row.insertAdjacentHTML('beforeend','<div class="pp-chips">'+[['week','W'],['month','M'],['year','Y'],['lifetime','All']].map(function(x){ return '<button class="'+(cur===x[0]?'on':'')+'" onclick="ppPer(\''+x[0]+'\')">'+x[1]+'</button>'; }).join('')+'</div>');
+  hero.insertBefore(row,hero.firstChild);
 }
 function ppMine(pg){ try{ [].slice.call(pg.querySelectorAll('.pp-tophd,.pp-tophd *,.pp-new,.pp-new *,.pp-hero,.pp-hero *,.pp-qa,.pp-qa *')).forEach(function(e){ try{ _softSeen.add(e); }catch(x){} try{ _shaped.add(e); }catch(x){} }); }catch(e){} }
 function ppDecorate(pg){
@@ -4932,7 +4955,7 @@ function ppDecorate(pg){
     [].slice.call(pg.querySelectorAll('.sx-sel,.period-select-wrap')).forEach(function(e){ if(!e.closest('.pp-tophd')) e.style.display='none'; });
     [].slice.call(pg.querySelectorAll('.pp-tophd,.pp-new')).forEach(function(e){ e.remove(); });
     var ic=PP_ICON[tab]||['#eee','#333'], sel='';
-    if(tab!=='backup'){ try{ sel=sxSel(tab==='savings'?isavPeriod:spendPeriod,'ppPer'); }catch(e){} }
+    if(tab!=='backup'){ try{ sel=ppAheadPill(); }catch(e){} }
     pg.insertAdjacentHTML('afterbegin','<div class="pp-tophd"><div class="pp-brand"><span class="pp-logo" style="background:'+ic[0]+'">'+ppI(tab,ic[1],22)+'</span><b>'+(PP_NAMES[tab]||'')+'</b></div>'+sel+'</div>');
     var top=ppTabTop(tab);
     if(top){
@@ -4942,6 +4965,7 @@ function ppDecorate(pg){
       anchor.parentNode.insertBefore(holder,anchor.nextSibling);
       ppHideOld(pg,tab);
     }
+    try{ ppAddChips(pg,tab); }catch(e){}
     ppMine(pg);
     [].slice.call(pg.querySelectorAll('h1,h2,div,span')).forEach(function(el){
       if(el.closest('.pp-tophd')||el.children.length>1) return;
@@ -5116,6 +5140,9 @@ function ppSaveIncome(){
   D+'.nav-btn.active{color:#C38BFF!important}'+
   // v18.4 donut centre: label and amount together, exactly in the middle, amount bigger
   'html body .pp-donut>div{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important;line-height:1!important;padding:0!important}html body .pp-donut>div>small{display:block!important;margin:0!important;padding:0!important;font-size:11px!important;line-height:1!important;letter-spacing:.06em}html body .pp-donut>div>b{display:block!important;margin:0!important;padding:0!important;font-size:26px!important;font-weight:800!important;line-height:1.05!important}'+
+  // v18.7 ahead pill and period chips
+  '.pp-ahead{border-radius:99px;padding:6px 13px;font:inherit;font-size:13.5px;font-weight:700;white-space:nowrap;cursor:pointer;flex:none}.pp-ahead-g{background:#123A24;color:#30D158;border:1px solid #2E7D46}.pp-ahead-r{background:#3A1E2A;color:#FF4D5E;border:1px solid #8A2E45}.pp-ahead-n{background:#1C1C1E;color:#fff;border:1px solid #3A3A3C}'+
+  '.pp-chrow{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}.pp-chrow .pp-l{margin:0!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}.pp-chips{display:flex;gap:4px;flex:none}.pp-chips button{border:none;border-radius:99px;padding:4px 9px;font:inherit;font-size:11.5px;font-weight:700;color:#C9C2CF;background:rgba(255,255,255,.08);cursor:pointer}.pp-chips button.on{background:rgba(255,255,255,.24);color:#fff}'+
   // v18.4 pop-up buttons: Close matches the main button (rounded, same size)
   'html body .pp-sh .pp-sh-go,html body .pp-sh .pp-sh-x{display:block!important;width:100%!important;box-sizing:border-box!important;border-radius:14px!important;padding:14px!important;font-size:15px!important;font-weight:700!important;margin:8px 0 0!important;outline:none!important;box-shadow:none!important}html body .pp-sh .pp-sh-x{background:transparent!important;border:1px solid #3A3A3C!important;color:#C9C2CF!important}'+
   // v17.0 ring %: centred, bigger
