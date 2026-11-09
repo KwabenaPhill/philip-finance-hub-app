@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v19.0</title>
+<title>Philip's Finance Hub v19.1</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v19.0</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v19.1</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -4663,7 +4663,8 @@ function sxSettings(){
     '<div class="sx-row" onclick="openHistory()">'+sxBubble("hist","var(--peach)","#B56A08",44)+'<div class="n">History<small>Everything you\'ve done · '+histData.length+' record'+(histData.length!==1?'s':'')+'</small></div><span class="sx-chev">›</span></div>'+
     '<div class="sx-row" onclick="_sxLookOpen=!_sxLookOpen;renderBackup()">'+sxBubble("edit","var(--lav)","#3F1747",44)+'<div class="n">App look<small>Dark · Violet · Navy · Emerald · Black · Teal · Wine · Classic</small></div><span class="sx-chev">'+(_sxLookOpen?'⌄':'›')+'</span></div>'+
     (_sxLookOpen?'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 0 14px">'+lb("dark","Dark")+Object.keys(SX_THEMES).map(function(k){return lb(k,SX_THEMES[k][0]);}).join("")+lb("classic","Classic")+'</div>':'')+'</div>'+
-    (function(){ var cs=(typeof spendCats!=="undefined"?spendCats:[]).filter(function(c){return !c.fixed;}); if(!cs.length) return ""; return '<div class="sx-h2">Spending categories</div><div class="sx-card" style="padding:4px 18px">'+cs.map(function(c){ var ic=sxCatIcon(c); return '<div class="sx-tx">'+sxBubble(ic.n,ic.bg,ic.c)+'<div class="n"><div>'+sxEsc(c.label)+'</div></div><button onclick="deleteCat(\''+c.id+'\');setTimeout(renderBackup,50)" style="border:none;background:#F8CFCF;color:#B0201C;border-radius:10px;padding:8px 12px;font:500 13px Lexend;cursor:pointer">Delete</button></div>'; }).join("")+'</div>'; })()+
+    // v19.1: categories live only inside the Categories folder
+
     '<div class="sx-card sx-up" style="padding:4px 18px"><div class="sx-row" onclick="openResetSheet()">'+sxBubble("trash","#F8CFCF","var(--red)",44)+'<div class="n" style="color:var(--red)">Reset Finance Hub<small>Only clears Finance Hub. Other apps never touched.</small></div></div></div></div>';
   document.getElementById("page-backup").innerHTML=h;
 }
