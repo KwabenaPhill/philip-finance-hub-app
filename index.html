@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v19.1</title>
+<title>Philip's Finance Hub v19.2</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v19.1</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v19.2</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -606,10 +606,10 @@
 <div class="page" id="page-backup"></div>
 
 <div class="bottom-nav">
-  <button class="nav-btn active" onclick="switchTab('money')" id="nav-money"><span class="nav-icon">💰</span>Money</button>
-  <button class="nav-btn" onclick="switchTab('debt')" id="nav-debt"><span class="nav-icon">💳</span>Plans</button>
-  <button class="nav-btn" onclick="switchTab('savings')" id="nav-savings"><span class="nav-icon">🏦</span>Savings</button>
-  <button class="nav-btn" onclick="switchTab('budget')" id="nav-budget"><span class="nav-icon">🗓️</span>Budget</button>
+  <button class="nav-btn active" onclick="goMoney()" id="nav-money"><span class="nav-icon">💰</span>Money</button>
+  <button class="nav-btn" onclick="goDebts()" id="nav-debt"><span class="nav-icon">💳</span>Debts</button>
+  <button class="nav-btn" onclick="goSave()" id="nav-savings"><span class="nav-icon">🏦</span>Save</button>
+  <button class="nav-btn" onclick="goMoney('budget')" id="nav-budget" style="display:none"><span class="nav-icon">🗓️</span>Budget</button>
   <button class="nav-btn" onclick="switchTab('wn')" id="nav-wn"><span class="nav-icon">🛍️</span>Lists</button>
   <button class="nav-btn" onclick="switchTab('backup')" id="nav-backup"><span class="nav-icon">⚙️</span>Settings</button>
 </div>
@@ -4775,7 +4775,7 @@ function ppTop(){
 // ===== v16.8 (Philip, 8 Nov 2026): Affinity-matched solid plum violet. Violet colours only; layout, features and saved data unchanged. v16.4 AFFINITY COLOURS, deeper (white pages, deep plum cards, small orange glow, pastel buttons). v16.3: EVERY TAB LIKE THE APPROVED PREVIEW ("Finance Hub new look").
 // Header: coloured icon per tab + name + purple "This week" pill. Each tab: bright purple card with ring and 3 numbers,
 // 3 quick buttons, then its own lists. Readable colours. Drawn in the same frame as the page (smooth tab change).
-var PP_NAMES={money:'Money',debt:'Plans',savings:'Savings',budget:'Budget',wn:'Lists',backup:'Settings'};
+var PP_NAMES={money:'Money',debt:'Debts',savings:'Save',budget:'Money',wn:'Lists',backup:'Settings'};
 var PP_SVG={money:'<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/>',debt:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3v3h6V3M9 11h6M9 15h4"/>',
   savings:'<path d="M5 11a7 6 0 0 1 13-2h2v4l-2 1v3h-3l-1-2H9l-1 2H5v-3a5 5 0 0 1 0-3z"/>',budget:'<path d="M12 3v9h9A9 9 0 1 1 12 3z"/><path d="M15 3a7 7 0 0 1 6 6h-6z"/>',
   wn:'<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/>',backup:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/>',
@@ -4788,7 +4788,7 @@ var PP_TIPS=[/^Add your income to see what is left$/i,/^Applies from today/i,/^C
   /^No money in yet\. Add money/i,/^Tap Add to wants to start/i,/^Add YouTube, ElevenLabs/i,/^Only clears Finance Hub/i,/^Tap a plan to give it money/i,
   /^No buy plans yet\. Add one above/i,/^Know where every cedi goes$/i,/^All your pots at a glance$/i,/^Wants and needs$/i,/^Backup, money rules and looks$/i,
   /^Pay it off, one day at a time$/i,/^Where your money went$/i,/^Money you received$/i,/^Your numbers, your plan\.?$/i];
-function ppActive(){ var a=document.querySelector('.nav-btn.active'); return a?a.id.slice(4):'money'; }
+function ppActive(){ var p=document.querySelector('[id^=page-].active'); return p?p.id.slice(5):'money'; }
 function ppPer(v){ spendPeriod=v; try{ isavPeriod=v; }catch(e){} try{ switchTab(ppActive()); }catch(e){} }
 function ppN(v){ return Math.round(v||0).toLocaleString(); }
 // v17.0: income source logos. Saved on this phone only, in pfhub_src_logos (included in Export Backup).
@@ -4918,11 +4918,11 @@ function ppTabTop(tab){
     if(tab==='debt'){
       var d=dtStats(), t=sideTracker(planSide), pr=ppProg(document.getElementById('page-debt')), tot=pr.paid+pr.left, pc=tot>0?Math.round(pr.paid/tot*100):0;
       var bal=t.daysBehind>0?t.daysBehind+' days behind':t.daysAhead>0?t.daysAhead+' days ahead':'on track';
-      var tag=ppN(d.rate)+'/day';
-      if(planSide==='buy') return ppHero('Buy plans','GHS '+ppN(tot),pr.n+' thing'+(pr.n!==1?'s':'')+' to buy \u00b7 '+tag,[pc,'saved','#FFB627'],
+      var tag='';
+      if(planSide==='buy') return ppHero('Buy plans','GHS '+ppN(tot),pr.n+' thing'+(pr.n!==1?'s':'')+' to buy',[pc,'saved','#FFB627'],
         [['TOTAL',ppN(tot),'#FFB627'],['SAVED',ppN(pr.paid),'#22DD66'],['LEFT',ppN(pr.left),'#FF4D5E']])+
         ppQA([['plus','Add buy plan',"ppClickText(/Add (new )?buy plan/i)"],['check','Log saving',"ppFocusLog()"],['list','Merge',"ppClickText(/Merge buy plans/i);setTimeout(ppShowMerge,150)"]]);
-      return ppHero('You owe','GHS '+ppN(pr.left),pr.n+' debt'+(pr.n!==1?'s':'')+' \u00b7 '+tag,[pc,'paid','#FF4D5E'],
+      return ppHero('You owe','GHS '+ppN(pr.left),pr.n+' debt'+(pr.n!==1?'s':''),[pc,'paid','#FF4D5E'],
         [['OWED',ppN(tot),'#FF4D5E'],['PAID',ppN(pr.paid),'#22DD66'],['STREAK',t.streak+' days','#FFB627']])+
         ppQA([['plus','Add debt',"ppClickText(/Add (new )?debt/i)"],['check','Log payment',"ppFocusLog()"],['list','Merge',"ppClickText(/Merge debts/i);setTimeout(ppShowMerge,150)"]]);
     }
@@ -4968,19 +4968,27 @@ function ppHideOld(pg,tab){
   hideSel.forEach(function(s){ [].slice.call(pg.querySelectorAll(s)).forEach(function(e){ if(e.closest('.pp-new')) return; var box=e.closest('.sx-up')||e; if(s==='.sx-stat') box=e.parentElement; box.style.display='none'; }); });
   if(tab==='savings'){ [].slice.call(pg.querySelectorAll('.sx-card')).forEach(function(c){ if(/^\s*In your income pots now/.test(c.innerText||'')) c.style.display='none'; }); }
   if(tab==='budget'){ [].slice.call(pg.querySelectorAll('.sx-card')).forEach(function(c){ if(!c.closest('.pp-new') && /Planned/.test(c.innerText||'') && /Spent/.test(c.innerText||'') && (c.innerText||'').length<300) c.style.display='none'; }); }
-  // v18.9: the Plans pill shows payments behind, so the red box is not repeated
-  if(tab==='debt'){ [].slice.call(pg.querySelectorAll('div')).forEach(function(d){ if(d.closest('.pp-new')) return; var t=(d.innerText||''); if(d.children.length<=3&&/payments? behind!/.test(t)&&/to catch up/.test(t)&&t.length<140) d.style.display='none'; }); }
+  // v19.2: the pill says what to pay or save today, so the behind/ahead boxes and old daily target cards are not repeated
+  if(tab==='debt'||tab==='savings'){ [].slice.call(pg.querySelectorAll("[onclick^='dtOpenEdit']")).forEach(function(x){ if(!x.closest('.pp-new')) x.style.display='none'; }); }
+  if(tab==='debt'||tab==='savings'){ [].slice.call(pg.querySelectorAll('div')).forEach(function(d){ if(d.closest('.pp-new')) return; var t=(d.innerText||''); if(d.children.length<=3&&(/payments? behind/.test(t)&&/to catch up/.test(t)||/payments? ahead!/.test(t))&&t.length<160) d.style.display='none'; }); }
   // v18.7: Add Category and Add Subscription live in Settings now
   if(tab==='budget'){ [].slice.call(pg.querySelectorAll('button')).forEach(function(b){ var o=b.getAttribute('onclick')||''; if(!b.closest('.pp-new,.pp-qa') && /^\s*(openCatModal|openSubModal)\(\s*\)/.test(o)) b.style.display='none'; }); }
   if(tab==='wn'){ [].slice.call(pg.querySelectorAll('.sx-grid2')).forEach(function(c){ if(/Wants total/.test(c.innerText||'')) c.style.display='none'; }); }
 }
 // v18.7: daily score pill (top right) and small W M Y All chips inside the top card
-function ppAheadPill(tab){ var t='On track', c='n', go='ppDtEdit()';
+function ppAheadPill(tab){
   try{
-    if(tab==='debt'){ var tr=sideTracker(planSide); if(tr.daysBehind>0){ t=tr.daysBehind+' behind'; c='r'; } go='ppCatchUp()'; }
-    else { var sc=savScore(); if(sc.ahead>0){ t='+'+sc.ahead+' ahead'; c='g'; } else if(sc.behind>0){ t=sc.behind+' behind'; c='r'; } }
+    var side=null, verb='Pay';
+    if(tab==='debt'){ side=planSide; verb=planSide==='buy'?'Save':'Pay'; }
+    else if(tab==='savings'&&savSide!=='income'){ side='sav'; verb='Save'; }
+    if(side){ var d=dueFor(side); if(!d.count) return '';
+      if(d.due>0) return '<button class="pp-ahead pp-ahead-r" onclick="ppDue(\''+side+'\','+d.due+')">'+verb+' GH\u20b5 '+d.due.toLocaleString()+' today</button>';
+      return '<button class="pp-ahead pp-ahead-g">All done \u2713</button>'; }
+    if(tab==='budget'){ var b=budgetDay(); if(!b) return '';
+      if(b.left<0) return '<button class="pp-ahead pp-ahead-r">Over by GH\u20b5 '+Math.round(-b.left).toLocaleString()+'</button>';
+      return '<button class="pp-ahead pp-ahead-g">GH\u20b5 '+b.perDay.toLocaleString()+'/day left</button>'; }
   }catch(e){}
-  return '<button class="pp-ahead pp-ahead-'+c+'" onclick="'+go+'">'+t+'</button>'; }
+  return ''; }
 // v19.0: manage spending categories (add or delete) from Settings
 function ppCatSheet(){ var old=document.getElementById('ppSheet'); if(old) old.remove();
   var cs=spendCats.filter(function(c){ return !c.fixed; });
@@ -4995,14 +5003,17 @@ function ppCatchUp(){ var tr=sideTracker(planSide), old=document.getElementById(
   document.body.insertAdjacentHTML('beforeend','<div id="ppSheet" onclick="if(event.target.id===\'ppSheet\')this.remove()"><div class="pp-sh">'+body+'<button class="pp-sh-x" onclick="document.getElementById(\'ppSheet\').remove()">Close</button></div></div>'); }
 function ppAddChips(pg,tab){
   var tabs=null, per=false, cur='';
-  if(tab==='money'){ tabs=[['income','Income',"setMoneySide('income')"],['spend','Spending',"setMoneySide('spend')"]]; cur=moneySide; per=true; }
-  else if(tab==='savings'){ tabs=[['income','Income',"setSavSide('income')"],['goals','Goals',"setSavSide('goals')"]]; cur=(savSide==='income'?'income':'goals'); per=(savSide==='income'); }
-  else if(tab==='debt'){ tabs=[['buy','Buy',"setPlanSide('buy')"],['debt','Debt',"setPlanSide('debt')"]]; cur=planSide; }
+  var MON=[['income','In',"goMoney('income')"],['spend','Out',"goMoney('spend')"],['budget','Budget',"goMoney('budget')"]];
+  var SAV=[['pots','Pots',"goSave('pots')"],['goals','Goals',"goSave('goals')"],['buy','Buy',"goSave('buy')"]];
+  if(tab==='money'){ tabs=MON; cur=moneySide; per=true; }
+  else if(tab==='budget'){ tabs=MON; cur='budget'; }
+  else if(tab==='savings'){ tabs=SAV; cur=(savSide==='income'?'pots':'goals'); per=(savSide==='income'); }
+  else if(tab==='debt'&&planSide==='buy'){ tabs=SAV; cur='buy'; }
   else if(tab==='wn'){ tabs=[['wants','Wants',"wnSetTab('wants')"],['needs','Needs',"wnSetTab('needs')"]]; cur=wnTab; }
+  // the old big switches above the card are no longer needed
+  [].slice.call(pg.querySelectorAll('.sx-seg')).forEach(function(sg){ if(!sg.closest('.pp-new,.pp-hero')&&/(Income|Spending|Goals|Buy|Debt|Wants|Needs)/.test(sg.innerText||'')) sg.style.display='none'; });
   if(!tabs) return;
   var hero=pg.querySelector('.pp-new .pp-hero')||pg.querySelector('.pp-hero'); if(!hero||hero.querySelector('.pp-chrow')) return;
-  // the big switch above the card is no longer needed
-  [].slice.call(pg.querySelectorAll('.sx-seg')).forEach(function(sg){ if(!sg.closest('.pp-new,.pp-hero')&&/(Income|Spending|Goals|Buy|Debt|Wants|Needs)/.test(sg.innerText||'')) sg.style.display='none'; });
   var row=document.createElement('div'); row.className='pp-chrow';
   var h='<div class="pp-tabs">'+tabs.map(function(x){ return '<button class="'+(cur===x[0]?'on':'')+'" onclick="'+x[2]+'">'+x[1]+'</button>'; }).join('')+'</div>';
   if(per){ var pc=tab==='savings'?isavPeriod:spendPeriod;
@@ -5010,6 +5021,32 @@ function ppAddChips(pg,tab){
     var l=hero.querySelector('.pp-l'); if(l) l.textContent=(l.textContent||'').split(' \u00b7 ')[0]; }
   row.innerHTML=h; hero.insertBefore(row,hero.firstChild);
 }
+// v19.2: five tabs with one job each. Money = In, Out, Budget. Debts alone. Save = Pots, Goals, Buy.
+var _ppLastMoney='income', _ppLastSave='pots';
+function goMoney(sub){ sub=sub||_ppLastMoney; _ppLastMoney=sub; if(sub==='budget'){ switchTab('budget'); } else { moneySide=sub; switchTab('money'); } }
+function goDebts(){ planSide='debt'; switchTab('debt'); }
+function goSave(sub){ sub=sub||_ppLastSave; _ppLastSave=sub; if(sub==='buy'){ planSide='buy'; switchTab('debt'); } else { savSide=(sub==='pots'?'income':'goals'); switchTab('savings'); } }
+function ppNavKey(t){ if(t==='budget') return 'money'; if(t==='debt'&&planSide==='buy') return 'savings'; return t; }
+function ppNavFix(){ var pg=document.querySelector('[id^=page-].active'); if(!pg) return; var n=ppNavKey(pg.id.slice(5));
+  TABS.forEach(function(x){ var b=document.getElementById('nav-'+x); if(b) b.classList.toggle('active',x===n); }); }
+(function(){ var o=switchTab; switchTab=function(t){ var r=o.apply(this,arguments); try{ ppNavFix(); }catch(e){} return r; }; })();
+// what to pay or save today to stay on plan (missed payments plus today's)
+function planDue(o,paid,total){
+  const amt=(o.planAmt>0)?o.planAmt:(o.planDaily||o.dailyTarget||0); if(!(amt>0)) return 0;
+  const per=(o.planFreq==='week')?7:1, elapsed=Math.max(daysBetween(o.planStart||TODAY,TODAY),0);
+  const logged=Math.max(Math.min(planLogTotal(o),(paid||0)),0), stillOwed=Math.max((total||0)-((paid||0)-logged),0);
+  const allP=Math.ceil(stillOwed/amt), dueNow=Math.min(Math.floor(elapsed/per)+1,allP);
+  return Math.max(0,Math.min(dueNow*amt,stillOwed)-logged);
+}
+function dueFor(side){ let n=0, k=0;
+  if(side==='sav'){ savActiveGoals().forEach(function(g){ k++; n+=planDue(g,g.saved||0,g.target||0); }); }
+  else pActive(side).forEach(function(p){ k++; n+=planDue(p,pPaid(side,p),p.amount); });
+  return {due:Math.round(n),count:k}; }
+function budgetDay(){ var ym=TODAY.slice(0,7), planned=monthlyPlan||0; if(!(planned>0)) return null;
+  var spent=budgetCats().reduce(function(s,c){return s+catSpentMonth(c.id,ym);},0)+wnSpentMonth(ym)+subsTotalMonthly(), left=planned-spent;
+  var y=+TODAY.slice(0,4), m=+TODAY.slice(5,7), dim=new Date(y,m,0).getDate(), dl=dim-(+TODAY.slice(8,10))+1;
+  return {left:left, perDay:Math.floor(left/Math.max(dl,1))}; }
+function ppDue(side,amt){ if(amt>0) openLogPicker(side,amt); }
 function ppMine(pg){ try{ [].slice.call(pg.querySelectorAll('.pp-tophd,.pp-tophd *,.pp-new,.pp-new *,.pp-hero,.pp-hero *,.pp-qa,.pp-qa *')).forEach(function(e){ try{ _softSeen.add(e); }catch(x){} try{ _shaped.add(e); }catch(x){} }); }catch(e){} }
 function ppDecorate(pg){
   if(!pg) return;
@@ -5021,7 +5058,7 @@ function ppDecorate(pg){
     [].slice.call(pg.querySelectorAll('.pp-tophd,.pp-new')).forEach(function(e){ e.remove(); });
     var ic=PP_ICON[tab]||['#eee','#333'], sel='';
     if(tab!=='backup'){ try{ sel=ppAheadPill(tab); }catch(e){} }
-    pg.insertAdjacentHTML('afterbegin','<div class="pp-tophd"><div class="pp-brand"><span class="pp-logo" style="background:'+ic[0]+'">'+ppI(tab,ic[1],22)+'</span><b>'+(PP_NAMES[tab]||'')+'</b></div>'+sel+'</div>');
+    var nk=ppNavKey(tab); ic=PP_ICON[nk]||ic; pg.insertAdjacentHTML('afterbegin','<div class="pp-tophd"><div class="pp-brand"><span class="pp-logo" style="background:'+ic[0]+'">'+ppI(nk,ic[1],22)+'</span><b>'+(PP_NAMES[nk]||'')+'</b></div>'+sel+'</div>');
     var top=ppTabTop(tab);
     if(top){
       var seg=pg.querySelector('.sx-seg'); var holder=document.createElement('div'); holder.className='pp-new'; holder.innerHTML=top;
@@ -5050,7 +5087,7 @@ function ppDecorate(pg){
     if(tab==='savings'){ byText('.sx-card,.card',/^Total Savings/).forEach(gone); [].slice.call(pg.querySelectorAll('.add-savings-btn')).forEach(gone); }
     if(tab==='budget'){ byText('button',/^\+?\s*Add (Category|Subscription)$/i).forEach(gone); }
     if(tab==='wn'){ byText('button',/^\+?\s*Add to (wants|needs)$/i).forEach(gone); byText('button',/^Combine items into one buy plan/i).forEach(gone); }
-    if(tab==='savings'&&savSide!=='income'){ var od=[].slice.call(pg.querySelectorAll("[onclick^='dtOpenEdit']")).filter(function(x){ return !x.closest('.pp-new,.pp-qa'); })[0]; if(od){ od.insertAdjacentHTML('beforebegin',ppDailyCard()); od.remove(); } var sg=pg.querySelector('.sav-streak-grid'); if(sg) sg.style.setProperty('display','none','important'); }
+    if(tab==='savings'&&savSide!=='income'){ var od=[].slice.call(pg.querySelectorAll("[onclick^='dtOpenEdit']")).filter(function(x){ return !x.closest('.pp-new,.pp-qa'); })[0]; if(od){ od.remove(); } var sg=pg.querySelector('.sav-streak-grid'); if(sg) sg.style.setProperty('display','none','important'); }
     if(tab==='budget'&&_D()){ [].slice.call(pg.querySelectorAll('.pp-subtot')).forEach(function(x){ x.style.setProperty('color','#22DD66','important'); x.style.setProperty('font-weight','800','important'); }); }
     if((tab==='savings'||tab==='debt')&&_D()){ [].slice.call(pg.querySelectorAll('.bar-fill')).forEach(function(f){ var w=parseFloat(f.style.width); if(!isNaN(w)) f.style.setProperty('background',ppPctCol(w),'important'); }); }
     if(tab==='backup'){
