@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v18.7</title>
+<title>Philip's Finance Hub v18.8</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v18.7</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v18.8</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -1355,6 +1355,28 @@ function paceUnits(o, paid, total){
   const aheadBy=donePayments-dueNow;
   if(aheadBy>=1-1e-9) return {units:Math.floor(aheadBy+1e-9), short:0, word};
   return {units:0, short:0, word};
+}
+// v18.8: ahead or behind in cedis. Only money you log to a plan counts, compared with what the plan says by today.
+function paceMoney(o, paid, total){
+  const amt=(o.planAmt>0)?o.planAmt:(o.planDaily||o.dailyTarget||0);
+  if(!(amt>0)) return 0;
+  const per=(o.planFreq==='week')?7:1;
+  const elapsed=Math.max(daysBetween(o.planStart||TODAY,TODAY),0);
+  const logged=Math.max(Math.min(planLogTotal(o),(paid||0)),0);
+  const stillOwed=Math.max((total||0)-((paid||0)-logged),0);
+  const allPayments=Math.ceil(stillOwed/amt);
+  const dueFinished=Math.min(Math.floor(elapsed/per),allPayments), dueNow=Math.min(dueFinished+1,allPayments);
+  const mustHave=Math.min(dueFinished*amt,stillOwed), aheadLine=Math.min(dueNow*amt,stillOwed);
+  if(logged<mustHave-1e-9) return -(mustHave-logged);
+  if(logged>aheadLine+1e-9) return logged-aheadLine;
+  return 0;
+}
+function paceMoneyFor(which){
+  let n=0;
+  if(which==='all'||which==='debt') for(const p of pActive('debt')) n+=paceMoney(p,pPaid('debt',p),p.amount);
+  if(which==='all'||which==='buy') for(const p of pActive('buy')) n+=paceMoney(p,pPaid('buy',p),p.amount);
+  if(which==='all'||which==='sav') for(const g of savActiveGoals()) n+=paceMoney(g,g.saved||0,g.target||0);
+  return Math.round(n);
 }
 // kept for the tracker boxes, same numbers
 function paceDaysOf(o, paid, total, daily){
@@ -4686,7 +4708,7 @@ function ppTop(){
   var q=function(ic,l,go){ return '<button onclick="'+go+'" class="pp-q"><span>'+ic+'</span>'+l+'</button>'; };
   return '<div class="pp-hd"><div><div class="pp-t1">Money overview</div><div class="pp-t2">Your numbers, your plan.</div></div></div>'+
     '<div class="pp-hero"><div class="pp-row"><div><div class="pp-l">Available to spend · '+pr.label.toLowerCase()+'</div><div class="pp-v">GHS '+Math.round(avail).toLocaleString()+'</div>'+
-    '<div class="pp-g" style="color:'+(avail>=0?'#30D158':'#FF453A')+'">'+(inc>0?(avail>=0?'↑ ':'↓ ')+pct+'% of income left':'Add your income to see what is left')+'</div></div>'+
+    (inc>0?'':'<div class="pp-g" style="color:#30D158">Add your income to see what is left</div>')+'</div>'+
     '<div class="pp-ring" style="background:conic-gradient('+(typeof ppPctCol==='function'?ppPctCol(pct):'#22DD66')+' 0 '+pct+'%,rgba(255,255,255,.08) '+pct+'% 100%)"><div>'+pct+'%<small>left</small></div></div></div>'+
     '<div class="pp-mini"><div style="'+ppTint('#22DD66')+'"><span>INCOME</span><b style="color:#22DD66">'+ppNum(inc)+'</b></div><div style="'+ppTint('#38B6FF')+'"><span>MOVED</span><b style="color:#38B6FF">'+ppNum(moved)+'</b></div><div style="'+ppTint('#FF4D5E')+'"><span>SPENT</span><b style="color:#FF4D5E">'+ppNum(spent)+'</b></div></div></div>'+
     '<div class="pp-qa">'+q(ppI('up','#FF4D5E',30),'Add spending',"ppSheet('spend')")+q(ppI('minus','#FFB020',30),'Clear manually',"ppClearSheet()")+q(ppI('list','#C77DFF',30),'Transactions',"var t=document.getElementById('ppTx');if(t)t.scrollIntoView({behavior:'smooth'})")+'</div>'+
@@ -4840,7 +4862,8 @@ function ppIncHistory(){
 // v17.1: colours that speak. Low = red, middle = gold, high = green.
 function ppPctCol(p,bad){ p=+p||0; if(bad) p=100-p; return p<34?'#FF4D5E':p<67?'#FFB020':'#22DD66'; }
 function ppTint(c){ var m=/^#([0-9a-f]{6})$/i.exec(String(c||'')); if(!m||!document.body.classList.contains('soft-dark')) return ''; var n=parseInt(m[1],16),r=n>>16&255,g=n>>8&255,b=n&255;
-  return 'background:rgba('+r+','+g+','+b+',.16)!important;border:1px solid rgba('+r+','+g+','+b+',.38)!important'; }
+  // v18.8: every stat box uses one soft violet; only the number keeps its colour
+  return 'background:rgba(191,148,228,.13)!important;border:1px solid rgba(191,148,228,.28)!important'; }
 // v17.1: pick which manual spending to clear, or clear all
 function ppClearSheet(){
   var old=document.getElementById('ppSheet'); if(old) old.remove();
@@ -4879,7 +4902,7 @@ function ppTabTop(tab){
     if(tab==='debt'){
       var d=dtStats(), t=sideTracker(planSide), pr=ppProg(document.getElementById('page-debt')), tot=pr.paid+pr.left, pc=tot>0?Math.round(pr.paid/tot*100):0;
       var bal=t.daysBehind>0?t.daysBehind+' days behind':t.daysAhead>0?t.daysAhead+' days ahead':'on track';
-      var tag=ppN(d.rate)+'/day \u00b7 '+bal;
+      var tag=ppN(d.rate)+'/day';
       if(planSide==='buy') return ppHero('Buy plans','GHS '+ppN(tot),pr.n+' thing'+(pr.n!==1?'s':'')+' to buy \u00b7 '+tag,[pc,'saved','#FFB627'],
         [['TOTAL',ppN(tot),'#FFB627'],['SAVED',ppN(pr.paid),'#22DD66'],['LEFT',ppN(pr.left),'#FF4D5E']])+
         ppQA([['plus','Add buy plan',"ppClickText(/Add (new )?buy plan/i)"],['check','Log saving',"ppFocusLog()"],['list','Merge',"ppClickText(/Merge buy plans/i);setTimeout(ppShowMerge,150)"]]);
@@ -4889,12 +4912,12 @@ function ppTabTop(tab){
     }
     if(tab==='savings'){
       if(savSide!=='income'){ var gs=(typeof savGoals!=='undefined'&&savGoals)||[], tg=0, sd=0; gs.forEach(function(g){ tg+=+(g.target||g.amount||0); sd+=+(g.saved||0); });
-        return ppHero('Saved in goals','GHS '+ppN(sd),'of GHS '+ppN(tg)+' \u00b7 '+gs.length+' goal'+(gs.length!==1?'s':''),[tg>0?Math.round(sd/tg*100):0,'done','#38B6FF'],
+        return ppHero('Saved in goals','GHS '+ppN(sd),gs.length+' goal'+(gs.length!==1?'s':''),[tg>0?Math.round(sd/tg*100):0,'done','#38B6FF'],
           [['TARGET',ppN(tg),'#38B6FF'],['SAVED',ppN(sd),'#22DD66'],['LEFT',ppN(tg-sd),'#FF4D5E']])+
           ppQA([['plus','New goal','openSavModal()'],['check','Log saving',"ppFocusLog()"],['up','Take out',"ppTakeOutPick()"]]); }
       var from=rangeFrom(isavPeriod), per=potRows(from,''), T=per.reduce(function(a,r){return {earned:a.earned+r.earned,saved:a.saved+r.saved+r.carry,out:a.out+r.out};},{earned:0,saved:0,out:0});
       var inPots=potRows('','').reduce(function(a,r){return a+r.net;},0), pc=T.earned>0?Math.min(100,Math.round(T.saved/T.earned*100)):0;
-      return ppHero('In your income pots now','GHS '+ppN(inPots),'+GHS '+ppN(T.saved-T.out)+' '+({week:'this week',month:'this month',year:'this year',lifetime:'lifetime'}[isavPeriod]||''),[pc,'saved','#38B6FF'],
+      return ppHero('In your income pots now','GHS '+ppN(inPots),'',[pc,'saved','#38B6FF'],
         [['EARNED',ppN(T.earned),'#22DD66'],['SAVED',ppN(T.saved),'#38B6FF'],['TAKEN OUT',ppN(T.out),'#FF4D5E']])+
         ppQA([['wallet','Add income',"ppSheet('income')"],['up','Take out',"ppTakeOutPick()"],['savings','New pot','openNewPot()']]);
     }
@@ -4934,16 +4957,25 @@ function ppHideOld(pg,tab){
   if(tab==='wn'){ [].slice.call(pg.querySelectorAll('.sx-grid2')).forEach(function(c){ if(/Wants total/.test(c.innerText||'')) c.style.display='none'; }); }
 }
 // v18.7: daily score pill (top right) and small W M Y All chips inside the top card
-function ppAheadPill(){ var d=dtStats(), t, c; if(d.ahead>0){ t='+'+d.ahead+' ahead'; c='g'; } else if(d.behind>0){ t='\u2212'+d.behind+' behind'; c='r'; } else { t='On track'; c='n'; }
+function ppAheadPill(tab){ var w='all'; if(tab==='debt') w=(planSide==='buy'?'buy':'debt'); else if(tab==='savings'&&savSide!=='income') w='sav';
+  var n=0; try{ n=paceMoneyFor(w); }catch(e){} var t, c;
+  if(n>0){ t='+GH\u20b5 '+n.toLocaleString()+' ahead'; c='g'; } else if(n<0){ t='\u2212GH\u20b5 '+(-n).toLocaleString()+' behind'; c='r'; } else { t='On track'; c='n'; }
   return '<button class="pp-ahead pp-ahead-'+c+'" onclick="ppDtEdit()">'+t+'</button>'; }
 function ppAddChips(pg,tab){
-  if(!(tab==='money'||(tab==='savings'&&savSide==='income'))) return;
-  var hero=pg.querySelector('.pp-hero'); if(!hero||hero.querySelector('.pp-chips')) return;
-  var cur=tab==='savings'?isavPeriod:spendPeriod, l=hero.querySelector('.pp-l');
+  var tabs=null, per=false, cur='';
+  if(tab==='money'){ tabs=[['income','Income',"setMoneySide('income')"],['spend','Spending',"setMoneySide('spend')"]]; cur=moneySide; per=true; }
+  else if(tab==='savings'){ tabs=[['income','Income',"setSavSide('income')"],['goals','Goals',"setSavSide('goals')"]]; cur=(savSide==='income'?'income':'goals'); per=(savSide==='income'); }
+  else if(tab==='debt'){ tabs=[['buy','Buy',"setPlanSide('buy')"],['debt','Debt',"setPlanSide('debt')"]]; cur=planSide; }
+  if(!tabs) return;
+  var hero=pg.querySelector('.pp-new .pp-hero')||pg.querySelector('.pp-hero'); if(!hero||hero.querySelector('.pp-chrow')) return;
+  // the big switch above the card is no longer needed
+  [].slice.call(pg.querySelectorAll('.sx-seg')).forEach(function(sg){ if(!sg.closest('.pp-new,.pp-hero')&&/(Income|Spending|Goals|Buy|Debt)/.test(sg.innerText||'')) sg.style.display='none'; });
   var row=document.createElement('div'); row.className='pp-chrow';
-  if(l){ l.textContent=(l.textContent||'').split(' \u00b7 ')[0]; row.appendChild(l); }
-  row.insertAdjacentHTML('beforeend','<div class="pp-chips">'+[['week','W'],['month','M'],['year','Y'],['lifetime','All']].map(function(x){ return '<button class="'+(cur===x[0]?'on':'')+'" onclick="ppPer(\''+x[0]+'\')">'+x[1]+'</button>'; }).join('')+'</div>');
-  hero.insertBefore(row,hero.firstChild);
+  var h='<div class="pp-tabs">'+tabs.map(function(x){ return '<button class="'+(cur===x[0]?'on':'')+'" onclick="'+x[2]+'">'+x[1]+'</button>'; }).join('')+'</div>';
+  if(per){ var pc=tab==='savings'?isavPeriod:spendPeriod;
+    h+='<div class="pp-chips">'+[['week','W'],['month','M'],['year','Y'],['lifetime','All']].map(function(x){ return '<button class="'+(pc===x[0]?'on':'')+'" onclick="ppPer(\''+x[0]+'\')">'+x[1]+'</button>'; }).join('')+'</div>';
+    var l=hero.querySelector('.pp-l'); if(l) l.textContent=(l.textContent||'').split(' \u00b7 ')[0]; }
+  row.innerHTML=h; hero.insertBefore(row,hero.firstChild);
 }
 function ppMine(pg){ try{ [].slice.call(pg.querySelectorAll('.pp-tophd,.pp-tophd *,.pp-new,.pp-new *,.pp-hero,.pp-hero *,.pp-qa,.pp-qa *')).forEach(function(e){ try{ _softSeen.add(e); }catch(x){} try{ _shaped.add(e); }catch(x){} }); }catch(e){} }
 function ppDecorate(pg){
@@ -4955,7 +4987,7 @@ function ppDecorate(pg){
     [].slice.call(pg.querySelectorAll('.sx-sel,.period-select-wrap')).forEach(function(e){ if(!e.closest('.pp-tophd')) e.style.display='none'; });
     [].slice.call(pg.querySelectorAll('.pp-tophd,.pp-new')).forEach(function(e){ e.remove(); });
     var ic=PP_ICON[tab]||['#eee','#333'], sel='';
-    if(tab!=='backup'){ try{ sel=ppAheadPill(); }catch(e){} }
+    if(tab!=='backup'){ try{ sel=ppAheadPill(tab); }catch(e){} }
     pg.insertAdjacentHTML('afterbegin','<div class="pp-tophd"><div class="pp-brand"><span class="pp-logo" style="background:'+ic[0]+'">'+ppI(tab,ic[1],22)+'</span><b>'+(PP_NAMES[tab]||'')+'</b></div>'+sel+'</div>');
     var top=ppTabTop(tab);
     if(top){
@@ -5142,7 +5174,10 @@ function ppSaveIncome(){
   'html body .pp-donut>div{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important;line-height:1!important;padding:0!important}html body .pp-donut>div>small{display:block!important;margin:0!important;padding:0!important;font-size:11px!important;line-height:1!important;letter-spacing:.06em}html body .pp-donut>div>b{display:block!important;margin:0!important;padding:0!important;font-size:26px!important;font-weight:800!important;line-height:1.05!important}'+
   // v18.7 ahead pill and period chips
   '.pp-ahead{border-radius:99px;padding:6px 13px;font:inherit;font-size:13.5px;font-weight:700;white-space:nowrap;cursor:pointer;flex:none}.pp-ahead-g{background:#123A24;color:#30D158;border:1px solid #2E7D46}.pp-ahead-r{background:#3A1E2A;color:#FF4D5E;border:1px solid #8A2E45}.pp-ahead-n{background:#1C1C1E;color:#fff;border:1px solid #3A3A3C}'+
-  '.pp-chrow{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}.pp-chrow .pp-l{margin:0!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}.pp-chips{display:flex;gap:4px;flex:none}.pp-chips button{border:none;border-radius:99px;padding:4px 9px;font:inherit;font-size:11.5px;font-weight:700;color:#C9C2CF;background:rgba(255,255,255,.08);cursor:pointer}.pp-chips button.on{background:rgba(255,255,255,.24);color:#fff}'+
+  '.pp-chrow{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}.pp-chips{display:flex;gap:4px;flex:none}.pp-chips button{border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:4px 8px;font:inherit;font-size:11.5px;font-weight:700;color:#C9C2CF;background:transparent;cursor:pointer}.pp-chips button.on{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.3)}'+
+  '.pp-tabs{display:flex;gap:4px;background:rgba(0,0,0,.28);border-radius:99px;padding:3px;flex:none}.pp-tabs button{border:none;border-radius:99px;padding:6px 13px;font:inherit;font-size:13px;font-weight:700;color:#C9C2CF;background:transparent;cursor:pointer;white-space:nowrap}.pp-tabs button.on{background:#5B2A86;color:#fff;box-shadow:0 2px 8px rgba(91,42,134,.45)}'+
+  // v18.8 stat boxes: one soft violet style, bigger numbers (they still shrink to fit)
+  'html body .pp-mini>div{background:rgba(191,148,228,.13)!important;border:1px solid rgba(191,148,228,.28)!important}html body .pp-mini span{color:#CFC3DA!important}html body .pp-mini b{font-size:23px!important;font-weight:800!important;line-height:1.15!important}'+
   // v18.4 pop-up buttons: Close matches the main button (rounded, same size)
   'html body .pp-sh .pp-sh-go,html body .pp-sh .pp-sh-x{display:block!important;width:100%!important;box-sizing:border-box!important;border-radius:14px!important;padding:14px!important;font-size:15px!important;font-weight:700!important;margin:8px 0 0!important;outline:none!important;box-shadow:none!important}html body .pp-sh .pp-sh-x{background:transparent!important;border:1px solid #3A3A3C!important;color:#C9C2CF!important}'+
   // v17.0 ring %: centred, bigger
