@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v18.4</title>
+<title>Philip's Finance Hub v18.5</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v18.4</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v18.5</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -3184,6 +3184,8 @@ function catSpentAll(catId){
 }
 function catEntriesAll(catId){ return (spendData.entries||[]).filter(e=>e.cat===catId); }
 function catSpentMonth(catId,ym){ return entriesForCatMonth(catId,ym).reduce((s,e)=>s+e.amount,0); }
+// v18.5: wants and needs you logged or bought this month are real spending, so the budget counts them
+function wnSpentMonth(ym){ try{ return getAllEntries().filter(e=>(e.cat==='wants'||e.cat==='needs')&&(e.date||'').slice(0,7)===ym).reduce((s,e)=>s+(e.amount||0),0); }catch(e){ return 0; } }
 function subPaidThisMonth(subId,ym){ return spendData.entries.some(e=>e.cat==="subs"&&e.sub===subId&&(e.date||"").slice(0,7)===ym); }
 function subsTotalMonthly(){ return subs.filter(x=>!x.cancelled).reduce((s,x)=>s+(x.amount||0),0); }
 
@@ -3233,7 +3235,7 @@ function renderBudget(){
   const cats=budgetCats();
   const catsSpent=cats.reduce((s,c)=>s+catSpentMonth(c.id,ym),0);
   const subsM=subsTotalMonthly();
-  const spent=catsSpent+((ym===TODAY.slice(0,7))?subsM:0);
+  const spent=catsSpent+wnSpentMonth(ym)+((ym===TODAY.slice(0,7))?subsM:0);
   const planned=monthlyPlan;
   const left=planned-spent;
   const cur=TODAY.slice(0,7);
@@ -4559,7 +4561,7 @@ function sxSavingsTop(){
 function sxBudgetTop(){
   var pg=document.getElementById("page-budget"); if(!pg) return;
   var ym=selBudgetMonth, cur=TODAY.slice(0,7), cats=budgetCats();
-  var subsM=subsTotalMonthly(), spent=cats.reduce(function(s,c){return s+catSpentMonth(c.id,ym);},0)+((ym===cur)?subsM:0), planned=monthlyPlan, left=planned-spent;
+  var subsM=subsTotalMonthly(), spent=cats.reduce(function(s,c){return s+catSpentMonth(c.id,ym);},0)+wnSpentMonth(ym)+((ym===cur)?subsM:0), planned=monthlyPlan, left=planned-spent;
   var wn=pg.querySelector(".week-nav");
   if(wn){ var a=document.createElement("div"); a.className="sx";
     a.innerHTML='<div class="sx-card sx-up" style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:var(--acc,#3F1747);border:none"><button onclick="selBudgetMonth=shiftMonth(selBudgetMonth,-1);renderBudget()" style="border:none;background:none;font:500 15px Lexend;color:#fff;cursor:pointer">‹ Prev</button><b style="font-weight:500;font-size:16px">'+monthLabel(ym)+'</b><button onclick="selBudgetMonth=shiftMonth(selBudgetMonth,1);renderBudget()" style="border:none;background:none;font:400 15px Lexend;color:'+(ym<cur?'#fff':'#9A879E')+';cursor:pointer">Next ›</button></div>';
@@ -4661,12 +4663,15 @@ function ppDkCol(col,id){
 function ppTop(){
   var pr=periodRange(), all=getPeriodEntries(), arch=archiveForPeriod();
   // v17.7: money put into savings or paid on debt is MOVED, not spent
-  var isMove=function(e){ return e.cat==='debt'||e.cat==='sav'; };
+  // v18.5: buy plan savings are also moved (still yours, set aside), not spent
+  var isMove=function(e){ return e.cat==='debt'||e.cat==='sav'||e.cat==='buy'; };
   var moved=all.filter(isMove).reduce(function(s,e){return s+e.amount;},0)+arch.debt+arch.sav;
   var spent=all.filter(function(e){return !isMove(e);}).reduce(function(s,e){return s+e.amount;},0)+arch.wants+arch.needs+arch.budget;
   var inc=0; try{ inc=incomeTotal(pr.from,pr.to)||0; }catch(e){}
-  var bl=0; try{ var ym=TODAY.slice(0,7), cats=budgetCats(); var bs=cats.reduce(function(s,c){return s+catSpentMonth(c.id,ym);},0)+(typeof subsTotalMonthly==='function'?subsTotalMonthly():0); bl=(monthlyPlan||0)-bs; }catch(e){}
-  var avail=inc-spent, pct=inc>0?Math.max(0,Math.min(100,Math.round(avail/inc*100))):0;
+  var bl=0; try{ var ym=TODAY.slice(0,7), cats=budgetCats(); var bs=cats.reduce(function(s,c){return s+catSpentMonth(c.id,ym);},0)+wnSpentMonth(ym)+(typeof subsTotalMonthly==='function'?subsTotalMonthly():0); bl=(monthlyPlan||0)-bs; }catch(e){}
+  // v18.5: Available = income - saved to pots + taken out of pots - moved - spent
+  var potIn=0, potOut=0; try{ incomeData.entries.filter(function(e){return inRange(e.date,pr.from,pr.to);}).forEach(function(e){ potIn+=(e.build||0); }); (incSav.moves||[]).filter(function(m){return m.kind==='out'&&inRange(m.d,pr.from,pr.to);}).forEach(function(m){ potOut+=(m.a||0); }); }catch(e){}
+  var avail=inc-potIn+potOut-moved-spent, pct=inc>0?Math.max(0,Math.min(100,Math.round(avail/inc*100))):0;
   var byCat={}; all.filter(function(e){return !isMove(e);}).forEach(function(e){ var c=getCat(e.cat)||{label:e.cat,color:'#8A5BA6'}; var k=c.label||e.cat; if(!byCat[k]) byCat[k]={l:k,a:0,c:ppDkCol(c.color||'#8A5BA6',e.cat)}; byCat[k].a+=e.amount; });
   var cats=Object.keys(byCat).map(function(k){return byCat[k];}).sort(function(a,b){return b.a-a.a;});
   var tot=cats.reduce(function(s,c){return s+c.a;},0), at=0;
@@ -4676,7 +4681,7 @@ function ppTop(){
   return '<div class="pp-hd"><div><div class="pp-t1">Money overview</div><div class="pp-t2">Your numbers, your plan.</div></div></div>'+
     '<div class="pp-hero"><div class="pp-row"><div><div class="pp-l">Available to spend · '+pr.label.toLowerCase()+'</div><div class="pp-v">GHS '+Math.round(avail).toLocaleString()+'</div>'+
     '<div class="pp-g" style="color:'+(avail>=0?'#30D158':'#FF453A')+'">'+(inc>0?(avail>=0?'↑ ':'↓ ')+pct+'% of income left':'Add your income to see what is left')+'</div></div>'+
-    '<div class="pp-ring" style="background:conic-gradient('+ppPctCol(pct)+' 0 '+pct+'%,rgba(255,255,255,.08) '+pct+'% 100%)"><div>'+pct+'%<small>left</small></div></div></div>'+
+    '<div class="pp-ring" style="background:conic-gradient('+(typeof ppPctCol==='function'?ppPctCol(pct):'#22DD66')+' 0 '+pct+'%,rgba(255,255,255,.08) '+pct+'% 100%)"><div>'+pct+'%<small>left</small></div></div></div>'+
     '<div class="pp-mini"><div style="'+ppTint('#22DD66')+'"><span>INCOME</span><b style="color:#22DD66">'+ppNum(inc)+'</b></div><div style="'+ppTint('#38B6FF')+'"><span>MOVED</span><b style="color:#38B6FF">'+ppNum(moved)+'</b></div><div style="'+ppTint('#FF4D5E')+'"><span>SPENT</span><b style="color:#FF4D5E">'+ppNum(spent)+'</b></div></div></div>'+
     '<div class="pp-qa">'+q(ppI('up','#FF4D5E',30),'Add spending',"ppSheet('spend')")+q(ppI('minus','#FFB020',30),'Clear manually',"ppClearSheet()")+q(ppI('list','#C77DFF',30),'Transactions',"var t=document.getElementById('ppTx');if(t)t.scrollIntoView({behavior:'smooth'})")+'</div>'+
     '<div class="pp-card"><div class="pp-ch">Spending by category<span>'+pr.label+'</span></div><div class="pp-row" style="gap:16px">'+
@@ -4716,7 +4721,8 @@ function ppTop(){
     }catch(e){ console.log(e); }
     return r;
   };
-  try{ var a=document.querySelector('.nav-btn.active'); if(a&&a.id.slice(4)==='money') renderMoney(); }catch(e){}
+  // v18.5: wait until every helper has loaded before the first draw
+  setTimeout(function(){ try{ var a=document.querySelector('.nav-btn.active'); if(a&&a.id.slice(4)==='money') renderMoney(); }catch(e){} },0);
 })();
 
 </script>
@@ -4884,7 +4890,7 @@ function ppTabTop(tab){
     }
     if(tab==='budget'){
       var ym=selBudgetMonth, cur=TODAY.slice(0,7), cats=budgetCats(), subs=subsTotalMonthly();
-      var spent=cats.reduce(function(s,c){return s+catSpentMonth(c.id,ym);},0)+((ym===cur)?subs:0), planned=monthlyPlan||0, pc=planned>0?Math.min(100,Math.round(spent/planned*100)):0;
+      var spent=cats.reduce(function(s,c){return s+catSpentMonth(c.id,ym);},0)+wnSpentMonth(ym)+((ym===cur)?subs:0), planned=monthlyPlan||0, pc=planned>0?Math.min(100,Math.round(spent/planned*100)):0;
       return ppHero('Budget left \u00b7 '+monthLabel(ym),'GHS '+ppN(planned-spent),'',[pc,'spent','#FFB627'],
         [['PLANNED',ppN(planned),'#22DD66'],['SPENT',ppN(spent),'#FF4D5E'],['SUBS / MO',ppN(subs),'#22DD66']])+
         ppQA([['up','Log spending',"ppSheet('spend')"],['list','Subscription',"openSubModal()"],['plus','Category','openCatModal()']]);
