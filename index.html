@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v20.7</title>
+<title>Philip's Finance Hub v20.8</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v20.7</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v20.8</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -4729,7 +4729,7 @@ function ppTop(){
     '<div class="pp-hero"><div class="pp-row"><div><div class="pp-l">Left to spend · '+pr.label.toLowerCase()+'</div><div class="pp-v" style="color:'+(avail<0?'#FF4D5E':'#22DD66')+'!important">GH\u20b5 '+Math.round(avail).toLocaleString()+'</div>'+
     (inc>0?'':'<div class="pp-g" style="color:#30D158">Add your income to see what is left</div>')+'</div>'+
     '<div class="pp-ring" style="background:conic-gradient('+(typeof ppPctCol==='function'?ppPctCol(pct):'#22DD66')+' 0 '+pct+'%,rgba(255,255,255,.08) '+pct+'% 100%)"><div>'+pct+'%<small>left</small></div></div></div>'+
-    '<div class="pp-mini" style="grid-template-columns:1fr 1fr"><div style="'+ppTint('#38B6FF')+'"><span>PAID &amp; SAVED</span><b style="color:#38B6FF">'+ppNum(moved)+'</b></div><div style="'+ppTint('#FF4D5E')+'"><span>YOU HAD</span><b style="color:#FF4D5E">'+ppNum(toSpend)+'</b></div></div></div>'+
+    '<div class="pp-mini" style="grid-template-columns:1fr 1fr"><div style="'+ppTint('#38B6FF')+'"><span>PAID &amp; SAVED</span><b style="color:#38B6FF">'+ppNum(moved)+'</b></div><div style="'+ppTint('#FF4D5E')+'"><span>YOU HAD</span><b style="color:#22DD66">'+ppNum(toSpend)+'</b></div></div></div>'+
     '<div class="pp-qa" style="grid-template-columns:1fr">'+q(ppI('up','#FF4D5E',30),'Add spending',"ppSheet('spend')")+'</div>'+
     '<div class="pp-card"><div class="pp-ch">Spending by category<span>'+pr.label+'</span></div><div class="pp-row" style="gap:16px">'+
     '<div class="pp-donut" style="background:conic-gradient('+grad+')"><div><small>SPENT</small><b>'+ppDn(spent)+'</b></div></div>'+
@@ -4903,12 +4903,14 @@ function ppClearSel(){
   document.getElementById('ppSheet').remove(); renderMoney(); renderBudget(); showToast('Cleared '+gone.length);
 }
 // v19.5: every top card reads done -> left -> total
+// v20.8: green = money you have or paid, blue = saved or left, red = target, owed, spent, taken out
+var PP_BOXCOL={PAID:'#22DD66',EARNED:'#22DD66',BOUGHT:'#22DD66','TO SPEND':'#22DD66','YOU HAD':'#22DD66',SAVED:'#38B6FF',LEFT:'#38B6FF',PLANNED:'#38B6FF',NEEDS:'#38B6FF',TARGET:'#FF4D5E',OWED:'#FF4D5E','TAKEN OUT':'#FF4D5E',SPENT:'#FF4D5E',WANTS:'#FF4D5E',SOURCES:'#FFFFFF'};
 var PP_RANK={SAVED:0,INCOME:0,PAID:0,EARNED:0,SPENT:0,BOUGHT:0,LEFT:1,PLANNED:2,TARGET:2,TOTAL:2,OWED:2,'TAKEN OUT':2,'TO SPEND':2,WANTS:2};
 function ppHero(l,v,g,ring,mini){
   // v17.9: same colour order on every tab: green first, blue middle, red last
   // v20.2: a card can carry 2 boxes (the box that repeated the big number is gone); each box keeps its rank colour
   if(mini&&mini.length){ var ppPal=['#22DD66','#38B6FF','#FF4D5E'];
-    mini=mini.map(function(m,i){ return [m,i]; }).sort(function(a,b){ var ra=PP_RANK[a[0][0]]===undefined?1:PP_RANK[a[0][0]], rb=PP_RANK[b[0][0]]===undefined?1:PP_RANK[b[0][0]]; return ra-rb||a[1]-b[1]; }).map(function(x,i){ var rk=PP_RANK[x[0][0]]===undefined?1:PP_RANK[x[0][0]]; return [x[0][0],x[0][1],rk===0?'#38B6FF':'#FF4D5E']; }); } // v20.7: stat boxes use two colours only, done blue, left/target/owed red
+    mini=mini.map(function(m,i){ return [m,i]; }).sort(function(a,b){ var ra=PP_RANK[a[0][0]]===undefined?1:PP_RANK[a[0][0]], rb=PP_RANK[b[0][0]]===undefined?1:PP_RANK[b[0][0]]; return ra-rb||a[1]-b[1]; }).map(function(x,i){ var rk=PP_RANK[x[0][0]]===undefined?1:PP_RANK[x[0][0]]; return [x[0][0],x[0][1],PP_BOXCOL[x[0][0]]||'#FFFFFF']; }); } // v20.8: one fixed colour per label on every tab
   return '<div class="pp-hero"><div class="pp-row"><div style="min-width:0"><div class="pp-l">'+l+'</div><div class="pp-v" style="color:'+(/-\d/.test(String(v))?'#FF4D5E':'#22DD66')+'!important">'+v+'</div>'+(g?'<div class="pp-g">'+g+'</div>':'')+'</div>'+
     (ring?'<div class="pp-ring" style="background:conic-gradient('+ppPctCol(ring[0],/spent/i.test(ring[1]))+' 0 '+ring[0]+'%,rgba(255,255,255,.12) '+ring[0]+'% 100%)"><div>'+ring[0]+'%<small>'+ring[1]+'</small></div></div>':'')+'</div>'+
     '<div class="pp-mini" style="grid-template-columns:repeat('+mini.length+',1fr)">'+mini.map(function(m){ return '<div style="'+ppTint(m[2])+'"><span>'+m[0]+'</span><b style="color:'+m[2]+'">'+m[1]+'</b></div>'; }).join('')+'</div></div>';
