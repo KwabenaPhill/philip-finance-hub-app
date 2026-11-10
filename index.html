@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v20.2</title>
+<title>Philip's Finance Hub v20.3</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v20.2</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v20.3</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -5309,7 +5309,9 @@ function ppSaveIncome(){
   '.sav-streak-box .ssb-icon,.streak-box .sb-icon{display:none!important}.sav-streak-box,.streak-box{padding:10px 6px!important}.sav-streak-box .ssb-val,.streak-box .sb-val{font-size:22px!important;line-height:1.1}.sav-streak-box .ssb-label,.streak-box .sb-label{font-size:10px!important;margin-top:2px!important}'+
   '.sx-stat>span:first-child{display:none!important}.sx-stat{padding:10px 6px!important}'+
   '.pp-gone{display:none!important}'+
-  '.pp-hrow{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(127,127,127,.18)}.pp-hrow .sx-ic{width:40px;height:40px}.pp-hsub{font-size:12px;color:#9A94A0;margin-top:2px}';
+  '.pp-hrow{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(127,127,127,.18)}.pp-hrow .sx-ic{width:40px;height:40px}.pp-hsub{font-size:12px;color:#9A94A0;margin-top:2px}'+
+  // v20.3: Money tab (In, Out, Budget) big amounts stay white; other tabs stay green
+  '#page-money .pp-v,#page-budget .pp-v{color:#fff!important}';
   document.head.appendChild(c);
 })();
 </script>
