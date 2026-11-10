@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v20.4</title>
+<title>Philip's Finance Hub v20.5</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v20.4</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v20.5</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -3546,8 +3546,8 @@ function doFinanceReset(){
 // =====================================================================
 // v109: INCOME SAVINGS · FULL HISTORY
 // =====================================================================
-function fmt(n){ return Math.round(n||0).toLocaleString(); }
-function fmtC(n){ return "GH₵ "+fmt(n); }
+function fmt(n){ return 'GH\u20b5 '+Math.round(n||0).toLocaleString(); } // v20.5: every amount shows GH₵
+function fmtC(n){ return fmt(n); }
 
 // ----- Income savings data: per-source settings + take-outs -----
 const INCSAV_KEY="pfhub_incsav_v1";
@@ -4460,7 +4460,7 @@ var st=document.createElement("style"); st.textContent=css; document.head.append
 })();
 function sxI(n,sz){ return '<svg viewBox="0 0 24 24" style="width:'+(sz||22)+'px;height:'+(sz||22)+'px">'+(SOFT_IC[n]||SOFT_IC.out)+'</svg>'; }
 function sxEsc(t){ return String(t==null?"":t).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
-function sxF(n){ return Math.round(n||0).toLocaleString(); }
+function sxF(n){ return 'GH\u20b5 '+Math.round(n||0).toLocaleString(); }
 function sxTitle(t,s){ return '<div class="sx-top sx-up"><div><h1>'+t+'</h1><div class="sub">'+s+'</div></div>'+(t==="Money"?'<div class="sx-brand">Philip\'s Finance Hub</div>':'')+'</div>'; }
 function sxSeg(items){ return '<div class="sx-seg sx-up">'+items.map(function(i){ return '<button class="'+(i.on?'on':'')+'" onclick="'+i.go+'">'+i.label+'</button>'; }).join("")+'</div>'; }
 function sxSel(value,handler){
@@ -4494,15 +4494,15 @@ function sxSpend(){
   var h='<div class="sx">'+sxTitle("Money","Where your money went")+
     sxSeg([{label:"Income",go:"setMoneySide('income')"},{label:"Spending",on:true,go:"setMoneySide('spend')"}])+
     sxSel(spendPeriod,"setSpendPeriod")+
-    '<div class="sx-dark sx-up"><div class="l">Total spent · '+(labs[spendPeriod]||"this week")+'</div><div class="sx-big" style="margin-top:4px">GHS '+sxF(total)+'</div><div class="l" style="margin-top:2px">'+n+' transaction'+(n!==1?'s':'')+(arch.count?' · '+arch.count+' archived':'')+'</div></div>'+
-    '<div class="sx-grid2 sx-up" style="margin-bottom:6px">'+boxes.map(function(b){ return '<div class="sx-acc" style="background:'+b.bg+'">'+sxBubble(b.n,"#fff",b.c,42)+'<div><div class="k">'+b.l+'</div><div class="v">GHS '+sxF(b.a)+'</div></div></div>'; }).join("")+'</div>'+
-    '<div class="sx-h2 sx-up" style="display:flex;justify-content:space-between;align-items:baseline">Transactions<span style="font-size:14px;color:var(--ink2)">GHS '+sxF(total)+'</span></div>'+
+    '<div class="sx-dark sx-up"><div class="l">Total spent · '+(labs[spendPeriod]||"this week")+'</div><div class="sx-big" style="margin-top:4px">'+sxF(total)+'</div><div class="l" style="margin-top:2px">'+n+' transaction'+(n!==1?'s':'')+(arch.count?' · '+arch.count+' archived':'')+'</div></div>'+
+    '<div class="sx-grid2 sx-up" style="margin-bottom:6px">'+boxes.map(function(b){ return '<div class="sx-acc" style="background:'+b.bg+'">'+sxBubble(b.n,"#fff",b.c,42)+'<div><div class="k">'+b.l+'</div><div class="v">'+sxF(b.a)+'</div></div></div>'; }).join("")+'</div>'+
+    '<div class="sx-h2 sx-up" style="display:flex;justify-content:space-between;align-items:baseline">Transactions<span style="font-size:14px;color:var(--ink2)">'+sxF(total)+'</span></div>'+
     '<div class="sx-card sx-up" style="padding:4px 18px">'+(list.length?list.map(function(e){
       if(e.potout) return '<div class="sx-tx">'+sxBubble("pig","#C6E5F0","#1C7891")+'<div class="n"><div>'+sxEsc(e.desc)+'</div><small>Moved from savings \u00b7 '+(typeof shortDate==="function"?shortDate(e.date):e.date)+(e.note?' \u00b7 '+sxEsc(e.note):'')+'</small></div><div class="a" style="color:#38B6FF">'+sxF(e.amount)+'</div>'+'</div>';
       var cat=getCat(e.cat), ic=sxCatIcon(cat);
       return '<div class="sx-tx">'+sxBubble(ic.n,ic.bg,ic.c)+'<div class="n"><div>'+sxEsc(e.desc)+'</div><small>'+sxEsc(cat.label)+' · '+(typeof shortDate==="function"?shortDate(e.date):e.date)+(e.auto?' · Auto':'')+'</small></div><div class="a sx-out">-'+sxF(e.amount)+'</div>'+'</div>';
     }).join(""):'<div style="padding:18px 0;color:var(--muted);text-align:center">No transactions this period.</div>')+
-    (arch.count?'<div style="text-align:center;font-size:13px;color:var(--ink2);padding:12px 0;border-top:1px solid var(--line)">'+arch.count+' older transaction'+(arch.count!==1?'s':'')+' rolled up · GHS '+sxF(archSum)+'</div>':'')+'</div>'+
+    (arch.count?'<div style="text-align:center;font-size:13px;color:var(--ink2);padding:12px 0;border-top:1px solid var(--line)">'+arch.count+' older transaction'+(arch.count!==1?'s':'')+' rolled up · '+sxF(archSum)+'</div>':'')+'</div>'+
     (spendData.entries.some(function(e){return !e.auto;})?'<button class="sx-btn2" style="border-color:#F2C9C8;color:var(--red)" onclick="ppClearSheet()">'+sxI("trash",18)+' Clear manually</button>':'')+
     '</div>';
   document.getElementById("page-money").innerHTML=h;
@@ -4517,7 +4517,7 @@ function sxIncome(){
   var h='<div class="sx">'+sxTitle("Money","Money you received")+
     sxSeg([{label:"Income",on:true,go:"setMoneySide('income')"},{label:"Spending",go:"setMoneySide('spend')"}])+
     sxSel(spendPeriod,"setSpendPeriod")+
-    '<div class="sx-dark sx-up"><div class="l">Money in · '+pr.label.toLowerCase()+'</div><div class="sx-big" style="margin-top:4px">GHS '+sxF(inTot)+'</div><div class="l" style="margin-top:2px">'+list.length+' payment'+(list.length!==1?'s':'')+' received</div>'+
+    '<div class="sx-dark sx-up"><div class="l">Money in · '+pr.label.toLowerCase()+'</div><div class="sx-big" style="margin-top:4px">'+sxF(inTot)+'</div><div class="l" style="margin-top:2px">'+list.length+' payment'+(list.length!==1?'s':'')+' received</div>'+
     '<div style="display:flex;gap:10px;margin-top:12px"><div class="sx-chip">Saved<b class="sx-in">'+sxF(saved)+'</b></div><div class="sx-chip">To spend<b style="color:#B56A08">'+sxF(live)+'</b></div></div></div>'+
     '<div class="sx-card sx-up"><div style="font-size:19px;font-weight:500;margin-bottom:12px">Add money you received</div>'+
     '<input class="sx-field" type="number" id="incAmt" placeholder="Amount (GHS)"/>'+
@@ -4541,7 +4541,7 @@ function sxPlansTop(){
   var dt=pg.querySelector("[onclick^='dtOpenEdit']");
   if(dt){ var w=document.createElement("div"); w.className="sx";
     w.innerHTML='<div class="sx-dark sx-up" onclick="dtOpenEdit()" style="cursor:pointer"><div style="display:flex;justify-content:space-between;align-items:center"><div class="l">Daily target</div><span style="opacity:.85">'+sxI("edit",18)+'</span></div>'+
-      '<div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:4px"><div class="sx-big">GHS '+sxF(d.rate)+'<span style="font-size:15px;opacity:.75"> /day</span></div><span class="sx-pill" style="background:#F2A33A;color:var(--acc,#3F1747)">'+sxF(d.todayGot)+' today</span></div>'+
+      '<div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:4px"><div class="sx-big">'+sxF(d.rate)+'<span style="font-size:15px;opacity:.75"> /day</span></div><span class="sx-pill" style="background:#F2A33A;color:var(--acc,#3F1747)">'+sxF(d.todayGot)+' today</span></div>'+
       '<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><span class="sx-pill" style="background:rgba(255,255,255,.14);color:#fff">'+bal+'</span><span class="sx-pill" style="background:rgba(255,255,255,.14);color:#fff">'+(clear>0?clear+" days to clear":"All clear")+'</span></div></div>';
     dt.replaceWith(w); }
   var tg=pg.querySelector("button[onclick^=\"setPlanSide\"]");
@@ -4559,7 +4559,7 @@ function sxPlansTop(){
     sg.replaceWith(g);
     if(tp){ var rem=t.amt-t.paid, pc=t.amt>0?Math.min(100,t.paid/t.amt*100):0, c=document.createElement("div"); c.className="sx";
       c.innerHTML='<div class="sx-card sx-up"><div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-weight:500;font-size:18px">Total progress</b><span class="sx-k">'+t.activeCount+' active</span></div>'+
-        '<div class="sx-prog"><i data-w="'+pc+'%" style="background:var(--teal)"></i></div><div class="sx-small"><span class="sx-in">GHS '+sxF(t.paid)+' '+(planSide==='buy'?'saved':'paid')+'</span><span class="sx-out">GHS '+sxF(rem)+' left</span></div></div>';
+        '<div class="sx-prog"><i data-w="'+pc+'%" style="background:var(--teal)"></i></div><div class="sx-small"><span class="sx-in">'+sxF(t.paid)+' '+(planSide==='buy'?'saved':'paid')+'</span><span class="sx-out">'+sxF(rem)+' left</span></div></div>';
       tp.replaceWith(c); }
   }
   var add=pg.querySelector(".add-debt-btn");
@@ -4580,10 +4580,10 @@ function sxSavingsTop(){
   var per=potRows(from,""), T=per.reduce(function(a,r){return {earned:a.earned+r.earned,saved:a.saved+r.saved+r.carry,spend:a.spend+r.spend,out:a.out+r.out};},{earned:0,saved:0,spend:0,out:0});
   var net=T.saved-T.out, life=potRows("",""), inPots=life.reduce(function(a,r){return a+r.net;},0);
   var cards=pg.querySelectorAll(".card");
-  if(cards[0]){ var a=document.createElement("div"); a.className="sx"; a.innerHTML='<div class="sx-card sx-up" style="background:#C6E5F0"><div class="sx-k">In your income pots now</div><div class="sx-big" style="color:#17708E;margin-top:4px">GHS '+sxF(inPots)+'</div><div class="sx-k" style="margin-top:2px">Every payment\'s save share lands here by itself</div></div>'; cards[0].replaceWith(a); }
+  if(cards[0]){ var a=document.createElement("div"); a.className="sx"; a.innerHTML='<div class="sx-card sx-up" style="background:#C6E5F0"><div class="sx-k">In your income pots now</div><div class="sx-big" style="color:#17708E;margin-top:4px">'+sxF(inPots)+'</div><div class="sx-k" style="margin-top:2px">Every payment\'s save share lands here by itself</div></div>'; cards[0].replaceWith(a); }
   if(cards[1]){ var b=document.createElement("div"); b.className="sx";
     var chip=function(l,v,bg,c){ return '<div class="sx-chip" style="background:'+bg+'">'+l+'<b style="color:'+c+'">'+sxF(v)+'</b></div>'; };
-    b.innerHTML='<div class="sx-dark sx-up"><div class="l">Net saved · '+labels[isavPeriod]+'</div><div class="sx-big" style="margin:4px 0 12px">GHS '+sxF(net)+'</div><div class="sx-grid2">'+
+    b.innerHTML='<div class="sx-dark sx-up"><div class="l">Net saved · '+labels[isavPeriod]+'</div><div class="sx-big" style="margin:4px 0 12px">'+sxF(net)+'</div><div class="sx-grid2">'+
       chip("Earned",T.earned,"#fff","var(--acc,#3F1747)")+chip("Saved",T.saved,"#fff","#0B6B43")+chip("Spend share",T.spend,"#fff","#8F5406")+chip("Taken out",T.out,"#fff","#B0201C")+'</div></div>';
     cards[1].replaceWith(b); }
   pg.querySelectorAll(".section-title").forEach(function(t){ if(/Your pots/.test(t.textContent)){ t.parentElement.outerHTML='<div class="sx"><div class="sx-h2 sx-up">Your pots</div></div>'; } });
@@ -4608,9 +4608,9 @@ function sxBudgetTop(){
     a.innerHTML='<div class="sx-card sx-up" style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:var(--acc,#3F1747);border:none"><button onclick="selBudgetMonth=shiftMonth(selBudgetMonth,-1);renderBudget()" style="border:none;background:none;font:500 15px Lexend;color:#fff;cursor:pointer">‹ Prev</button><b style="font-weight:500;font-size:16px">'+monthLabel(ym)+'</b><button onclick="selBudgetMonth=shiftMonth(selBudgetMonth,1);renderBudget()" style="border:none;background:none;font:400 15px Lexend;color:'+(ym<cur?'#fff':'#9A879E')+';cursor:pointer">Next ›</button></div>';
     var card=wn.nextElementSibling; wn.replaceWith(a);
     if(card&&card.classList.contains("card")){ var pc=planned>0?Math.min(100,spent/planned*100):0, b=document.createElement("div"); b.className="sx";
-      b.innerHTML='<div class="sx-card sx-up"><div style="display:flex;justify-content:space-between"><span class="sx-k" style="font-size:15px">Planned</span><b style="font-weight:500;font-size:17px;color:var(--green)">GHS '+sxF(planned)+'</b></div><div style="display:flex;justify-content:space-between;margin-top:6px"><span class="sx-k" style="font-size:15px">Spent</span><b style="font-weight:500;font-size:17px;color:var(--red)">GHS '+sxF(spent)+'</b></div>'+
-        (subsM>0&&ym===cur?'<div class="sx-small" style="justify-content:flex-end;margin-top:2px">includes GHS '+sxF(subsM)+' subscriptions</div>':'')+
-        '<div class="sx-prog"><i data-w="'+pc+'%" style="background:'+(spent>planned&&planned>0?'var(--red)':'var(--orange)')+'"></i></div><div class="sx-small"><span>'+(planned>0?Math.round(pc)+'% used':'No plan set')+'</span><span style="color:'+(left<0?'var(--red)':'var(--green)')+'">GHS '+sxF(left)+' left</span></div>'+
+      b.innerHTML='<div class="sx-card sx-up"><div style="display:flex;justify-content:space-between"><span class="sx-k" style="font-size:15px">Planned</span><b style="font-weight:500;font-size:17px;color:var(--green)">'+sxF(planned)+'</b></div><div style="display:flex;justify-content:space-between;margin-top:6px"><span class="sx-k" style="font-size:15px">Spent</span><b style="font-weight:500;font-size:17px;color:var(--red)">'+sxF(spent)+'</b></div>'+
+        (subsM>0&&ym===cur?'<div class="sx-small" style="justify-content:flex-end;margin-top:2px">includes '+sxF(subsM)+' subscriptions</div>':'')+
+        '<div class="sx-prog"><i data-w="'+pc+'%" style="background:'+(spent>planned&&planned>0?'var(--red)':'var(--orange)')+'"></i></div><div class="sx-small"><span>'+(planned>0?Math.round(pc)+'% used':'No plan set')+'</span><span style="color:'+(left<0?'var(--red)':'var(--green)')+'">'+sxF(left)+' left</span></div>'+
         '<button class="sx-btn2" style="margin:12px 0 0" onclick="setMonthlyPlan()">'+sxI("edit",17)+' '+(planned>0?'Edit monthly plan':'Set monthly plan')+'</button></div>';
       card.replaceWith(b); }
   }
@@ -4632,8 +4632,8 @@ function sxListsTop(){
   var wants=wnData.wants, needs=wnData.needs, wT=WNtotal(wants), nT=WNtotal(needs);
   var sm=pg.querySelector(".wn-summary");
   if(sm){ var a=document.createElement("div"); a.className="sx";
-    a.innerHTML='<div class="sx-grid2 sx-up" style="margin-bottom:14px"><div class="sx-acc" style="background:#F0E7F7;min-height:104px">'+sxBubble("bag","#fff","#3F1747",42)+'<div><div class="k">Wants total</div><div class="v">GHS '+sxF(wT)+' <span style="font-size:13px;color:var(--muted)">· '+wants.length+' item'+(wants.length!==1?'s':'')+'</span></div></div></div>'+
-      '<div class="sx-acc" style="background:#D0E4F8;min-height:104px">'+sxBubble("clip","#fff","#1F7FA3",42)+'<div><div class="k">Needs total</div><div class="v">GHS '+sxF(nT)+' <span style="font-size:13px;color:var(--muted)">· '+needs.length+' item'+(needs.length!==1?'s':'')+'</span></div></div></div></div>';
+    a.innerHTML='<div class="sx-grid2 sx-up" style="margin-bottom:14px"><div class="sx-acc" style="background:#F0E7F7;min-height:104px">'+sxBubble("bag","#fff","#3F1747",42)+'<div><div class="k">Wants total</div><div class="v">'+sxF(wT)+' <span style="font-size:13px;color:var(--muted)">· '+wants.length+' item'+(wants.length!==1?'s':'')+'</span></div></div></div>'+
+      '<div class="sx-acc" style="background:#D0E4F8;min-height:104px">'+sxBubble("clip","#fff","#1F7FA3",42)+'<div><div class="k">Needs total</div><div class="v">'+sxF(nT)+' <span style="font-size:13px;color:var(--muted)">· '+needs.length+' item'+(needs.length!==1?'s':'')+'</span></div></div></div></div>';
     sm.replaceWith(a); }
   var tb=pg.querySelector(".wn-tabs");
   if(tb){ var s=document.createElement("div"); s.className="sx"; s.innerHTML=sxSeg([{label:"Wants",on:wnTab==="wants",go:"wnSetTab('wants')"},{label:"Needs",on:wnTab==="needs",go:"wnSetTab('needs')"}]); tb.replaceWith(s); }
@@ -4689,7 +4689,7 @@ function sxSettings(){
 // Settings: "Classic layout" link at the bottom of Money (localStorage fhLayout = classic) brings the old screen back.
 function ppOn(){ return true; } // v17.8: the new layout is always on
 function ppSetLayout(x){ try{ localStorage.setItem('fhLayout',x); }catch(e){} renderMoney(); }
-function ppNum(v){ v=Math.round(v||0); return Math.abs(v)>=10000?(v/1000).toFixed(v%1000?1:0)+'k':v.toLocaleString(); }
+function ppNum(v){ v=Math.round(v||0); return 'GH\u20b5 '+(Math.abs(v)>=10000?(v/1000).toFixed(v%1000?1:0)+'k':v.toLocaleString()); }
 // v16.9: in dark look, very dark category colours become bright so dots and donut slices show
 function ppDkCol(col,id){
   try{
@@ -4724,7 +4724,7 @@ function ppTop(){
   var acc='var(--acc,#3F1747)';
   var q=function(ic,l,go){ return '<button onclick="'+go+'" class="pp-q"><span>'+ic+'</span>'+l+'</button>'; };
   return '<div class="pp-hd"><div><div class="pp-t1">Money overview</div><div class="pp-t2">Your numbers, your plan.</div></div></div>'+
-    '<div class="pp-hero"><div class="pp-row"><div><div class="pp-l">Left to spend · '+pr.label.toLowerCase()+'</div><div class="pp-v">GHS '+Math.round(avail).toLocaleString()+'</div>'+
+    '<div class="pp-hero"><div class="pp-row"><div><div class="pp-l">Left to spend · '+pr.label.toLowerCase()+'</div><div class="pp-v">GH\u20b5 '+Math.round(avail).toLocaleString()+'</div>'+
     (inc>0?'':'<div class="pp-g" style="color:#30D158">Add your income to see what is left</div>')+'</div>'+
     '<div class="pp-ring" style="background:conic-gradient('+(typeof ppPctCol==='function'?ppPctCol(pct):'#22DD66')+' 0 '+pct+'%,rgba(255,255,255,.08) '+pct+'% 100%)"><div>'+pct+'%<small>left</small></div></div></div>'+
     '<div class="pp-mini" style="grid-template-columns:1fr 1fr"><div style="'+ppTint('#38B6FF')+'"><span>PAID &amp; SAVED</span><b style="color:#38B6FF">'+ppNum(moved)+'</b></div><div style="'+ppTint('#FF4D5E')+'"><span>YOU HAD</span><b style="color:#FF4D5E">'+ppNum(toSpend)+'</b></div></div></div>'+
@@ -4791,7 +4791,7 @@ var PP_TIPS=[/^Add your income to see what is left$/i,/^Applies from today/i,/^C
   /^Pay it off, one day at a time$/i,/^Where your money went$/i,/^Money you received$/i,/^Your numbers, your plan\.?$/i];
 function ppActive(){ var p=document.querySelector('[id^=page-].active'); return p?p.id.slice(5):'money'; }
 function ppPer(v){ spendPeriod=v; try{ isavPeriod=v; }catch(e){} try{ switchTab(ppActive()); }catch(e){} }
-function ppN(v){ return Math.round(v||0).toLocaleString(); }
+function ppN(v){ return 'GH\u20b5 '+Math.round(v||0).toLocaleString(); }
 // v17.0: income source logos. Saved on this phone only, in pfhub_src_logos (included in Export Backup).
 function srcLogosGet(){ try{ return JSON.parse(localStorage.getItem('pfhub_src_logos')||'{}')||{}; }catch(e){ return {}; } }
 function srcLogosSet(o){ try{ localStorage.setItem('pfhub_src_logos',JSON.stringify(o||{})); }catch(e){ showToast('Logo too big to save','#FF453A'); } }
@@ -4823,7 +4823,7 @@ function ppDailyCard(){
     '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><span style="font-size:20px;font-weight:700;color:#fff;white-space:nowrap">Daily target</span><span style="font-size:15px;color:#CFC9D5;white-space:nowrap">'+sxF(d.rate)+'/day \u270e</span></div>'+
     '<div style="font-size:12.5px;color:#A9A3AE;margin-top:2px;white-space:nowrap">Savings goals only</div>'+
     '<div class="sx-prog" style="margin:12px 0 10px"><i style="display:block;height:100%;border-radius:99px;width:'+pc+'%;background:'+ppPctCol(pc)+'"></i></div>'+
-    '<div style="display:flex;justify-content:space-between;gap:8px;font-size:15px;white-space:nowrap"><span style="color:#22DD66">GHS '+sxF(d.todayGot)+' today</span><span style="color:'+(clear>0?'#FF4D5E':'#22DD66')+'">'+(clear>0?clear+' days to clear':'All clear')+'</span></div>'+
+    '<div style="display:flex;justify-content:space-between;gap:8px;font-size:15px;white-space:nowrap"><span style="color:#22DD66">'+sxF(d.todayGot)+' today</span><span style="color:'+(clear>0?'#FF4D5E':'#22DD66')+'">'+(clear>0?clear+' days to clear':'All clear')+'</span></div>'+
     '<div style="display:flex;justify-content:space-between;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid #2C2C2E;font-size:13px;color:#CFC9D5;white-space:nowrap">'+
       '<span>Streak <b style="color:#fff">'+(sd.streak||0)+'</b></span>'+bal+'<span>Saved <b style="color:#38B6FF">'+(sd.totalCredits||0)+'</b> days</span></div></div>';
 }
@@ -4856,7 +4856,7 @@ function ppMoneySheet(){
   document.body.insertAdjacentHTML('beforeend','<div id="ppSheet" onclick="if(event.target.id===\'ppSheet\')this.remove()"><div class="pp-sh" style="max-height:82vh;overflow:auto"><div class="pp-sh-t">Money settings</div>'+
     row('openSettings()','coins','#22DD66','Income settings',splitPct+'% save \u00b7 '+(100-splitPct)+'% spend \u00b7 '+sources.length+' sources')+
     row('dtOpenEdit()','target','#FFD60A','Daily target',sxF(dtRateToday())+'/day for savings and plans')+
-    row('setMonthlyPlan();try{renderBackup()}catch(e){}','pie','#38B6FF','Monthly budget plan','GHS '+sxF(monthlyPlan||0)+' a month')+
+    row('setMonthlyPlan();try{renderBackup()}catch(e){}','pie','#38B6FF','Monthly budget plan',''+sxF(monthlyPlan||0)+' a month')+
     '<button class="pp-sh-x" onclick="document.getElementById(\'ppSheet\').remove()">Close</button></div></div>');
 }
 // v17.2: Channel logos folder (opened from Settings)
@@ -4923,41 +4923,41 @@ function ppTabTop(tab){
       var d=dtStats(), t=sideTracker(planSide), pr=ppProg(document.getElementById('page-debt')), tot=pr.paid+pr.left, pc=tot>0?Math.round(pr.paid/tot*100):0;
       var bal=t.daysBehind>0?t.daysBehind+' days behind':t.daysAhead>0?t.daysAhead+' days ahead':'on track';
       var tag='';
-      if(planSide==='buy') return ppHero('Buy plans','GHS '+ppN(tot),pr.n+' thing'+(pr.n!==1?'s':'')+' to buy',[pc,'saved','#FFB627'],
+      if(planSide==='buy') return ppHero('Buy plans',''+ppN(tot),pr.n+' thing'+(pr.n!==1?'s':'')+' to buy',[pc,'saved','#FFB627'],
         [['SAVED',ppN(pr.paid),'#22DD66'],['LEFT',ppN(pr.left),'#38B6FF']])+
         ppQA([['plus','Add buy plan',"ppClickText(/Add (new )?buy plan/i)"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"');
-      return ppHero('You owe','GHS '+ppN(pr.left),pr.n+' debt'+(pr.n!==1?'s':''),[pc,'paid','#FF4D5E'],
+      return ppHero('You owe',''+ppN(pr.left),pr.n+' debt'+(pr.n!==1?'s':''),[pc,'paid','#FF4D5E'],
         [['PAID',ppN(pr.paid),'#22DD66'],['OWED',ppN(tot),'#FF4D5E']])+
         ppQA([['plus','Add debt',"ppClickText(/Add (new )?debt/i)"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"');
     }
     if(tab==='savings'){
       if(savSide!=='income'){ var gs=(typeof savGoals!=='undefined'&&savGoals)||[], tg=0, sd=0; gs.forEach(function(g){ tg+=+(g.target||g.amount||0); sd+=+(g.saved||0); });
-        return ppHero('Saved in goals','GHS '+ppN(sd),gs.length+' goal'+(gs.length!==1?'s':''),[tg>0?Math.round(sd/tg*100):0,'done','#38B6FF'],
+        return ppHero('Saved in goals',''+ppN(sd),gs.length+' goal'+(gs.length!==1?'s':''),[tg>0?Math.round(sd/tg*100):0,'done','#38B6FF'],
           [['LEFT',ppN(tg-sd),'#38B6FF'],['TARGET',ppN(tg),'#FF4D5E']])+
           ppQA([['plus','New goal','openSavModal()']]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"'); }
       var from=rangeFrom(isavPeriod), per=potRows(from,''), T=per.reduce(function(a,r){return {earned:a.earned+r.earned,saved:a.saved+r.saved+r.carry,out:a.out+r.out};},{earned:0,saved:0,out:0});
       var inPots=potRows('','').reduce(function(a,r){return a+r.net;},0), pc=T.earned>0?Math.min(100,Math.round(T.saved/T.earned*100)):0;
-      return ppHero('In your income pots now','GHS '+ppN(inPots),'',[pc,'saved','#38B6FF'],
+      return ppHero('In your income pots now',''+ppN(inPots),'',[pc,'saved','#38B6FF'],
         [['EARNED',ppN(T.earned),'#22DD66'],['TAKEN OUT',ppN(T.out),'#FF4D5E']])+
         ppQA([['up','Take out',"ppTakeOutPick()"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"');
     }
     if(tab==='budget'){
       var ym=selBudgetMonth, cur=TODAY.slice(0,7), cats=budgetCats(), subs=subsTotalMonthly();
       var spent=cats.reduce(function(s,c){return s+catSpentMonth(c.id,ym);},0)+wnSpentMonth(ym)+((ym===cur)?subs:0), planned=monthlyPlan||0, pc=planned>0?Math.min(100,Math.round(spent/planned*100)):0;
-      return ppHero('Budget left \u00b7 '+monthLabel(ym),'GHS '+ppN(planned-spent),(subs>0?'Includes GHS '+ppN(subs)+' subscriptions':''),[pc,'spent','#FFB627'],
+      return ppHero('Budget left \u00b7 '+monthLabel(ym),''+ppN(planned-spent),(subs>0?'Includes '+ppN(subs)+' subscriptions':''),[pc,'spent','#FFB627'],
         [['SPENT',ppN(spent),'#22DD66'],['PLANNED',ppN(planned),'#FF4D5E']])+
         ppQA([['up','Log spending',"ppSheet('spend')"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"');
     }
     if(tab==='wn'){
       var ub=function(l){ return (l||[]).filter(function(i){ return !i.bought; }); }, bo=function(l){ return (l||[]).filter(function(i){ return i.bought; }); };
       var wT=WNtotal(ub(wnData.wants)), nT=WNtotal(ub(wnData.needs)), n=ub(wnData.wants).length+ub(wnData.needs).length, bT=WNtotal(bo(wnData.wants).concat(bo(wnData.needs)));
-      return ppHero('Wants and needs','GHS '+ppN(wT+nT),n+' item'+(n!==1?'s':'')+' to buy',null,[['WANTS',ppN(wT),'#FF5CA8'],['NEEDS',ppN(nT),'#38B6FF'],['BOUGHT',ppN(bT),'#22DD66']])+
+      return ppHero('Wants and needs',''+ppN(wT+nT),n+' item'+(n!==1?'s':'')+' to buy',null,[['WANTS',ppN(wT),'#FF5CA8'],['NEEDS',ppN(nT),'#38B6FF'],['BOUGHT',ppN(bT),'#22DD66']])+
         ppQA([['plus','Add want',"wnSetTab('wants');setTimeout(ppWnAdd,60)"],['plus','Add need',"wnSetTab('needs');setTimeout(ppWnAdd,60)"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr 1fr"');
     }
     if(tab==='money' && typeof moneySide!=='undefined' && moneySide==='income'){
       var pr=periodRange(), list=incomeData.entries.filter(function(e){return inRange(e.date,pr.from,pr.to);});
       var inT=incomeTotal(pr.from,pr.to), sv=list.reduce(function(a,e){return a+(e.build||0);},0), lv=list.reduce(function(a,e){return a+(e.live||0);},0);
-      return ppHero('Money in \u00b7 '+pr.label.toLowerCase(),'GHS '+ppN(inT),list.length+' payment'+(list.length!==1?'s':''),[inT>0?Math.round(sv/inT*100):0,'saved','#22DD66'],
+      return ppHero('Money in \u00b7 '+pr.label.toLowerCase(),''+ppN(inT),list.length+' payment'+(list.length!==1?'s':''),[inT>0?Math.round(sv/inT*100):0,'saved','#22DD66'],
         [['SAVED',ppN(sv),'#22DD66'],['TO SPEND',ppN(lv),'#FFB627'],['SOURCES',sources.length,'#C77DFF']])+
         ppQA([['wallet','Add income',"ppSheet('income')"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"')+ppIncChart(list,inT,pr.label);
     }
