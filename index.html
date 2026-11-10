@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v20.6</title>
+<title>Philip's Finance Hub v20.7</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v20.6</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v20.7</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -4908,7 +4908,7 @@ function ppHero(l,v,g,ring,mini){
   // v17.9: same colour order on every tab: green first, blue middle, red last
   // v20.2: a card can carry 2 boxes (the box that repeated the big number is gone); each box keeps its rank colour
   if(mini&&mini.length){ var ppPal=['#22DD66','#38B6FF','#FF4D5E'];
-    mini=mini.map(function(m,i){ return [m,i]; }).sort(function(a,b){ var ra=PP_RANK[a[0][0]]===undefined?1:PP_RANK[a[0][0]], rb=PP_RANK[b[0][0]]===undefined?1:PP_RANK[b[0][0]]; return ra-rb||a[1]-b[1]; }).map(function(x,i){ var rk=PP_RANK[x[0][0]]===undefined?1:PP_RANK[x[0][0]]; return [x[0][0],x[0][1],mini.length===3?ppPal[i]:ppPal[Math.min(rk,2)]]; }); }
+    mini=mini.map(function(m,i){ return [m,i]; }).sort(function(a,b){ var ra=PP_RANK[a[0][0]]===undefined?1:PP_RANK[a[0][0]], rb=PP_RANK[b[0][0]]===undefined?1:PP_RANK[b[0][0]]; return ra-rb||a[1]-b[1]; }).map(function(x,i){ var rk=PP_RANK[x[0][0]]===undefined?1:PP_RANK[x[0][0]]; return [x[0][0],x[0][1],rk===0?'#38B6FF':'#FF4D5E']; }); } // v20.7: stat boxes use two colours only, done blue, left/target/owed red
   return '<div class="pp-hero"><div class="pp-row"><div style="min-width:0"><div class="pp-l">'+l+'</div><div class="pp-v" style="color:'+(/-\d/.test(String(v))?'#FF4D5E':'#22DD66')+'!important">'+v+'</div>'+(g?'<div class="pp-g">'+g+'</div>':'')+'</div>'+
     (ring?'<div class="pp-ring" style="background:conic-gradient('+ppPctCol(ring[0],/spent/i.test(ring[1]))+' 0 '+ring[0]+'%,rgba(255,255,255,.12) '+ring[0]+'% 100%)"><div>'+ring[0]+'%<small>'+ring[1]+'</small></div></div>':'')+'</div>'+
     '<div class="pp-mini" style="grid-template-columns:repeat('+mini.length+',1fr)">'+mini.map(function(m){ return '<div style="'+ppTint(m[2])+'"><span>'+m[0]+'</span><b style="color:'+m[2]+'">'+m[1]+'</b></div>'; }).join('')+'</div></div>';
@@ -5312,7 +5312,7 @@ function ppSaveIncome(){
   '.sx-stat>span:first-child{display:none!important}.sx-stat{padding:10px 6px!important}'+
   '.pp-gone{display:none!important}'+
   // v20.6: small stat box numbers white on every tab; chart legend amounts stay on one line
-  'html body .pp-mini b{color:#fff!important}html body .pp-leg p{white-space:nowrap}html body .pp-leg p>span{min-width:0;flex:1}'+
+  'html body .pp-leg p{white-space:nowrap}html body .pp-leg p>span{min-width:0;flex:1}'+
   '.pp-hrow{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(127,127,127,.18)}.pp-hrow .sx-ic{width:40px;height:40px}.pp-hsub{font-size:12px;color:#9A94A0;margin-top:2px}';
   document.head.appendChild(c);
 })();
