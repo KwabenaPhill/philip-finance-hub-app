@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v20.5</title>
+<title>Philip's Finance Hub v20.6</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v20.5</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v20.6</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -4689,6 +4689,8 @@ function sxSettings(){
 // Settings: "Classic layout" link at the bottom of Money (localStorage fhLayout = classic) brings the old screen back.
 function ppOn(){ return true; } // v17.8: the new layout is always on
 function ppSetLayout(x){ try{ localStorage.setItem('fhLayout',x); }catch(e){} renderMoney(); }
+// v20.6: chart centre and legend numbers: plain, 5,000 and up shown as 5k
+function ppDn(v){ v=Math.round(v||0); return Math.abs(v)>=5000?(v/1000).toFixed(v%1000?1:0).replace(/\.0$/,'')+'k':v.toLocaleString(); }
 function ppNum(v){ v=Math.round(v||0); return 'GH\u20b5 '+(Math.abs(v)>=10000?(v/1000).toFixed(v%1000?1:0)+'k':v.toLocaleString()); }
 // v16.9: in dark look, very dark category colours become bright so dots and donut slices show
 function ppDkCol(col,id){
@@ -4724,14 +4726,14 @@ function ppTop(){
   var acc='var(--acc,#3F1747)';
   var q=function(ic,l,go){ return '<button onclick="'+go+'" class="pp-q"><span>'+ic+'</span>'+l+'</button>'; };
   return '<div class="pp-hd"><div><div class="pp-t1">Money overview</div><div class="pp-t2">Your numbers, your plan.</div></div></div>'+
-    '<div class="pp-hero"><div class="pp-row"><div><div class="pp-l">Left to spend · '+pr.label.toLowerCase()+'</div><div class="pp-v">GH\u20b5 '+Math.round(avail).toLocaleString()+'</div>'+
+    '<div class="pp-hero"><div class="pp-row"><div><div class="pp-l">Left to spend · '+pr.label.toLowerCase()+'</div><div class="pp-v" style="color:'+(avail<0?'#FF4D5E':'#22DD66')+'!important">GH\u20b5 '+Math.round(avail).toLocaleString()+'</div>'+
     (inc>0?'':'<div class="pp-g" style="color:#30D158">Add your income to see what is left</div>')+'</div>'+
     '<div class="pp-ring" style="background:conic-gradient('+(typeof ppPctCol==='function'?ppPctCol(pct):'#22DD66')+' 0 '+pct+'%,rgba(255,255,255,.08) '+pct+'% 100%)"><div>'+pct+'%<small>left</small></div></div></div>'+
     '<div class="pp-mini" style="grid-template-columns:1fr 1fr"><div style="'+ppTint('#38B6FF')+'"><span>PAID &amp; SAVED</span><b style="color:#38B6FF">'+ppNum(moved)+'</b></div><div style="'+ppTint('#FF4D5E')+'"><span>YOU HAD</span><b style="color:#FF4D5E">'+ppNum(toSpend)+'</b></div></div></div>'+
     '<div class="pp-qa" style="grid-template-columns:1fr">'+q(ppI('up','#FF4D5E',30),'Add spending',"ppSheet('spend')")+'</div>'+
     '<div class="pp-card"><div class="pp-ch">Spending by category<span>'+pr.label+'</span></div><div class="pp-row" style="gap:16px">'+
-    '<div class="pp-donut" style="background:conic-gradient('+grad+')"><div><small>SPENT</small><b>'+ppNum(spent)+'</b></div></div>'+
-    '<div class="pp-leg">'+(cats.length?cats.slice(0,6).map(function(c){return '<p><span><i style="background:'+c.c+'"></i>'+sxEsc(c.l)+'</span>'+ppNum(c.a)+'</p>';}).join(''):'<p style="color:var(--muted,#8a8a90)">No spending yet</p>')+'</div></div></div>';
+    '<div class="pp-donut" style="background:conic-gradient('+grad+')"><div><small>SPENT</small><b>'+ppDn(spent)+'</b></div></div>'+
+    '<div class="pp-leg">'+(cats.length?cats.slice(0,6).map(function(c){return '<p><span><i style="background:'+c.c+'"></i>'+sxEsc(c.l)+'</span>'+ppDn(c.a)+'</p>';}).join(''):'<p style="color:var(--muted,#8a8a90)">No spending yet</p>')+'</div></div></div>';
 }
 (function(){
   var css=document.createElement('style');
@@ -4907,7 +4909,7 @@ function ppHero(l,v,g,ring,mini){
   // v20.2: a card can carry 2 boxes (the box that repeated the big number is gone); each box keeps its rank colour
   if(mini&&mini.length){ var ppPal=['#22DD66','#38B6FF','#FF4D5E'];
     mini=mini.map(function(m,i){ return [m,i]; }).sort(function(a,b){ var ra=PP_RANK[a[0][0]]===undefined?1:PP_RANK[a[0][0]], rb=PP_RANK[b[0][0]]===undefined?1:PP_RANK[b[0][0]]; return ra-rb||a[1]-b[1]; }).map(function(x,i){ var rk=PP_RANK[x[0][0]]===undefined?1:PP_RANK[x[0][0]]; return [x[0][0],x[0][1],mini.length===3?ppPal[i]:ppPal[Math.min(rk,2)]]; }); }
-  return '<div class="pp-hero"><div class="pp-row"><div style="min-width:0"><div class="pp-l">'+l+'</div><div class="pp-v">'+v+'</div>'+(g?'<div class="pp-g">'+g+'</div>':'')+'</div>'+
+  return '<div class="pp-hero"><div class="pp-row"><div style="min-width:0"><div class="pp-l">'+l+'</div><div class="pp-v" style="color:'+(/-\d/.test(String(v))?'#FF4D5E':'#22DD66')+'!important">'+v+'</div>'+(g?'<div class="pp-g">'+g+'</div>':'')+'</div>'+
     (ring?'<div class="pp-ring" style="background:conic-gradient('+ppPctCol(ring[0],/spent/i.test(ring[1]))+' 0 '+ring[0]+'%,rgba(255,255,255,.12) '+ring[0]+'% 100%)"><div>'+ring[0]+'%<small>'+ring[1]+'</small></div></div>':'')+'</div>'+
     '<div class="pp-mini" style="grid-template-columns:repeat('+mini.length+',1fr)">'+mini.map(function(m){ return '<div style="'+ppTint(m[2])+'"><span>'+m[0]+'</span><b style="color:'+m[2]+'">'+m[1]+'</b></div>'; }).join('')+'</div></div>';
 }
@@ -5040,8 +5042,8 @@ function ppIncChart(list,inT,label){
   rows.forEach(function(r,i){ r.c=pal[i%pal.length]; });
   var at=0, grad=rows.map(function(r){ var a=at; at+=r.a/inT*100; return r.c+' '+a.toFixed(2)+'% '+at.toFixed(2)+'%'; }).join(',');
   return '<div class="pp-card"><div class="pp-ch">Income by source<span>'+label+'</span></div><div class="pp-row" style="gap:16px">'+
-    '<div class="pp-donut" style="background:conic-gradient('+grad+')"><div><small>IN</small><b>'+ppNum(inT)+'</b></div></div>'+
-    '<div class="pp-leg">'+rows.slice(0,6).map(function(r){ return '<p><span><i style="background:'+r.c+'"></i>'+sxEsc(r.n)+'</span>'+ppNum(r.a)+'</p>'; }).join('')+'</div></div></div>'; }
+    '<div class="pp-donut" style="background:conic-gradient('+grad+')"><div><small>IN</small><b>'+ppDn(inT)+'</b></div></div>'+
+    '<div class="pp-leg">'+rows.slice(0,6).map(function(r){ return '<p><span><i style="background:'+r.c+'"></i>'+sxEsc(r.n)+'</span>'+ppDn(r.a)+'</p>'; }).join('')+'</div></div></div>'; }
 // v19.2: five tabs with one job each. Money = In, Out, Budget. Debts alone. Save = Pots, Goals, Buy.
 var _ppLastMoney='income', _ppLastSave='pots';
 function goMoney(sub){ sub=sub||_ppLastMoney; _ppLastMoney=sub; if(sub==='budget'){ switchTab('budget'); } else { moneySide=sub; switchTab('money'); } }
@@ -5309,6 +5311,8 @@ function ppSaveIncome(){
   '.sav-streak-box .ssb-icon,.streak-box .sb-icon{display:none!important}.sav-streak-box,.streak-box{padding:10px 6px!important}.sav-streak-box .ssb-val,.streak-box .sb-val{font-size:22px!important;line-height:1.1}.sav-streak-box .ssb-label,.streak-box .sb-label{font-size:10px!important;margin-top:2px!important}'+
   '.sx-stat>span:first-child{display:none!important}.sx-stat{padding:10px 6px!important}'+
   '.pp-gone{display:none!important}'+
+  // v20.6: small stat box numbers white on every tab; chart legend amounts stay on one line
+  'html body .pp-mini b{color:#fff!important}html body .pp-leg p{white-space:nowrap}html body .pp-leg p>span{min-width:0;flex:1}'+
   '.pp-hrow{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(127,127,127,.18)}.pp-hrow .sx-ic{width:40px;height:40px}.pp-hsub{font-size:12px;color:#9A94A0;margin-top:2px}';
   document.head.appendChild(c);
 })();
