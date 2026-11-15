@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v20.8</title>
+<title>Philip's Finance Hub v21.0</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v20.8</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v21.0</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -3391,6 +3391,7 @@ function renderBudget(){
 function exportData(){
   const backupData={...state, debtGoals, goalOrder, savGoals, savOrder, wnData, spendData, spendCats, budgets, subs, monthlyPlan, archive:archiveData, dailyDebt:DAILY_DEBT, dailySav:DAILY_SAV, subOrder, buyPlans, incomeData, sources, splitPct, sentData, dest, catIn, dailyTarget, incSav, history:histData};
   try{ backupData.srcLogos=srcLogosGet(); }catch(e){}
+  try{ var _ph=localStorage.getItem('pfhub_profile_photo_v1'); if(_ph) backupData.profilePhoto=_ph; }catch(e){} // v21.0
   const blob=new Blob([JSON.stringify(backupData,null,2)],{type:"application/json"});
   const url=URL.createObjectURL(blob);
   const a=document.createElement("a");a.href=url;
@@ -3412,6 +3413,7 @@ function importData(event){
       if(parsed.savOrder){savOrder=parsed.savOrder;saveSavOrder();}
       if(parsed.wnData){wnData=parsed.wnData;saveWN();}
       if(parsed.srcLogos){srcLogosSet(parsed.srcLogos);}
+      if(parsed.profilePhoto){ try{ localStorage.setItem('pfhub_profile_photo_v1',parsed.profilePhoto); }catch(e){} } // v21.0
       if(parsed.spendData){spendData=parsed.spendData;saveSpend();}
       if(parsed.spendCats){
         spendCats=parsed.spendCats;
@@ -4917,8 +4919,8 @@ function ppHero(l,v,g,ring,mini){
 }
 var PP_QC=[['#D6ECFA','#0E7FA8'],['#FFE0B8','#C2410C'],['#C9F2DF','#0F9D58']];
 function ppQA(a){ return '<div class="pp-qa">'+a.map(function(x,i){ var q=PP_QC[i%3]; return '<button class="pp-q" style="background:'+q[0]+'" onclick="'+x[2]+'"><span>'+(PP_SVG[x[0]]?ppI(x[0],q[1],24):x[0])+'</span>'+x[1]+'</button>'; }).join('')+'</div>'; }
-function ppProg(pg){ var el=[].slice.call(pg.querySelectorAll('.sx-card,.card')).filter(function(e){ return /^Total progress/.test((e.textContent||'').trim()); }).pop(); var t=el?el.textContent.replace(/(\d)(GHS)/g,'$1 $2').replace(/(saved|paid|left|active)/g,' $1 '):'';
-  var num=function(re){ var m=t.match(re); return m?+m[1].replace(/,/g,''):0; }; return {paid:num(/GHS\s*([\d,]+)\s*(?:paid|saved)/i),left:num(/GHS\s*([\d,]+)\s*left/i),n:num(/(\d+)\s*active/i)}; }
+function ppProg(pg){ var el=[].slice.call(pg.querySelectorAll('.sx-card,.card')).filter(function(e){ return /^Total progress/.test((e.textContent||'').trim()); }).pop(); var t=el?el.textContent.replace(/(\d)(GHS|GH\u20b5)/g,'$1 $2').replace(/(saved|paid|left|active)/g,' $1 '):'';
+  var num=function(re){ var m=t.match(re); return m?+m[1].replace(/,/g,''):0; }; return {paid:num(/(?:GHS|GH\u20b5)\s*([\d,]+)\s*(?:paid|saved)/i),left:num(/(?:GHS|GH\u20b5)\s*([\d,]+)\s*left/i),n:num(/(\d+)\s*active/i)}; }
 function ppClickText(re){ var b=[].slice.call(document.querySelectorAll('.page.active button, [id^=page-].active button')).filter(function(x){ return !x.closest('.pp-qa,.pp-new')&&re.test((x.innerText||'').trim()); })[0]; if(b){ b.click(); b.scrollIntoView({behavior:'smooth',block:'center'}); } else if(/Combine/.test(String(re))) showToast('Add at least 2 items first','#FF9F0A'); else showToast('Nothing to open yet','#FF9F0A'); }
 function ppScrollTo(re){ var e=[].slice.call(document.querySelectorAll('.page.active *, [id^=page-].active *')).filter(function(x){ return x.children.length<3 && re.test((x.innerText||'').trim()); })[0]; if(e) e.scrollIntoView({behavior:'smooth',block:'start'}); }
 function ppTabTop(tab){
@@ -4931,7 +4933,7 @@ function ppTabTop(tab){
         [['SAVED',ppN(pr.paid),'#22DD66'],['LEFT',ppN(pr.left),'#38B6FF']])+
         ppQA([['plus','Add buy plan',"ppClickText(/Add (new )?buy plan/i)"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"');
       return ppHero('You owe',''+ppN(pr.left),pr.n+' debt'+(pr.n!==1?'s':''),[pc,'paid','#FF4D5E'],
-        [['PAID',ppN(pr.paid),'#22DD66'],['OWED',ppN(tot),'#FF4D5E']])+
+        [['PAID',ppN(pr.paid),'#22DD66'],['OWED',ppN(tot),'#FF4D5E']]).replace('color:#22DD66!important','color:'+(pr.left>0?'#FF4D5E':'#22DD66')+'!important')+ // v21.0: a debt shows red
         ppQA([['plus','Add debt',"ppClickText(/Add (new )?debt/i)"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"');
     }
     if(tab==='savings'){
@@ -5334,6 +5336,354 @@ function ppSaveIncome(){
 // v16.9: follow the phone when it switches between light and dark
 try{ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){ try{ applyLook(); switchTab(ppActive()); }catch(e){} }); }catch(e){}
 </script>
+<style id="v21-fixes">
+/* ===== v21.0 fixes (Philip, 15 Nov 2026). Look and layout only. ===== */
+.v21-lbl{display:flex!important;align-items:center;gap:8px;margin:16px 2px 8px!important;font-size:11px!important;font-weight:700!important;letter-spacing:1.5px!important;color:#B4B4BA!important;text-transform:uppercase;white-space:nowrap}
+.v21-lbl::after{content:"";flex:1;height:1px;background:#26262A;order:1}
+.v21-lbl b{order:2;letter-spacing:0!important;font-size:12.5px!important;font-weight:800!important;text-transform:none}
+.v21-card{background:#161618!important;border:1px solid #26262A!important;border-radius:16px!important;padding:10px 12px!important;margin:0 0 8px!important;display:flex!important;align-items:center;gap:10px;box-shadow:none!important;color:#F5F5F7}
+.v21-x{flex:1 1 auto;min-width:0}
+.v21-n{font-size:15px!important;font-weight:800!important;color:#F5F5F7!important;white-space:nowrap!important;overflow:hidden;text-overflow:clip;line-height:1.25!important;display:block}
+.v21-s{font-size:12.5px!important;font-weight:500!important;color:#B4B4BA!important;white-space:nowrap!important;overflow:hidden;text-overflow:clip;margin-top:2px;line-height:1.3!important;display:block}
+.v21-s b{font-weight:800!important}
+.v21-bt{width:36px!important;height:36px!important;min-width:36px;border-radius:11px!important;border:1px solid #3A3A3A!important;background:#2A2A2A!important;color:#FFFFFF!important;display:flex!important;align-items:center;justify-content:center;flex:none;padding:0!important;margin:0!important;cursor:pointer;box-shadow:none!important}
+.v21-bt svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.v21-bt.v21-del{color:#FF453A!important}
+.v21-more{width:26px!important;height:36px!important;border:none!important;background:transparent!important;color:#B4B4BA!important;display:flex!important;align-items:center;justify-content:center;flex:none;padding:0!important;cursor:pointer}
+.v21-more svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
+.v21-go{height:36px!important;padding:0 12px!important;border-radius:11px!important;border:none!important;background:#7C3AED!important;color:#fff!important;font:inherit;font-size:13px!important;font-weight:700!important;display:flex!important;align-items:center;gap:4px;flex:none;cursor:pointer;white-space:nowrap}
+.v21-go svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.v21-cnt{width:48px;height:48px;border-radius:13px;text-align:center;flex:none;display:flex;flex-direction:column;justify-content:center;align-items:center;border:1px solid #2E2E33;background:#1A1A1D;color:#D4D4D8}
+.v21-cnt b{font-size:17px!important;font-weight:800!important;line-height:1!important;color:inherit!important}
+.v21-cnt span{font-size:9.5px!important;font-weight:700!important;margin-top:3px;letter-spacing:.5px;color:inherit!important}
+.v21-cnt.r{background:#2A0D0D;border-color:#5A1D1D;color:#FF6B61}
+.v21-cnt.a{background:#2E2210;border-color:#4A3613;color:#F5A623}
+.v21-logo{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:none;font-size:13.5px!important;font-weight:800!important;color:#fff!important;overflow:hidden;cursor:pointer;letter-spacing:.3px}
+.v21-logo img{width:100%;height:100%;object-fit:cover}
+.v21-btn{width:100%;height:44px;border-radius:14px!important;display:flex!important;align-items:center;justify-content:center;gap:7px;font:inherit;font-size:14px!important;font-weight:700!important;cursor:pointer;margin:2px 0 8px!important;box-shadow:none!important}
+.v21-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.v21-btn.vio{background:#1A1226!important;border:1px solid #3B2560!important;color:#C9A7FF!important}
+.v21-btn.dark{background:#161618!important;border:1px solid #26262A!important;color:#F5F5F7!important}
+.v21-btn.dark svg{color:#B4B4BA}
+.v21-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:16px 3px 9px}
+.v21-hd>span{font-size:19px!important;font-weight:800!important;color:#F5F5F7!important;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.v21-hd>span svg{width:19px;height:19px;fill:none;stroke:#22DD66;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.v21-hd>b{font-size:15.5px!important;font-weight:800!important;white-space:nowrap}
+.v21-ck{width:26px!important;height:26px!important;border-radius:8px!important;border:1.5px solid #3F3F46!important;background:#1C1C1F!important;flex:none;display:flex!important;align-items:center;justify-content:center;padding:0!important;color:#fff!important;cursor:pointer}
+.v21-ck svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.v21-ck.on{background:#16A34A!important;border-color:#16A34A!important}
+.v21-ck.pick{border-radius:50%!important}
+.v21-ck.pick.on{background:#7C3AED!important;border-color:#7C3AED!important}
+.v21-card.bought{background:#0E1610!important;border-color:#1F3A26!important}
+.v21-card.bought .v21-n{color:#8A8A90!important;text-decoration:line-through}
+.v21-card.picked{background:#1E1330!important;border-color:#5B21B6!important}
+.v21-tag{display:inline-block;font-size:10px!important;font-weight:700!important;letter-spacing:1px;border-radius:99px;padding:1px 7px;border:1px solid;margin-right:5px;vertical-align:1px}
+.v21-tag.w{color:#C9A7FF!important;border-color:#3B2560}.v21-tag.n{color:#4FC3F7!important;border-color:#16303F}
+.v21-empty{text-align:center;color:#B4B4BA!important;font-size:13.5px!important;padding:16px 8px;background:#161618;border:1px dashed #26262A;border-radius:16px;margin-bottom:8px}
+.v21-bar{background:#161618;border:1px solid #3B2560;border-radius:16px;padding:10px 12px;margin:4px 0 8px}
+.v21-bar input{width:100%;box-sizing:border-box;height:40px;border-radius:12px;border:1px solid #2E2E33!important;background:#0D0D0F!important;color:#F5F5F7!important;padding:0 12px;font:inherit;font-size:14px;margin-bottom:9px}
+.v21-cancel{height:36px;padding:0 12px;border-radius:11px;border:1px solid #2E2E33!important;background:transparent!important;color:#B4B4BA!important;font:inherit;font-size:13px!important;font-weight:700!important;cursor:pointer;flex:none}
+/* settings */
+#page-backup.v21-set{padding-top:6px}
+.v21-prof{display:flex;align-items:center;gap:14px;background:#1E1330!important;border:1px solid #3B2560!important;border-radius:20px;padding:15px 16px;margin:4px 0 10px}
+.v21-av{position:relative;flex:none;width:60px;height:60px;cursor:pointer}
+.v21-av>div{width:60px;height:60px;border-radius:50%;background:#2A1B4A;display:flex;align-items:center;justify-content:center;color:#C9A7FF;overflow:hidden}
+.v21-av>div svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.v21-av>div img{width:100%;height:100%;object-fit:cover}
+.v21-av>i{position:absolute;right:-3px;bottom:-3px;width:24px;height:24px;border-radius:50%;background:#7C3AED;border:2px solid #1E1330;display:flex;align-items:center;justify-content:center;color:#fff}
+.v21-av>i svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.v21-pn{display:block;font-size:20px!important;font-weight:800!important;color:#F5F5F7!important;line-height:1.2;white-space:nowrap}
+.v21-pv{display:block;font-size:13.5px!important;color:#B4B4BA!important;font-weight:500!important;white-space:nowrap}
+.v21-rm{font-size:13.5px!important;color:#B4B4BA!important;text-decoration:underline;flex:none;cursor:pointer;background:none!important;border:none!important;padding:4px!important;font-weight:500!important}
+.v21-tiles{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin-bottom:8px}
+.v21-tile{background:#161618!important;border:1px solid #26262A!important;border-radius:20px;padding:12px;min-width:0;cursor:pointer}
+.v21-ib{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex:none}
+.v21-ib svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.v21-ib.pu{background:#2A1B4A;color:#C9A7FF}.v21-ib.bl{background:#0D2233;color:#4FC3F7}.v21-ib.gr{background:#0F2A1A;color:#4ADE80}.v21-ib.am{background:#2E2210;color:#F5A623}.v21-ib.rd{background:#2A0D0D;color:#FF6B61}
+.v21-tile .v21-n{margin-top:10px}
+.v21-wide{display:flex;align-items:center;gap:12px;background:#161618!important;border:1px solid #26262A!important;border-radius:20px;padding:13px;margin-bottom:8px;cursor:pointer}
+.v21-chev{color:#8A8A90;flex:none}.v21-chev svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.v21-bk{background:#161618!important;border:1px solid #26262A!important;border-radius:20px;padding:13px;margin-bottom:8px}
+.v21-b2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.v21-b2 button{height:44px;border-radius:14px!important;background:#1C1C1F!important;border:1px solid #2A2A2E!important;color:#F5F5F7!important;display:flex;align-items:center;justify-content:center;gap:6px;font:inherit;font-size:14.5px!important;font-weight:800!important;cursor:pointer}
+.v21-b2 button svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.v21-reset{display:flex;align-items:center;gap:12px;background:#160B0B!important;border:1px solid #5A1D1D!important;border-radius:20px;padding:12px 13px;margin-bottom:18px;cursor:pointer}
+/* action menu */
+#v21Menu{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10001;display:flex;align-items:flex-end}
+#v21Menu .v21-sh{width:100%;background:#1C1C1E;border-radius:22px 22px 0 0;padding:14px 14px 24px;box-sizing:border-box}
+#v21Menu .v21-sh-t{font-size:15px;font-weight:800;color:#F5F5F7;margin:2px 4px 10px;white-space:nowrap;overflow:hidden}
+#v21Menu .v21-sh button{width:100%;display:flex;align-items:center;gap:10px;height:48px;border-radius:14px;border:1px solid #2C2C2E;background:#161618;color:#F5F5F7;font:inherit;font-size:15px;font-weight:700;margin-bottom:8px;padding:0 14px;cursor:pointer}
+#v21Menu .v21-sh button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#v21Menu .v21-sh button.red{color:#FF453A}
+#v21Menu .v21-sh button.x{justify-content:center;color:#B4B4BA;background:transparent}
+/* spending category rows (restyled in place) */
+.v21-catcard{padding:9px 11px!important;border-radius:16px!important;background:#161618!important;border:1px solid #26262A!important;margin-bottom:8px!important}
+.v21-catic{width:36px!important;height:36px!important;border-radius:11px!important;box-shadow:none!important}
+.v21-catic svg{width:19px!important;height:19px!important;filter:none!important}
+.v21-amt{font-size:15px!important;font-weight:800!important;white-space:nowrap;flex:none;margin-right:2px}
+.v21-plus{width:32px!important;height:32px!important;min-width:32px;border-radius:10px!important;border:1px solid #3A3A3A!important;background:#2A2A2A!important;color:#C9A7FF!important;display:flex!important;align-items:center;justify-content:center;padding:0!important;font-size:0!important}
+.v21-plus svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
+</style>
+<script>
+// ===== v21.0 (Philip, 15 Nov 2026): the 10 fixes from the "Finance fixes list".
+// Look and layout only. One new saved item: the profile photo (pfhub_profile_photo_v1), included in Export and Restore.
+// Every button keeps calling the same function it called before. No other data or keys are touched.
+(function(){
+  var PHOTO_KEY='pfhub_profile_photo_v1';
+  var P={
+    plus:'<path d="M12 5v14M5 12h14"/>',cart:'<path d="M3 4h2l2 11h11l2-8H6"/><circle cx="9" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/>',
+    edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/>',trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+    check:'<path d="M5 12l4 4 10-10"/>',box:'<path d="M3 7l9-4 9 4v10l-9 4-9-4z"/><path d="M3 7l9 4 9-4M12 11v10"/>',
+    dots:'<circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/>',
+    up:'<path d="M12 15V4M8 8l4-4 4 4"/><rect x="3" y="14" width="18" height="7" rx="2"/>',hist:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/>',
+    refresh:'<path d="M4 12a8 8 0 0 1 14-5l2 2M20 12a8 8 0 0 1-14 5l-2-2M20 4v5h-5M4 20v-5h5"/>',x:'<path d="M6 6l12 12M18 6L6 18"/>',
+    user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',cam:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
+    coins:'<circle cx="9" cy="9" r="6"/><path d="M15.5 9.5A6 6 0 1 1 9.5 15.5"/>',cat:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
+    yt:'<rect x="3" y="6" width="18" height="12" rx="3"/><path d="M10 9.5v5l4-2.5z"/>',dl:'<path d="M12 4v11M8 11l4 4 4-4M5 20h14"/>',ul:'<path d="M12 20V9M8 13l4-4 4 4M5 4h14"/>',
+    chev:'<path d="M9 6l6 6-6 6"/>',reset:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>'
+  };
+  function ic(k){ return '<svg viewBox="0 0 24 24">'+(P[k]||'')+'</svg>'; }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function jsq(s){ return String(s==null?'':s).replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+  function cedi(n){ return 'GH\u20b5 '+Math.round(n||0).toLocaleString(); }
+  function mine(root){ if(!root) return; var all=[root].concat([].slice.call(root.querySelectorAll('*'))); all.forEach(function(e){ try{ _softSeen.add(e); }catch(x){} try{ _shaped.add(e); }catch(x){} }); }
+  function el(html){ var d=document.createElement('div'); d.innerHTML=html; var n=d.firstElementChild; mine(n); return n; }
+  function shortDate(ds){ if(!ds) return ''; var d=new Date(ds+'T00:00:00'); if(isNaN(d)) return ds; return d.getDate()+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]; }
+  function ver(){ var m=/v[\d.]+/.exec(document.title||''); return m?m[0]:''; }
+
+  // ---- small action menu (the ⋮ button) ----
+  var _acts=[];
+  window.v21Act=function(i){ var m=document.getElementById('v21Menu'); if(m) m.remove(); var f=_acts[i]; _acts=[]; if(f) try{ (new Function(f))(); }catch(e){ console.log(e); } };
+  window.v21Menu=function(title,items){
+    var old=document.getElementById('v21Menu'); if(old) old.remove(); _acts=[];
+    var h='<div id="v21Menu" onclick="if(event.target.id===\'v21Menu\')this.remove()"><div class="v21-sh"><div class="v21-sh-t">'+esc(title)+'</div>'+
+      items.map(function(it){ _acts.push(it[2]); return '<button class="'+(it[3]||'')+'" onclick="v21Act('+(_acts.length-1)+')">'+ic(it[0])+esc(it[1])+'</button>'; }).join('')+
+      '<button class="x" onclick="document.getElementById(\'v21Menu\').remove()">Close</button></div></div>';
+    document.body.appendChild(el(h));
+  };
+  window.v21SubMenu=function(id){
+    var s=(subs||[]).find(function(x){ return String(x.id)===String(id); }); if(!s) return;
+    var q=jsq(s.id);
+    if(s.cancelled) v21Menu(s.name,[['refresh','Renew / Reactivate',"openSubDate('"+q+"','reactivate')"],['trash','Delete',"deleteSub('"+q+"')",'red']]);
+    else v21Menu(s.name,[['edit','Edit',"openSubModal('"+q+"')"],['x','Cancel subscription',"cancelSub('"+q+"')"],['trash','Delete',"deleteSub('"+q+"')",'red']]);
+  };
+
+  // ---- one line: shrink a name a little until it fits ----
+  function fit(e,min){ var f=parseFloat(e.dataset.v21f||getComputedStyle(e).fontSize); e.dataset.v21f=f; e.style.removeProperty('font-size'); var w=e.clientWidth; if(!w) return; var n=0;
+    while(e.scrollWidth>w+1&&f>min&&n<30){ f-=0.5; e.style.setProperty('font-size',f+'px','important'); n++; } }
+  function fitAll(root){ (root||document).querySelectorAll('.v21-n,.v21-s,.v21-pn').forEach(function(e){ fit(e,e.classList.contains('v21-s')?10:11); }); }
+
+  // ================= FIX 4: SETTINGS =================
+  function photo(){ try{ return localStorage.getItem(PHOTO_KEY)||''; }catch(e){ return ''; } }
+  window.v21PickPhoto=function(){ var i=document.getElementById('v21PhotoIn'); if(!i){ i=document.createElement('input'); i.type='file'; i.accept='image/*'; i.id='v21PhotoIn'; i.style.display='none'; i.onchange=v21PhotoChosen; document.body.appendChild(i); } i.value=''; i.click(); };
+  function v21PhotoChosen(ev){
+    var f=ev.target.files&&ev.target.files[0]; if(!f) return;
+    var r=new FileReader(); r.onload=function(){ var im=new Image(); im.onload=function(){
+      var S=320, c=document.createElement('canvas'); c.width=S; c.height=S; var x=c.getContext('2d'); var m=Math.min(im.width,im.height);
+      x.drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,S,S);
+      try{ localStorage.setItem(PHOTO_KEY,c.toDataURL('image/jpeg',0.82)); try{ rec('app','Profile photo changed'); }catch(e){} showToast('Photo saved'); }catch(e){ showToast('Photo too big to save','#FF453A'); }
+      try{ renderBackup(); }catch(e){}
+    }; im.src=r.result; }; r.readAsDataURL(f);
+  }
+  window.v21RemovePhoto=function(){ if(!photo()) return; if(!confirm('Remove your photo?')) return; try{ localStorage.removeItem(PHOTO_KEY); }catch(e){} try{ renderBackup(); }catch(e){} };
+  function settingsHTML(){
+    var ph=photo();
+    var d=null; try{ d=localStorage.getItem('pfhub_last_export_v1'); }catch(e){}
+    var bk='Never downloaded', bkc='#F5A623';
+    if(d){ var days=Math.max(0,daysBetween(d,TODAY)); bk='Last downloaded '+(days===0?'today':days===1?'yesterday':days+' days ago'); bkc=days<=6?'#B4B4BA':'#F5A623'; }
+    var act=(subs||[]).filter(function(x){ return !x.cancelled; }).length, mo=0; try{ mo=subsTotalMonthly(); }catch(e){}
+    var hn=(typeof histData!=='undefined'&&histData)?histData.length:0;
+    var tile=function(cls,k,name,sub,go){ return '<div class="v21-tile" onclick="'+go+'"><div class="v21-ib '+cls+'">'+ic(k)+'</div><span class="v21-n">'+name+'</span><span class="v21-s">'+sub+'</span></div>'; };
+    return '<div class="v21-prof"><div class="v21-av" onclick="v21PickPhoto()"><div>'+(ph?'<img src="'+ph+'" alt="">':ic('user'))+'</div><i>'+ic('cam')+'</i></div>'+
+      '<div class="v21-x"><span class="v21-pn">Philip</span><span class="v21-pv">Finance Hub '+ver()+'</span></div>'+
+      (ph?'<button class="v21-rm" onclick="v21RemovePhoto()">Remove</button>':'')+'</div>'+
+      '<div class="v21-tiles">'+
+        tile('pu','coins','Money settings','Split, target, budget','ppMoneySheet()')+
+        tile('bl','cat','Categories','Add or delete','ppCatSheet()')+
+        tile('gr','refresh','Subscriptions',act+' \u00b7 '+cedi(mo)+'/mo','openSubModal()')+
+        tile('am','yt','Channel logos','One per source','ppLogoSheet()')+
+      '</div>'+
+      '<div class="v21-wide" onclick="openHistory()"><div class="v21-ib am">'+ic('hist')+'</div><div class="v21-x"><span class="v21-n">History</span><span class="v21-s">'+hn+' record'+(hn!==1?'s':'')+'</span></div><span class="v21-chev">'+ic('chev')+'</span></div>'+
+      '<div class="v21-bk"><div style="display:flex;align-items:center;gap:12px"><div class="v21-ib pu" style="border-radius:50%">'+ic('dl')+'</div><div class="v21-x"><span class="v21-n" style="font-size:18px!important">Backup</span><span class="v21-s" style="color:'+bkc+'!important">'+bk+'</span></div></div>'+
+        '<div class="v21-b2"><button onclick="exportData()">'+ic('dl')+'Download</button><button onclick="triggerImport()">'+ic('ul')+'Restore</button></div></div>'+
+      '<div class="v21-reset" onclick="openResetSheet()"><div class="v21-ib rd" style="border-radius:50%">'+ic('reset')+'</div><div class="v21-x"><span class="v21-n" style="color:#FF453A!important;font-size:17px!important">Reset Finance Hub</span></div><span class="v21-chev">'+ic('chev')+'</span></div>';
+  }
+  function doSettings(){ var pg=document.getElementById('page-backup'); if(!pg) return; pg.innerHTML=settingsHTML(); pg.classList.add('v21-set'); mine(pg); fitAll(pg); }
+
+  // ================= FIX 6: SUBSCRIPTIONS =================
+  function subRow(s){
+    var dl=deadlineDaysLeft(s.deadline), box;
+    if(s.cancelled) box='<div class="v21-cnt"><b>\u2013</b><span>OFF</span></div>';
+    else if(dl===null) box='<div class="v21-cnt"><b>\u2013</b><span>NO DATE</span></div>';
+    else if(dl<0) box='<div class="v21-cnt r"><b>'+(-dl)+'</b><span>LATE</span></div>';
+    else if(dl===0) box='<div class="v21-cnt r"><b>0</b><span>TODAY</span></div>';
+    else box='<div class="v21-cnt'+(dl<=7?' a':'')+'"><b>'+dl+'</b><span>DAY'+(dl===1?'':'S')+'</span></div>';
+    var sub=cedi(s.amount)+'/mo'+(s.cancelled?' \u00b7 cancelled':(s.deadline?' \u00b7 '+shortDate(s.deadline):' \u00b7 no date set'));
+    var due=!s.cancelled&&dl!==null&&dl<=0;
+    return '<div class="v21-card">'+box+'<div class="v21-x"><span class="v21-n">'+esc(s.name)+'</span><span class="v21-s">'+sub+'</span></div>'+
+      (due?'<button class="v21-go" onclick="openSubDate(\''+jsq(s.id)+'\',\'renew\')">'+ic('refresh')+'Renew</button>':'')+
+      '<button class="v21-more" onclick="v21SubMenu(\''+jsq(s.id)+'\')" aria-label="More">'+ic('dots')+'</button></div>';
+  }
+  function subsHTML(){
+    var act=getOrderedActiveSubs().slice().sort(function(a,b){ return urgencyKey(a.deadline)-urgencyKey(b.deadline); });
+    var can=(subs||[]).filter(function(s){ return s.cancelled; });
+    var h='<div class="v21-subs"><div class="v21-lbl">Active<b style="color:#C9A7FF!important">'+cedi(subsTotalMonthly())+'/mo</b></div>';
+    h+=act.length?act.map(subRow).join(''):'<div class="v21-empty">No active subscriptions</div>';
+    if(can.length) h+='<div class="v21-lbl">Cancelled<b style="color:#B4B4BA!important">'+can.length+'</b></div>'+can.map(subRow).join('');
+    return h+'</div>';
+  }
+  function doSubs(pg){
+    var hdr=[].slice.call(pg.querySelectorAll('.wn-section-header')).filter(function(h){ return /Active Subscriptions/i.test(h.textContent||''); })[0];
+    if(!hdr) return; var par=hdr.parentNode, n=hdr, kill=[];
+    while(n){ kill.push(n); n=n.nextSibling; }
+    var keep=document.createDocumentFragment(); kill.forEach(function(k){ if(k.nodeType===1&&/^(INPUT)$/.test(k.tagName)) keep.appendChild(k); else k.remove(); });
+    par.appendChild(el(subsHTML())); par.appendChild(keep);
+  }
+
+  // ================= FIX 7: SPENDING CATEGORIES =================
+  function hueOf(hex){ var m=/^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})/i.exec(hex||''); if(!m) return null; var r=parseInt(m[1],16)/255,g=parseInt(m[2],16)/255,b=parseInt(m[3],16)/255,mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn,h=0;
+    if(d<0.08) return null; h=mx===r?((g-b)/d)%6:mx===g?(b-r)/d+2:(r-g)/d+4; h=Math.round(h*60); if(h<0) h+=360; return h; }
+  function doCats(pg){
+    var total=0, any=false;
+    [].slice.call(pg.querySelectorAll('.card')).forEach(function(card){
+      var head=card.querySelector('[onclick^="budgetExpandedId="]'); if(!head||card.dataset.v21) return;
+      var m=/budgetExpandedId===?'([^']+)'/.exec(head.getAttribute('onclick')||''); if(!m) return; var id=m[1];
+      var texts=[].slice.call(head.querySelectorAll('div')).filter(function(d){ return !d.children.length; });
+      var nameEl=texts[0], subEl=texts[1]; if(!nameEl||!subEl) return;
+      var st=subEl.textContent||'', am=/GH\u20b5\s*(-?[\d,]+)/.exec(st), cn=/(\d+)\s*entr/.exec(st);
+      var amt=am?parseFloat(am[1].replace(/,/g,''))||0:0, cnt=cn?+cn[1]:0; total+=amt; any=true;
+      var cat={}; try{ cat=getCat(id)||{}; }catch(e){}
+      var h=hueOf(cat.color), box=card.querySelector('.sx-ic');
+      if(box){ box.classList.add('v21-catic'); box.style.setProperty('background',h===null?'#26262A':'hsl('+h+',55%,16%)','important'); box.style.setProperty('color',h===null?'#D4D4D8':'hsl('+h+',85%,'+(h>40&&h<75?'60%':'68%')+')','important'); box.style.setProperty('box-shadow','none','important'); }
+      nameEl.className='v21-n'; nameEl.removeAttribute('style');
+      subEl.className='v21-s'; subEl.removeAttribute('style'); subEl.textContent=cnt?cnt+' entr'+(cnt===1?'y':'ies'):'No entries';
+      var info=nameEl.parentNode; if(info){ info.style.minWidth='0'; info.style.flex='1 1 auto'; }
+      var right=head.nextElementSibling;
+      if(right){ var a=document.createElement('span'); a.className='v21-amt'; a.style.color=amt>0?'#FF4D5E':'#8A8A90'; a.textContent=cedi(amt); right.insertBefore(a,right.firstChild);
+        [].slice.call(right.querySelectorAll('button')).forEach(function(b){ if(/^\+\s*Log$/i.test((b.textContent||'').trim())){ b.className='v21-plus'; b.removeAttribute('style'); b.innerHTML=ic('plus'); b.setAttribute('aria-label','Log spending'); } }); }
+      card.classList.add('v21-catcard'); card.dataset.v21='1';
+      ['padding','border-color','border-radius'].forEach(function(p){ card.style.removeProperty(p); });
+      mine(card);
+    });
+    if(any){ var t=[].slice.call(pg.querySelectorAll('.sx-h2')).filter(function(x){ return /^Spending categories$/i.test((x.textContent||'').trim()); })[0];
+      if(t){ var lb=el('<div class="v21-lbl">Spending<b style="color:#FF4D5E!important">'+cedi(total)+'</b></div>'); var wrap=t.closest('.sx')||t; wrap.replaceWith(lb); } }
+  }
+
+  // ================= FIX 8: YOUR POTS =================
+  var LOGO_COL=['#6D28D9','#2563EB','#16A34A','#DB2777','#D97706','#0891B2','#DC2626','#7C3AED'];
+  function initials(n){ var w=String(n||'').trim().split(/\s+/).filter(Boolean); if(!w.length) return '?'; if(w.length===1) return w[0].slice(0,2).toUpperCase(); return (w[0][0]+w[1][0]).toUpperCase(); }
+  function potLogo(src){ var L={}; try{ L=srcLogosGet(); }catch(e){} var i=Math.max(0,(sources||[]).findIndex(function(x){ return String(x.id)===String(src); }));
+    var tap=' onclick="event.stopPropagation();srcLogoPick(\''+jsq(src)+'\')" title="Tap to set logo"';
+    if(L[src]) return '<div class="v21-logo"'+tap+' style="background:#fff"><img src="'+L[src]+'" alt=""></div>';
+    return '<div class="v21-logo"'+tap+' style="background:'+LOGO_COL[i%LOGO_COL.length]+'">'+esc(initials(getSource(src).name))+'</div>'; }
+  function doPots(pg){
+    var life=[]; try{ life=potRows('',''); }catch(e){ return; }
+    [].slice.call(pg.querySelectorAll('button[onclick^="openTakeOut("]')).forEach(function(b){
+      var card=b.closest('.sx-card,.card'); if(!card||card.closest('.pp-new')) return;
+      var m=/openTakeOut\('([^']+)'\)/.exec(b.getAttribute('onclick')||''); if(!m) return; var src=m[1];
+      var r=life.find(function(x){ return String(x.src)===String(src); })||{net:0,earned:0};
+      var q=jsq(src);
+      var row=el('<div class="v21-card">'+potLogo(src)+'<div class="v21-x"><span class="v21-n">'+esc(getSource(src).name)+'</span><span class="v21-s"><b style="color:#38B6FF!important">'+cedi(r.net)+'</b> of <b style="color:#22DD66!important">'+Math.round(r.earned||0).toLocaleString()+'</b></span></div>'+
+        '<button class="v21-bt" style="color:#38B6FF!important" onclick="openTakeOut(\''+q+'\')" aria-label="Take out">'+ic('up')+'</button>'+
+        '<button class="v21-bt" onclick="openHistory({r:\''+q+'\'})" aria-label="History">'+ic('hist')+'</button></div>');
+      var wrap=(card.parentElement&&card.parentElement.classList.contains('sx')&&card.parentElement.children.length===1)?card.parentElement:card; wrap.replaceWith(row);
+    });
+    var t=[].slice.call(pg.querySelectorAll('.sx-h2')).filter(function(x){ return /^Your pots$/i.test((x.textContent||'').trim()); })[0];
+    if(t){ (t.closest('.sx')||t).replaceWith(el('<div class="v21-lbl">Your pots</div>')); }
+  }
+
+  // ================= FIX 9: LISTS (WANTS AND NEEDS) + COMBINE =================
+  var _cname='';
+  window.v21CName=function(v){ _cname=v; };
+  function wnRow(item){
+    var q=jsq(item.id), b=!!item.bought, pend=!!(item.pendingBuy&&!b);
+    var price=item.price>0?cedi(item.price):'No price set';
+    return '<div class="v21-card'+(b?' bought':'')+'"><button class="v21-ck'+(b?' on':'')+'" onclick="wnToggleBought(\''+q+'\')" aria-label="Bought">'+(b?ic('check'):'')+'</button>'+
+      '<div class="v21-x"><span class="v21-n">'+esc(item.name)+'</span><span class="v21-s">'+price+(pend?' \u00b7 <b style="color:#F5A623!important">Pending buy</b>':'')+'</span></div>'+
+      (item.price>0&&!b&&!item.pendingBuy?'<button class="v21-bt" onclick="addToBuyFromListById(\''+q+'\')" aria-label="Add to buy plan">'+ic('cart')+'</button>':'')+
+      '<button class="v21-bt" onclick="wnOpenEdit(\''+q+'\')" aria-label="Edit">'+ic('edit')+'</button>'+
+      '<button class="v21-bt v21-del" onclick="wnDelete(\''+q+'\')" aria-label="Delete">'+ic('trash')+'</button></div>';
+  }
+  function wnHTML(){
+    var list=wnTab==='wants'?wnData.wants:wnData.needs, open=list.filter(function(x){ return !x.bought; }), done=list.filter(function(x){ return x.bought; });
+    var h='<div class="v21-wn">';
+    if(wnCombineMode){
+      var pool=[].concat((wnData.wants||[]).map(function(x){ return [x,'w']; }),(wnData.needs||[]).map(function(x){ return [x,'n']; })).filter(function(p){ return !p[0].bought&&!p[0].pendingBuy; });
+      var picks=wnPickedItems(), tot=wnCombineTotal();
+      h+='<div class="v21-lbl">Pick items<b style="color:#C9A7FF!important">Wants and needs</b></div>';
+      h+=pool.length?pool.map(function(p){ var x=p[0], on=!!wnPicked[x.id];
+        return '<div class="v21-card'+(on?' picked':'')+'" onclick="wnPick(\''+jsq(x.id)+'\')" style="cursor:pointer"><span class="v21-ck pick'+(on?' on':'')+'">'+(on?ic('check'):'')+'</span><div class="v21-x"><span class="v21-n"><span class="v21-tag '+p[1]+'">'+(p[1]==='w'?'WANT':'NEED')+'</span>'+esc(x.name)+'</span></div><span class="v21-amt">'+(x.price>0?cedi(x.price):'\u2013')+'</span></div>'; }).join('')
+        :'<div class="v21-empty">Nothing to combine yet</div>';
+      h+='<div class="v21-bar"><input id="wnCombineName" placeholder="Name it, e.g. Weekend shopping" value="'+esc(_cname)+'" oninput="v21CName(this.value)">'+
+        '<div style="display:flex;align-items:center;gap:8px"><div class="v21-x"><span class="v21-n">'+picks.length+' picked</span><span class="v21-s" style="color:#C9A7FF!important;font-weight:800!important">'+cedi(tot)+'</span></div>'+
+        '<button class="v21-cancel" onclick="v21CName(\'\');wnToggleCombine()">Cancel</button><button class="v21-go" onclick="v21CombineGo()">'+ic('cart')+'Make buy plan</button></div></div>';
+      return h+'</div>';
+    }
+    h+='<div class="v21-hd"><span>To buy</span><b style="color:#C9A7FF!important">'+cedi(WNtotal(open))+'</b></div>';
+    if(!list.length) h+='<div class="v21-empty">No '+wnTab+' yet. Tap Add '+(wnTab==='wants'?'want':'need')+' to start.</div>';
+    else if(!open.length) h+='<div class="v21-empty">All '+wnTab+' bought</div>';
+    h+=open.map(wnRow).join('');
+    h+='<button class="v21-btn vio" onclick="v21CName(\'\');wnToggleCombine()">'+ic('box')+'Combine items into one buy plan</button>';
+    if(done.length) h+='<div class="v21-hd"><span>'+ic('check')+'Bought \u00b7 Record</span><b style="color:#22DD66!important">'+cedi(WNtotal(done))+'</b></div>'+done.map(wnRow).join('')+
+      '<button class="v21-btn dark" onclick="wnClearBought()">'+ic('trash')+'Clear bought record</button>';
+    return h+'</div>';
+  }
+  window.v21CombineGo=function(){ var p=wnPickedItems(); if(p.length<2){ showToast('Pick at least 2 items','#FF453A'); return; } _cname=''; wnCombineGo(); };
+  function doWN(pg){
+    var form=document.getElementById('wnAddForm'); if(!form||!pg.contains(form)) return;
+    var n=form.nextSibling; while(n){ var nx=n.nextSibling; n.remove(); n=nx; }
+    form.parentNode.appendChild(el(wnHTML()));
+  }
+
+  // ================= FIX 10 + FIX 3: polish of the top parts and every delete button =================
+  var DEL=/^(deleteDebt|deleteBuyPlan|deleteSavGoal|deleteSub|deleteCat|deletePotMove|deleteSpendEntry|deleteIncome|wnDelete|ppCatDel|debtActionDelete)\(/;
+  function set(e,p,v){ if(e.style.getPropertyValue(p)!==v||e.style.getPropertyPriority(p)!=='important') e.style.setProperty(p,v,'important'); }
+  function polish(){
+    // fix 3: every delete button: same dark box as the other buttons, red trash icon
+    document.querySelectorAll('button[onclick]').forEach(function(b){
+      if(b.classList.contains('v21-bt')||b.closest('#v21Menu')) return;
+      if(!DEL.test(b.getAttribute('onclick')||'')) return;
+      set(b,'background','#2A2A2A'); set(b,'border','1px solid #3A3A3A'); set(b,'color','#FF453A'); set(b,'box-shadow','none');
+    });
+    var pg=document.querySelector('.page.active'); if(!pg) return;
+    // fix 10: big add buttons become one short line (Lists keeps its tinted Add want / Add need)
+    var isWN=pg.id==='page-wn';
+    pg.querySelectorAll('.pp-qa').forEach(function(qa){ var bs=[].slice.call(qa.querySelectorAll('.pp-q'));
+      bs.forEach(function(b,i){
+        if(isWN){ var c=i===0?['#0B1824','#16303F','#38B6FF']:['#1D120A','#3F2414','#FF6B35']; set(b,'background',c[0]); set(b,'border','1px solid '+c[1]); set(b,'color','#F5F5F7');
+          var s0=b.querySelector('span svg'); if(s0) set(s0,'stroke',c[2]); return; }
+        set(b,'flex-direction','row'); set(b,'gap','8px'); set(b,'height','46px'); set(b,'min-height','46px'); set(b,'padding','0 12px'); set(b,'font-size','14.5px'); set(b,'font-weight','700');
+        set(b,'background','#161618'); set(b,'border','1px solid #26262A'); set(b,'color','#F5F5F7'); set(b,'border-radius','16px');
+        var sp=b.querySelector('span'); if(sp){ set(sp,'margin','0'); set(sp,'font-size','0'); }
+        var sv=b.querySelector('span svg'); if(sv){ set(sv,'width','20px'); set(sv,'height','20px'); }
+      }); });
+    // log box on one line: the hint moves into the box
+    pg.querySelectorAll('.custom-log-wrap').forEach(function(w){
+      var t=w.querySelector('.custom-log-title'), inp=w.querySelector('input'); if(!inp) return;
+      var goal=/goal/i.test((t&&t.textContent)||''); if(t) set(t,'display','none');
+      var ph=goal?'Amount, then pick a goal':'Amount, then pick a plan'; if(inp.placeholder!==ph) inp.placeholder=ph;
+      set(w,'padding','10px'); set(w,'border-radius','16px');
+    });
+    // merge buttons: slimmer, soft violet
+    pg.querySelectorAll('button[onclick^="toggleMergeMode("]').forEach(function(b){
+      set(b,'padding','10px'); set(b,'background','#1A1226'); set(b,'border','1px solid #3B2560'); set(b,'color','#C9A7FF'); set(b,'font-size','14px'); set(b,'font-weight','700'); set(b,'border-radius','14px');
+    });
+    fitAll(pg);
+  }
+  var _t=0; function q(){ if(_t) return; _t=requestAnimationFrame(function(){ _t=0; try{ polish(); }catch(e){ console.log(e); } }); }
+  new MutationObserver(q).observe(document.body,{childList:true,subtree:true}); window.addEventListener('resize',q);
+
+  // ================= hook into each page's drawing (runs last, after every other layer) =================
+  function wrap(fn,after){ var o=window[fn]; if(typeof o!=='function') return; window[fn]=function(){ var r=o.apply(this,arguments); try{ after(); }catch(e){ console.log(e); } q(); return r; }; }
+  wrap('renderBackup',doSettings);
+  wrap('renderBudget',function(){ var pg=document.getElementById('page-budget'); doCats(pg); doSubs(pg); fitAll(pg); });
+  wrap('renderSavings',function(){ if(savSide==='income'){ var pg=document.getElementById('page-savings'); doPots(pg); fitAll(pg); } });
+  wrap('renderWN',function(){ var pg=document.getElementById('page-wn'); doWN(pg); fitAll(pg); });
+  try{ renderBackup=window.renderBackup; renderBudget=window.renderBudget; renderSavings=window.renderSavings; renderWN=window.renderWN; }catch(e){}
+  try{ switchTab(ppActive()); }catch(e){}
+})();
+</script>
+
 <script>
 // v111: installable app. Registers the offline file. Does not touch any saved data.
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(function(){});});}
