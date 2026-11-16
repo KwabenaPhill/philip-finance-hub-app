@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v21.0</title>
+<title>Philip's Finance Hub v21.1</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v21.0</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v21.1</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -3314,7 +3314,7 @@ function renderBudget(){
           <div style="display:flex;gap:6px;flex-shrink:0;align-items:center">
             ${budgetAddingId===cat.id
               ?`<button class="btn-cancel" onclick="budgetAddingId=null;renderBudget()">✕</button>`
-              :`<button class="btn-sm" style="background:${cat.color}" onclick="budgetAddingId='${cat.id}';budgetExpandedId='${cat.id}';renderBudget()">+ Log</button>`}
+              :`<button class="btn-sm" style="background:${cat.color}" onclick="budgetAddingId='${cat.id}';renderBudget()">+ Log</button>`}
             ${!cat.fixed?`<button class="btn-cancel" onclick="deleteCat('${cat.id}')" style="padding:6px 8px">🗑</button>`:''}
           </div>
         </div>
@@ -4906,8 +4906,8 @@ function ppClearSel(){
 }
 // v19.5: every top card reads done -> left -> total
 // v20.8: green = money you have or paid, blue = saved or left, red = target, owed, spent, taken out
-var PP_BOXCOL={PAID:'#22DD66',EARNED:'#22DD66',BOUGHT:'#22DD66','TO SPEND':'#22DD66','YOU HAD':'#22DD66',SAVED:'#38B6FF',LEFT:'#38B6FF',PLANNED:'#38B6FF',NEEDS:'#38B6FF',TARGET:'#FF4D5E',OWED:'#FF4D5E','TAKEN OUT':'#FF4D5E',SPENT:'#FF4D5E',WANTS:'#FF4D5E',SOURCES:'#FFFFFF'};
-var PP_RANK={SAVED:0,INCOME:0,PAID:0,EARNED:0,SPENT:0,BOUGHT:0,LEFT:1,PLANNED:2,TARGET:2,TOTAL:2,OWED:2,'TAKEN OUT':2,'TO SPEND':2,WANTS:2};
+var PP_BOXCOL={PAID:'#22DD66',EARNED:'#22DD66',BOUGHT:'#22DD66','TO SPEND':'#22DD66','YOU HAD':'#22DD66',SAVED:'#38B6FF',LEFT:'#38B6FF',PLANNED:'#38B6FF',NEEDS:'#38B6FF',TARGET:'#FF4D5E',OWED:'#FF4D5E','TAKEN OUT':'#FF4D5E',SPENT:'#FF4D5E',WANTS:'#FF4D5E',SOURCES:'#FFFFFF',SUBSCRIPTIONS:'#C9A7FF'};
+var PP_RANK={SAVED:0,INCOME:0,PAID:0,EARNED:0,SPENT:0,BOUGHT:0,LEFT:1,PLANNED:2,TARGET:2,TOTAL:2,OWED:2,'TAKEN OUT':2,'TO SPEND':2,WANTS:2,SUBSCRIPTIONS:3};
 function ppHero(l,v,g,ring,mini){
   // v17.9: same colour order on every tab: green first, blue middle, red last
   // v20.2: a card can carry 2 boxes (the box that repeated the big number is gone); each box keeps its rank colour
@@ -4950,8 +4950,8 @@ function ppTabTop(tab){
     if(tab==='budget'){
       var ym=selBudgetMonth, cur=TODAY.slice(0,7), cats=budgetCats(), subs=subsTotalMonthly();
       var spent=cats.reduce(function(s,c){return s+catSpentMonth(c.id,ym);},0)+wnSpentMonth(ym)+((ym===cur)?subs:0), planned=monthlyPlan||0, pc=planned>0?Math.min(100,Math.round(spent/planned*100)):0;
-      return ppHero('Budget left \u00b7 '+monthLabel(ym),''+ppN(planned-spent),(subs>0?'Includes '+ppN(subs)+' subscriptions':''),[pc,'spent','#FFB627'],
-        [['SPENT',ppN(spent),'#22DD66'],['PLANNED',ppN(planned),'#FF4D5E']])+
+      return ppHero('Budget left \u00b7 '+monthLabel(ym),''+ppN(planned-spent),'',[pc,'spent','#FFB627'],
+        [['SPENT',ppN(spent),'#22DD66'],['PLANNED',ppN(planned),'#FF4D5E'],['SUBSCRIPTIONS',ppN((ym===cur)?subs:0),'#C9A7FF']])+ // v21.1
         ppQA([['up','Log spending',"ppSheet('spend')"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"');
     }
     if(tab==='wn'){
@@ -5358,6 +5358,11 @@ try{ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change'
 .v21-cnt span{font-size:9.5px!important;font-weight:700!important;margin-top:3px;letter-spacing:.5px;color:inherit!important}
 .v21-cnt.r{background:#2A0D0D;border-color:#5A1D1D;color:#FF6B61}
 .v21-cnt.a{background:#2E2210;border-color:#4A3613;color:#F5A623}
+.v21-cnt.g{background:#0F2A1A;border-color:#1F4D2E;color:#4ADE80}
+.v21-card.off{background:#0E0E10!important;border:1px dashed #2A2A2E!important;opacity:.55}
+.v21-card.off .v21-n{color:#8A8A90!important;font-weight:600!important;text-decoration:line-through}
+.v21-card.off .v21-cnt{background:#141416;border-color:#26262A;color:#6B6B72}
+.v21-subs .v21-lbl b.v21-tot{font-size:17px!important}
 .v21-logo{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:none;font-size:13.5px!important;font-weight:800!important;color:#fff!important;overflow:hidden;cursor:pointer;letter-spacing:.3px}
 .v21-logo img{width:100%;height:100%;object-fit:cover}
 .v21-btn{width:100%;height:44px;border-radius:14px!important;display:flex!important;align-items:center;justify-content:center;gap:7px;font:inherit;font-size:14px!important;font-weight:700!important;cursor:pointer;margin:2px 0 8px!important;box-shadow:none!important}
@@ -5494,7 +5499,8 @@ try{ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change'
     var act=(subs||[]).filter(function(x){ return !x.cancelled; }).length, mo=0; try{ mo=subsTotalMonthly(); }catch(e){}
     var hn=(typeof histData!=='undefined'&&histData)?histData.length:0;
     var tile=function(cls,k,name,sub,go){ return '<div class="v21-tile" onclick="'+go+'"><div class="v21-ib '+cls+'">'+ic(k)+'</div><span class="v21-n">'+name+'</span><span class="v21-s">'+sub+'</span></div>'; };
-    return '<div class="v21-prof"><div class="v21-av" onclick="v21PickPhoto()"><div>'+(ph?'<img src="'+ph+'" alt="">':ic('user'))+'</div><i>'+ic('cam')+'</i></div>'+
+    var inst=(typeof v21InstallShow==='function'&&v21InstallShow())?'<div id="v21Install" class="v21-wide" onclick="v21InstallGo()" style="background:#1E1330!important;border-color:#5B21B6!important"><div class="v21-ib pu">'+ic('dl')+'</div><div class="v21-x"><span class="v21-n">Install Finance Hub</span><span class="v21-s">Add it to your home screen</span></div><span class="v21-chev">'+ic('chev')+'</span></div>':'';
+    return inst+'<div class="v21-prof"><div class="v21-av" onclick="v21PickPhoto()"><div>'+(ph?'<img src="'+ph+'" alt="">':ic('user'))+'</div><i>'+ic('cam')+'</i></div>'+
       '<div class="v21-x"><span class="v21-pn">Philip</span><span class="v21-pv">Finance Hub '+ver()+'</span></div>'+
       (ph?'<button class="v21-rm" onclick="v21RemovePhoto()">Remove</button>':'')+'</div>'+
       '<div class="v21-tiles">'+
@@ -5517,17 +5523,17 @@ try{ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change'
     else if(dl===null) box='<div class="v21-cnt"><b>\u2013</b><span>NO DATE</span></div>';
     else if(dl<0) box='<div class="v21-cnt r"><b>'+(-dl)+'</b><span>LATE</span></div>';
     else if(dl===0) box='<div class="v21-cnt r"><b>0</b><span>TODAY</span></div>';
-    else box='<div class="v21-cnt'+(dl<=7?' a':'')+'"><b>'+dl+'</b><span>DAY'+(dl===1?'':'S')+'</span></div>';
+    else box='<div class="v21-cnt '+(dl<=6?'r':dl<=14?'a':'g')+'"><b>'+dl+'</b><span>DAY'+(dl===1?'':'S')+'</span></div>'; // v21.1: 15+ green, 7-14 amber, 0-6 red
     var sub=cedi(s.amount)+'/mo'+(s.cancelled?' \u00b7 cancelled':(s.deadline?' \u00b7 '+shortDate(s.deadline):' \u00b7 no date set'));
     var due=!s.cancelled&&dl!==null&&dl<=0;
-    return '<div class="v21-card">'+box+'<div class="v21-x"><span class="v21-n">'+esc(s.name)+'</span><span class="v21-s">'+sub+'</span></div>'+
+    return '<div class="v21-card'+(s.cancelled?' off':'')+'">'+box+'<div class="v21-x"><span class="v21-n">'+esc(s.name)+'</span><span class="v21-s">'+sub+'</span></div>'+
       (due?'<button class="v21-go" onclick="openSubDate(\''+jsq(s.id)+'\',\'renew\')">'+ic('refresh')+'Renew</button>':'')+
       '<button class="v21-more" onclick="v21SubMenu(\''+jsq(s.id)+'\')" aria-label="More">'+ic('dots')+'</button></div>';
   }
   function subsHTML(){
     var act=getOrderedActiveSubs().slice().sort(function(a,b){ return urgencyKey(a.deadline)-urgencyKey(b.deadline); });
     var can=(subs||[]).filter(function(s){ return s.cancelled; });
-    var h='<div class="v21-subs"><div class="v21-lbl">Active<b style="color:#C9A7FF!important">'+cedi(subsTotalMonthly())+'/mo</b></div>';
+    var h='<div class="v21-subs"><div class="v21-lbl">Active<b class="v21-tot" style="color:#C9A7FF!important">'+cedi(subsTotalMonthly())+'/mo</b></div>';
     h+=act.length?act.map(subRow).join(''):'<div class="v21-empty">No active subscriptions</div>';
     if(can.length) h+='<div class="v21-lbl">Cancelled<b style="color:#B4B4BA!important">'+can.length+'</b></div>'+can.map(subRow).join('');
     return h+'</div>';
@@ -5687,19 +5693,20 @@ try{ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change'
 <script>
 // v111: installable app. Registers the offline file. Does not touch any saved data.
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(function(){});});}
-// v113: Install App button. Shows only when Chrome allows installing, hides once installed.
+// v21.1: Install Finance Hub card at the top of Settings (replaces the old floating button).
+// Shows only when Chrome offers to install and the app is not installed. Once installed it is gone for good.
 (function(){
+  var DONE='pfhub_install_done_v1';
   var standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
-  var deferred=null;
+  function done(){ try{ localStorage.setItem(DONE,'1'); }catch(e){} window._fhInstall=null; try{ var c=document.getElementById('v21Install'); if(c) c.remove(); }catch(e){} }
+  if(standalone) done();
+  window.v21InstallShow=function(){ try{ if(localStorage.getItem(DONE)) return false; }catch(e){} return !standalone&&!!window._fhInstall; };
+  window.v21InstallGo=function(){ var d=window._fhInstall; if(!d) return; d.prompt(); d.userChoice.then(function(r){ if(r&&r.outcome==='accepted') done(); }).catch(function(){}); };
   window.addEventListener('beforeinstallprompt',function(e){
-    e.preventDefault();deferred=e;
-    if(standalone||document.getElementById('fhInstallBtn'))return;
-    var b=document.createElement('button');b.id='fhInstallBtn';b.type='button';b.textContent='\u2B07 Install Finance Hub';
-    b.style.cssText='position:fixed;right:14px;bottom:96px;z-index:9999;border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:11px 16px;background:#FFD700;color:#000;font:800 13px Outfit,system-ui,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.45)';
-    b.addEventListener('click',function(){if(!deferred)return;deferred.prompt();deferred.userChoice.then(function(){deferred=null;b.remove();});});
-    document.body.appendChild(b);
+    e.preventDefault(); window._fhInstall=e;
+    try{ if(document.getElementById('page-backup').classList.contains('active')) renderBackup(); }catch(x){}
   });
-  window.addEventListener('appinstalled',function(){deferred=null;var b=document.getElementById('fhInstallBtn');if(b)b.remove();});
+  window.addEventListener('appinstalled',done);
 })();
 </script>
 </body>
