@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v21.2</title>
+<title>Philip's Finance Hub v21.3</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v21.2</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v21.3</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -4712,9 +4712,9 @@ function ppTop(){
   var pr=periodRange(), all=getPeriodEntries(), arch=archiveForPeriod();
   // v17.7: money put into savings or paid on debt is MOVED, not spent
   // v18.5: buy plan savings are also moved (still yours, set aside), not spent
-  var isMove=function(e){ return e.cat==='debt'||e.cat==='sav'||e.cat==='buy'; };
-  var moved=all.filter(isMove).reduce(function(s,e){return s+e.amount;},0)+arch.debt+arch.sav;
-  var spent=all.filter(function(e){return !isMove(e);}).reduce(function(s,e){return s+e.amount;},0)+arch.wants+arch.needs+arch.budget;
+  var isMove=function(e){ return e.cat==='sav'||e.cat==='buy'; }; // v21.3: debt payments count as spending (Philip, 16 Nov 2026)
+  var moved=all.filter(isMove).reduce(function(s,e){return s+e.amount;},0)+arch.sav;
+  var spent=all.filter(function(e){return !isMove(e);}).reduce(function(s,e){return s+e.amount;},0)+arch.debt+arch.wants+arch.needs+arch.budget;
   var inc=0; try{ inc=incomeTotal(pr.from,pr.to)||0; }catch(e){}
   var bl=0; try{ var ym=TODAY.slice(0,7), cats=budgetCats(); var bs=cats.reduce(function(s,c){return s+catSpentMonth(c.id,ym);},0)+wnSpentMonth(ym)+(typeof subsTotalMonthly==='function'?subsTotalMonthly():0); bl=(monthlyPlan||0)-bs; }catch(e){}
   // v18.5: Available = income - saved to pots + taken out of pots - moved - spent
@@ -4731,7 +4731,7 @@ function ppTop(){
     '<div class="pp-hero"><div class="pp-row"><div><div class="pp-l">Left to spend · '+pr.label.toLowerCase()+'</div><div class="pp-v" style="color:'+(avail<0?'#FF4D5E':'#22DD66')+'!important">GH\u20b5 '+Math.round(avail).toLocaleString()+'</div>'+
     (inc>0?'':'<div class="pp-g" style="color:#30D158">Add your income to see what is left</div>')+'</div>'+
     '<div class="pp-ring" style="background:conic-gradient('+(typeof ppPctCol==='function'?ppPctCol(pct):'#22DD66')+' 0 '+pct+'%,rgba(255,255,255,.08) '+pct+'% 100%)"><div>'+pct+'%<small>left</small></div></div></div>'+
-    '<div class="pp-mini" style="grid-template-columns:1fr 1fr"><div style="'+ppTint('#38B6FF')+'"><span>PAID &amp; SAVED</span><b style="color:#38B6FF">'+ppNum(moved)+'</b></div><div style="'+ppTint('#FF4D5E')+'"><span>YOU HAD</span><b style="color:#22DD66">'+ppNum(toSpend)+'</b></div></div></div>'+
+    '<div class="pp-mini" style="grid-template-columns:1fr 1fr"><div style="'+ppTint('#38B6FF')+'"><span>SAVED</span><b style="color:#38B6FF">'+ppNum(moved)+'</b></div><div style="'+ppTint('#FF4D5E')+'"><span>YOU HAD</span><b style="color:#22DD66">'+ppNum(toSpend)+'</b></div></div></div>'+
     '<div class="pp-qa" style="grid-template-columns:1fr">'+q(ppI('up','#FF4D5E',30),'Add spending',"ppSheet('spend')")+'</div>'+
     '<div class="pp-card"><div class="pp-ch">Spending by category<span>'+pr.label+'</span></div><div class="pp-row" style="gap:16px">'+
     '<div class="pp-donut" style="background:conic-gradient('+grad+')"><div><small>SPENT</small><b>'+ppDn(spent)+'</b></div></div>'+
