@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v21.1</title>
+<title>Philip's Finance Hub v21.2</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v21.1</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v21.2</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -5696,12 +5696,11 @@ if('serviceWorker' in navigator){window.addEventListener('load',function(){navig
 // v21.1: Install Finance Hub card at the top of Settings (replaces the old floating button).
 // Shows only when Chrome offers to install and the app is not installed. Once installed it is gone for good.
 (function(){
-  var DONE='pfhub_install_done_v1';
+  var DONE='pfhub_install_done_v2'; // v21.2: new marker, only set when Chrome confirms the install
   var standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
   function done(){ try{ localStorage.setItem(DONE,'1'); }catch(e){} window._fhInstall=null; try{ var c=document.getElementById('v21Install'); if(c) c.remove(); }catch(e){} }
-  if(standalone) done();
-  window.v21InstallShow=function(){ try{ if(localStorage.getItem(DONE)) return false; }catch(e){} return !standalone&&!!window._fhInstall; };
-  window.v21InstallGo=function(){ var d=window._fhInstall; if(!d) return; d.prompt(); d.userChoice.then(function(r){ if(r&&r.outcome==='accepted') done(); }).catch(function(){}); };
+  window.v21InstallShow=function(){ try{ if(localStorage.getItem(DONE)) return false; }catch(e){} return !standalone; }; // v21.2: shows in Chrome even before Chrome offers the prompt
+  window.v21InstallGo=function(){ var d=window._fhInstall; if(!d){ alert('To install Finance Hub:\n\n1. Tap the Chrome menu (the 3 dots, top right).\n2. Tap "Add to home screen" or "Install app".\n3. Tap Install.\n\nIf it says "Open app", the old Finance Hub is still installed. Remove it from your home screen first, then try again.'); return; } d.prompt(); d.userChoice.then(function(r){ if(r&&r.outcome==='accepted') done(); }).catch(function(){}); };
   window.addEventListener('beforeinstallprompt',function(e){
     e.preventDefault(); window._fhInstall=e;
     try{ if(document.getElementById('page-backup').classList.contains('active')) renderBackup(); }catch(x){}
