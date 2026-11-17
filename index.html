@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v21.3</title>
+<title>Philip's Finance Hub v21.4</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v21.3</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v21.4</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -708,6 +708,10 @@ function archiveForPeriod(){
   return z;
 }
 const TODAY = new Date().toISOString().split("T")[0];
+// v21.4: TODAY is fixed when the app opens. If the app was left open into a new day, reload so payments get the right date.
+(function(){ function chk(){ try{ if(new Date().toISOString().split("T")[0]!==TODAY) location.reload(); }catch(e){} }
+  document.addEventListener("visibilitychange",function(){ if(document.visibilityState==="visible") chk(); });
+  window.addEventListener("pageshow",chk); window.addEventListener("focus",chk); })();
 const MASTER_KEY  = "pfhub_finance_hub_master";
 const ORDER_KEY   = "pfhub_debt_order";
 const GOALS_KEY   = "pfhub_debt_goals";
@@ -1023,7 +1027,7 @@ function confirmSubDate(){
   if(!v){ showToast("Pick a date","#FF453A"); return; }
   const mode=subDateMode;
   s.deadline=v; s.cancelled=false;
-  spendData.entries.push({id:uid("sp_"),date:TODAY,cat:"subs",amount:s.amount||0,desc:s.name}); saveSpend();
+  spendData.entries.push({id:uid("sp_"),date:TODAY,cat:"subs",amount:s.amount||0,desc:s.name,sub:s.id}); saveSpend();
   saveSubs(); bumpSubToTop(s.id);
   closeSubDate(); renderBudget();
   showToast((mode==="reactivate"?"✅ Reactivated · ":"🔁 Renewed · ")+"next "+v);
@@ -1086,9 +1090,10 @@ function saveDebtModal(){
   if(modalEditId){
     const g=debtGoals.find(x=>x.id===modalEditId);
     if(g){
-      const fresh=replanned(g, amount, deadline, _dg.planFreq, _dg.planAmt);
-      g.label=name; g.person=person; g.amount=amount; g.color=selectedColor; g.deadline=deadline; g.planDaily=planDaily; g.planAmt=_dg.planAmt; g.planFreq=_dg.planFreq;
-      if(fresh || !g.planStart) g.planStart=TODAY;
+      const fresh=replanned(g, amount, deadline, _dg.planFreq);
+      const _np=fresh || !g.planStart || !(g.planAmt>0);
+      g.label=name; g.person=person; g.amount=amount; g.color=selectedColor; g.deadline=deadline;
+      if(_np){ g.planDaily=planDaily; g.planAmt=_dg.planAmt; g.planFreq=_dg.planFreq; g.planStart=TODAY; } // v21.4: a name edit keeps the plan
       g.planVer=PLAN_VER;
       D().paid[modalEditId]=Math.min(paid,amount);
     }
@@ -1099,7 +1104,7 @@ function saveDebtModal(){
     debtGoals.unshift({ id:newId, label:name, person, amount, color:selectedColor, deadline, planDaily, planAmt:_dg.planAmt, planFreq:_dg.planFreq, planStart:TODAY, planBase:Math.min(paid,amount), planVer:PLAN_VER });
     goalOrder.unshift(newId);
     D().paid[newId]=Math.min(paid,amount);
-    if(paid>0) D().log.push({date:TODAY,goalId:newId,amount:Math.min(paid,amount),label:name});
+    if(paid>0) D().log.push({date:TODAY,goalId:newId,amount:Math.min(paid,amount),label:name,seed:true}); // v21.4: paid before the plan, not today's payment
     showToast(debtAgainFrom?"🔁 Added again. Old one kept in records":"✅ New debt added!");
   }
   saveGoals(); saveOrder(); saveAll();
@@ -1329,7 +1334,7 @@ function planLogTotal(o){
     for(const l of o.log){ if(!l.seed && (l.date||"")>=start) sum+=(l.amount||0); }
   } else {
     const master=(D().log)||[];
-    for(const l of master){ if(l.goalId===o.id && (l.date||"")>=start) sum+=(l.amount||0); }
+    for(const l of master){ if(l.goalId===o.id && !l.seed && (l.date||"")>=start) sum+=(l.amount||0); }
   }
   return sum;
 }
@@ -1439,7 +1444,7 @@ function dtSetRate(n){
 function dtPaidByDate(){
   const map={};
   const add=(d,a)=>{ if(!d||!(a>0)) return; map[d]=(map[d]||0)+a; };
-  for(const l of (D().log||[])) add(l.date, l.amount);
+  for(const l of (D().log||[])) if(!l.seed) add(l.date, l.amount);
   for(const p of (buyPlans||[])) for(const l of (p.log||[])) if(!l.seed) add(l.date, l.amount);
   for(const g of (savGoals||[])) for(const l of (g.log||[])) if(!l.seed) add(l.date, l.amount);
   return map;
@@ -1699,16 +1704,18 @@ function rollFocusOn(side, finishedPlan){
 // planStart = the day this plan was made, planBase = what was already paid that day
 function paceFor(o, paid, total){
   const u=paceUnits(o, paid, total);
-  if(u.units>0) return {text:`+${u.units} ${u.word}${u.units!==1?'s':''}`, color:'#30D158'};
   if(u.units<0){ const n=-u.units; return {text:`-${n} ${u.word}${n!==1?'s':''}`, color:'#FF453A'}; }
-  return {text:'On track', color:'#A0A0A0'};
+  if(u.units>0) return {text:`+${u.units} ${u.word}${u.units!==1?'s':''}`, color:'#30D158'};
+  // v21.4: today's payment is due until it is logged
+  const due=(typeof planDue==='function')?planDue(o,paid,total):0;
+  if(due>0.009) return {text:(o.planFreq==='week')?'Due this week':'Due today', color:'#FF9F0A'};
+  return {text:'On track', color:'#30D158'};
 }
 // a new target date, a new amount or a new day/week choice = a new plan, so the pace restarts today
 function replanned(o, amount, deadline, freq, newPlanAmt){
   return (o.deadline||"")!==(deadline||"")
       || (o.planFreq||"day")!==(freq||"day")
-      || (o.amount||o.target||0)!==amount
-      || (newPlanAmt!=null && (o.planAmt||0)!==newPlanAmt);
+      || (o.amount||o.target||0)!==amount;
 }
 // ---- bring older plans onto the current clean maths ----
 const PLAN_VER=70;
@@ -1786,8 +1793,8 @@ function mergeGo(side){
     if(p.items&&p.items.length) items=items.concat(p.items);
     else items.push({name:p.label, amount:p.amount||0});
     listIds=listIds.concat(planListIds(p));
-    if(side==='buy'){ for(const l of (p.log||[])) logs.push({date:l.date,amount:l.amount}); }
-    else { for(const l of (D().log||[])) if(l.goalId===p.id) logs.push({date:l.date,amount:l.amount}); }
+    if(side==='buy'){ for(const l of (p.log||[])) logs.push(l.seed?{date:l.date,amount:l.amount,seed:true}:{date:l.date,amount:l.amount}); }
+    else { for(const l of (D().log||[])) if(l.goalId===p.id) logs.push(l.seed?{date:l.date,amount:l.amount,seed:true}:{date:l.date,amount:l.amount}); }
   }
   const deadline=picks.map(p=>p.deadline).filter(Boolean).sort()[0]||"";
   const g=genPlan(Math.max(total-paid,0), deadline, picks[0].planFreq||'day');
@@ -1807,7 +1814,7 @@ function mergeGo(side){
     debtGoals.unshift(ng);
     goalOrder=[nid, ...goalOrder.filter(x=>!mergePicked[x])];
     D().log=(D().log||[]).filter(l=>!mergePicked[l.goalId]);
-    for(const l of logs) D().log.push({date:l.date, goalId:nid, amount:l.amount, label:name});
+    for(const l of logs) D().log.push(l.seed?{date:l.date, goalId:nid, amount:l.amount, label:name, seed:true}:{date:l.date, goalId:nid, amount:l.amount, label:name});
     for(const k of Object.keys(mergePicked)) if(mergePicked[k]) delete D().paid[k];
     D().paid[nid]=paid;
     saveGoals(); saveOrder(); saveAll();
@@ -2028,7 +2035,7 @@ function planDaysInfo(deadline, remaining, daily, anchor, amount){
   daily=daily>0?daily:1;
   let dl;
   if(deadline){ dl=deadlineDaysLeft(deadline); }
-  else { dl=Math.ceil(amount/daily)-Math.max(daysBetween(anchor,TODAY),0); }
+  else { dl=Math.ceil(remaining/daily); } // v21.4: from what is still left
   if(dl===null||dl===undefined){ const n=Math.ceil(remaining/daily); return {text:`${n} day${n!==1?'s':''} left`,color:n<=3?'#FF453A':n<=10?'#FF9F0A':'#30D158'}; }
   if(dl<0) return {text:`${Math.abs(dl)} day${Math.abs(dl)!==1?'s':''} overdue`, color:'#FF453A'};
   return {text:`${dl} day${dl!==1?'s':''} left`, color:dl<=3?'#FF453A':dl<=10?'#FF9F0A':'#30D158'};
@@ -2165,10 +2172,11 @@ function saveBuyModal(){
   if(buyEditId){
     const p=buyPlans.find(x=>x.id===buyEditId);
     if(p){
-      const fresh=replanned(p, amount, deadline, _bg.planFreq, _bg.planAmt);
-      p.label=name; p.note=note; p.amount=amount; p.color=buySelColor; p.planDaily=planDaily; p.planAmt=_bg.planAmt; p.planFreq=_bg.planFreq; p.deadline=deadline;
+      const fresh=replanned(p, amount, deadline, _bg.planFreq);
+      const _np=fresh || !p.planStart || !(p.planAmt>0);
+      p.label=name; p.note=note; p.amount=amount; p.color=buySelColor; p.deadline=deadline;
       p.saved=Math.min(saved,amount);
-      if(fresh || !p.planStart) p.planStart=TODAY;
+      if(_np){ p.planDaily=planDaily; p.planAmt=_bg.planAmt; p.planFreq=_bg.planFreq; p.planStart=TODAY; } // v21.4: a name edit keeps the plan
       p.planVer=PLAN_VER; p.reopened=false; syncBuyListItem(p);
     }
     showToast("✅ Buy plan updated!");
@@ -2614,17 +2622,17 @@ function getSavTotalForPeriod(range){
 // money that already left your hand stays in Transactions even if its plan is deleted
 function keepSpent(cat, desc, logs){
   let n=0;
-  for(const l of (logs||[])){ if(!(l.amount>0)) continue;
+  for(const l of (logs||[])){ if(!(l.amount>0)||l.seed) continue;
     spendData.entries.push({id:uid("kp_"),date:l.date||TODAY,desc:desc||"Payment",cat,amount:l.amount,auto:true,kept:true}); n++; }
   if(n) saveSpend();
 }
 function getAllEntries(){
   const manual=spendData.entries;
-  const debtE=D().log.map(e=>({id:'d'+e.date+e.goalId,date:e.date,desc:e.label||((debtGoals.find(g=>String(g.id)===String(e.goalId))||{}).label)||'Debt payment',cat:'debt',amount:e.amount,auto:true}));
-  const savE=savGoals.flatMap(g=>(g.log||[]).map(l=>({id:'s'+l.date+g.id,date:l.date,desc:g.name,cat:'sav',amount:l.amount,auto:true})));
+  const debtE=D().log.filter(e=>!e.seed).map(e=>({id:'d'+e.date+e.goalId,date:e.date,desc:e.label||((debtGoals.find(g=>String(g.id)===String(e.goalId))||{}).label)||'Debt payment',cat:'debt',amount:e.amount,auto:true}));
+  const savE=savGoals.flatMap(g=>(g.log||[]).filter(l=>!l.seed).map(l=>({id:'s'+l.date+g.id,date:l.date,desc:g.name,cat:'sav',amount:l.amount,auto:true})));
   const wantE=(wnData.wants||[]).filter(x=>x.bought&&x.price>0&&!x.buyPlanId).map(x=>({id:'w'+x.id,date:x.boughtDate||TODAY,desc:x.name,cat:'wants',amount:x.price,auto:true}));
   const needE=(wnData.needs||[]).filter(x=>x.bought&&x.price>0&&!x.buyPlanId).map(x=>({id:'n'+x.id,date:x.boughtDate||TODAY,desc:x.name,cat:'needs',amount:x.price,auto:true}));
-  const buyE=(buyPlans||[]).flatMap(p=>(p.log||[]).map(l=>({id:"b"+l.date+p.id,date:l.date,desc:p.label,cat:"buy",amount:l.amount,auto:true})));
+  const buyE=(buyPlans||[]).flatMap(p=>(p.log||[]).filter(l=>!l.seed).map(l=>({id:"b"+l.date+p.id,date:l.date,desc:p.label,cat:"buy",amount:l.amount,auto:true})));
   return [...debtE,...savE,...buyE,...wantE,...needE,...manual];
 }
 function getPeriodEntries(){
@@ -2897,9 +2905,10 @@ function saveSavModal(){
     if(g){
       g.saved=Math.min(sSaved,target);
       const _g=genPlan(target-g.saved,sdate,sfreq);
-      const fresh=replanned(g, target, sdate, _g.planFreq, _g.planAmt);
-      g.name=name;g.target=target;g.dailyTarget=_g.planDaily;g.planAmt=_g.planAmt;g.planFreq=_g.planFreq;g.deadline=sdate;g.color=savSelectedColor;
-      if(fresh || !g.planStart) g.planStart=TODAY;
+      const fresh=replanned(g, target, sdate, _g.planFreq);
+      const _np=fresh || !g.planStart || !(g.planAmt>0);
+      g.name=name;g.target=target;g.deadline=sdate;g.color=savSelectedColor;
+      if(_np){ g.dailyTarget=_g.planDaily;g.planAmt=_g.planAmt;g.planFreq=_g.planFreq;g.planStart=TODAY; } // v21.4: a name edit keeps the plan
       g.planVer=PLAN_VER;
     }
     showToast("✅ Goal updated!");
@@ -3226,6 +3235,13 @@ function catSpentMonth(catId,ym){ return entriesForCatMonth(catId,ym).reduce((s,
 function wnSpentMonth(ym){ try{ return getAllEntries().filter(e=>(e.cat==='wants'||e.cat==='needs')&&(e.date||'').slice(0,7)===ym).reduce((s,e)=>s+(e.amount||0),0); }catch(e){ return 0; } }
 function subPaidThisMonth(subId,ym){ return spendData.entries.some(e=>e.cat==="subs"&&e.sub===subId&&(e.date||"").slice(0,7)===ym); }
 function subsTotalMonthly(){ return subs.filter(x=>!x.cancelled).reduce((s,x)=>s+(x.amount||0),0); }
+// v21.4: subscriptions for a month = renewals paid that month; this month also counts active ones not paid yet
+function subsSpentMonth(ym){
+  const paid=(spendData.entries||[]).filter(e=>e.cat==="subs"&&(e.date||"").slice(0,7)===ym);
+  let t=paid.reduce((s,e)=>s+(e.amount||0),0);
+  if(ym===TODAY.slice(0,7)) subs.filter(x=>!x.cancelled).forEach(x=>{ if(!paid.some(e=>e.sub?String(e.sub)===String(x.id):e.desc===x.name)) t+=(x.amount||0); });
+  return t;
+}
 
 function setCatBudget(catId){
   const cat=getCat(catId); const cur=budgets[catId]||0;
@@ -3272,8 +3288,8 @@ function renderBudget(){
   const ym=selBudgetMonth;
   const cats=budgetCats();
   const catsSpent=cats.reduce((s,c)=>s+catSpentMonth(c.id,ym),0);
-  const subsM=subsTotalMonthly();
-  const spent=catsSpent+wnSpentMonth(ym)+((ym===TODAY.slice(0,7))?subsM:0);
+  const subsM=subsSpentMonth(ym);
+  const spent=catsSpent+wnSpentMonth(ym)+subsM;
   const planned=monthlyPlan;
   const left=planned-spent;
   const cur=TODAY.slice(0,7);
@@ -3287,8 +3303,8 @@ function renderBudget(){
 
     <div class="card" style="border-color:#E5E5E522">
       <div class="row" style="margin-bottom:6px"><span class="label-sm">Planned</span><span style="color:#30D158;font-weight:800;font-size:13px">GH₵ ${planned.toLocaleString()}</span></div>
-      <div class="row" style="margin-bottom:${(subsM>0&&ym===TODAY.slice(0,7))?2:8}px"><span class="label-sm">Spent</span><span style="color:#FF453A;font-weight:800;font-size:13px">GH₵ ${spent.toLocaleString()}</span></div>
-      ${(subsM>0&&ym===TODAY.slice(0,7))?`<div style="font-size:10px;color:#E5E5E5;text-align:right;margin-bottom:8px">includes GH₵ ${subsM.toLocaleString()} subscriptions</div>`:''}
+      <div class="row" style="margin-bottom:${(subsM>0)?2:8}px"><span class="label-sm">Spent</span><span style="color:#FF453A;font-weight:800;font-size:13px">GH₵ ${spent.toLocaleString()}</span></div>
+      ${(subsM>0)?`<div style="font-size:10px;color:#E5E5E5;text-align:right;margin-bottom:8px">includes GH₵ ${subsM.toLocaleString()} subscriptions</div>`:''}
       <div class="bar-wrap"><div class="bar-fill" style="width:${planned>0?Math.min((spent/planned)*100,100):0}%;background:${spent>planned&&planned>0?'#FF453A':'linear-gradient(90deg,#E5E5E5,#30D158)'}"></div></div>
       <div class="row" style="margin-top:8px"><span class="val-muted">${planned>0?(spent>planned?'Over plan':'On plan'):'No plan set'}</span><span style="color:${left<0?'#FF453A':'#30D158'};font-weight:700;font-size:13px">GH₵ ${left.toLocaleString()} left</span></div>
       <button onclick="setMonthlyPlan()" style="width:100%;margin-top:12px;padding:10px;border-radius:10px;background:#1E1E1E;border:1px solid #E5E5E544;color:#E5E5E5;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif">${planned>0?'✏️ Edit Monthly Plan':'➕ Set Monthly Plan'}</button>
@@ -4604,14 +4620,14 @@ function sxSavingsTop(){
 function sxBudgetTop(){
   var pg=document.getElementById("page-budget"); if(!pg) return;
   var ym=selBudgetMonth, cur=TODAY.slice(0,7), cats=budgetCats();
-  var subsM=subsTotalMonthly(), spent=cats.reduce(function(s,c){return s+catSpentMonth(c.id,ym);},0)+wnSpentMonth(ym)+((ym===cur)?subsM:0), planned=monthlyPlan, left=planned-spent;
+  var subsM=subsSpentMonth(ym), spent=cats.reduce(function(s,c){return s+catSpentMonth(c.id,ym);},0)+wnSpentMonth(ym)+subsM, planned=monthlyPlan, left=planned-spent;
   var wn=pg.querySelector(".week-nav");
   if(wn){ var a=document.createElement("div"); a.className="sx";
     a.innerHTML='<div class="sx-card sx-up" style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:var(--acc,#3F1747);border:none"><button onclick="selBudgetMonth=shiftMonth(selBudgetMonth,-1);renderBudget()" style="border:none;background:none;font:500 15px Lexend;color:#fff;cursor:pointer">‹ Prev</button><b style="font-weight:500;font-size:16px">'+monthLabel(ym)+'</b><button onclick="selBudgetMonth=shiftMonth(selBudgetMonth,1);renderBudget()" style="border:none;background:none;font:400 15px Lexend;color:'+(ym<cur?'#fff':'#9A879E')+';cursor:pointer">Next ›</button></div>';
     var card=wn.nextElementSibling; wn.replaceWith(a);
     if(card&&card.classList.contains("card")){ var pc=planned>0?Math.min(100,spent/planned*100):0, b=document.createElement("div"); b.className="sx";
       b.innerHTML='<div class="sx-card sx-up"><div style="display:flex;justify-content:space-between"><span class="sx-k" style="font-size:15px">Planned</span><b style="font-weight:500;font-size:17px;color:var(--green)">'+sxF(planned)+'</b></div><div style="display:flex;justify-content:space-between;margin-top:6px"><span class="sx-k" style="font-size:15px">Spent</span><b style="font-weight:500;font-size:17px;color:var(--red)">'+sxF(spent)+'</b></div>'+
-        (subsM>0&&ym===cur?'<div class="sx-small" style="justify-content:flex-end;margin-top:2px">includes '+sxF(subsM)+' subscriptions</div>':'')+
+        (subsM>0?'<div class="sx-small" style="justify-content:flex-end;margin-top:2px">includes '+sxF(subsM)+' subscriptions</div>':'')+
         '<div class="sx-prog"><i data-w="'+pc+'%" style="background:'+(spent>planned&&planned>0?'var(--red)':'var(--orange)')+'"></i></div><div class="sx-small"><span>'+(planned>0?Math.round(pc)+'% used':'No plan set')+'</span><span style="color:'+(left<0?'var(--red)':'var(--green)')+'">'+sxF(left)+' left</span></div>'+
         '<button class="sx-btn2" style="margin:12px 0 0" onclick="setMonthlyPlan()">'+sxI("edit",17)+' '+(planned>0?'Edit monthly plan':'Set monthly plan')+'</button></div>';
       card.replaceWith(b); }
@@ -4716,7 +4732,7 @@ function ppTop(){
   var moved=all.filter(isMove).reduce(function(s,e){return s+e.amount;},0)+arch.sav;
   var spent=all.filter(function(e){return !isMove(e);}).reduce(function(s,e){return s+e.amount;},0)+arch.debt+arch.wants+arch.needs+arch.budget;
   var inc=0; try{ inc=incomeTotal(pr.from,pr.to)||0; }catch(e){}
-  var bl=0; try{ var ym=TODAY.slice(0,7), cats=budgetCats(); var bs=cats.reduce(function(s,c){return s+catSpentMonth(c.id,ym);},0)+wnSpentMonth(ym)+(typeof subsTotalMonthly==='function'?subsTotalMonthly():0); bl=(monthlyPlan||0)-bs; }catch(e){}
+  var bl=0; try{ var ym=TODAY.slice(0,7), cats=budgetCats(); var bs=cats.reduce(function(s,c){return s+catSpentMonth(c.id,ym);},0)+wnSpentMonth(ym)+(typeof subsSpentMonth==='function'?subsSpentMonth(ym):0); bl=(monthlyPlan||0)-bs; }catch(e){}
   // v18.5: Available = income - saved to pots + taken out of pots - moved - spent
   var potIn=0, potOut=0; try{ incomeData.entries.filter(function(e){return inRange(e.date,pr.from,pr.to);}).forEach(function(e){ potIn+=(e.build||0); }); (incSav.moves||[]).filter(function(m){return m.kind==='out'&&inRange(m.d,pr.from,pr.to);}).forEach(function(m){ potOut+=(m.a||0); }); }catch(e){}
   // v19.4: Out shows your spending money only: TO SPEND (spend share of income + money taken out of pots) - MOVED - SPENT = Available
@@ -4822,7 +4838,7 @@ function ppDailyCard(){
   var gl=dtGoalsLeft(), gst=dtGoalsStart();
   if(!(savGoals||[]).length||!gst){ return '<div class="sx-card pp-dtc" onclick="ppDtEdit()" style="cursor:pointer;margin-bottom:12px"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><span style="font-size:20px;font-weight:700;color:#fff;white-space:nowrap">Daily target</span><span style="font-size:15px;color:#CFC9D5;white-space:nowrap">'+sxF(dtRateToday())+'/day \u270e</span></div><div style="font-size:12.5px;color:#A9A3AE;margin-top:2px">Savings goals only</div><div style="font-size:14px;color:#CFC9D5;margin-top:12px">Add a goal to start tracking it here.</div></div>'; }
   var d=dtStats(dtPaidGoals(),gst), clear=(d.rate>0&&gl>0)?Math.ceil(gl/d.rate):0, pc=d.rate>0?Math.min(100,Math.round(d.todayGot/d.rate*100)):0, sd={streak:d.streak||0,totalCredits:Math.floor((d.units||0)+1e-9)};
-  var bal=d.behind>0?'<b style="color:#FF4D5E">'+d.behind+' day'+(d.behind!==1?'s':'')+' behind</b>':d.ahead>0?'<b style="color:#22DD66">'+d.ahead+' day'+(d.ahead!==1?'s':'')+' ahead</b>':'<b style="color:#fff">On track</b>';
+  var bal=d.behind>0?'<b style="color:#FF4D5E">'+d.behind+' day'+(d.behind!==1?'s':'')+' behind</b>':d.ahead>0?'<b style="color:#22DD66">'+d.ahead+' day'+(d.ahead!==1?'s':'')+' ahead</b>':(d.todayGot<d.rate)?'<b style="color:#FF9F0A">Due today</b>':'<b style="color:#22DD66">On track</b>'; // v21.4
   return '<div class="sx-card pp-dtc" onclick="ppDtEdit()" style="cursor:pointer;margin-bottom:12px">'+
     '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><span style="font-size:20px;font-weight:700;color:#fff;white-space:nowrap">Daily target</span><span style="font-size:15px;color:#CFC9D5;white-space:nowrap">'+sxF(d.rate)+'/day \u270e</span></div>'+
     '<div style="font-size:12.5px;color:#A9A3AE;margin-top:2px;white-space:nowrap">Savings goals only</div>'+
@@ -4926,20 +4942,23 @@ function ppScrollTo(re){ var e=[].slice.call(document.querySelectorAll('.page.ac
 function ppTabTop(tab){
   try{
     if(tab==='debt'){
-      var d=dtStats(), t=sideTracker(planSide), pr=ppProg(document.getElementById('page-debt')), tot=pr.paid+pr.left, pc=tot>0?Math.round(pr.paid/tot*100):0;
+      // v21.4: worked out from the data (not read off the screen); a paused debt is still owed
+      var d=dtStats(), t=sideTracker(planSide), _pl=(planSide==='buy')?pActive('buy'):pList('debt').filter(function(p){ return pPaid('debt',p)<p.amount; });
+      var pr={n:_pl.length,paid:0,left:0}; _pl.forEach(function(p){ var pd=pPaid(planSide,p); pr.paid+=pd; pr.left+=Math.max((p.amount||0)-pd,0); });
+      var tot=pr.paid+pr.left, pc=tot>0?Math.round(pr.paid/tot*100):0;
       var bal=t.daysBehind>0?t.daysBehind+' days behind':t.daysAhead>0?t.daysAhead+' days ahead':'on track';
       var tag='';
       if(planSide==='buy') return ppHero('Buy plans',''+ppN(tot),pr.n+' thing'+(pr.n!==1?'s':'')+' to buy',[pc,'saved','#FFB627'],
         [['SAVED',ppN(pr.paid),'#22DD66'],['LEFT',ppN(pr.left),'#38B6FF']])+
         ppQA([['plus','Add buy plan',"ppClickText(/Add (new )?buy plan/i)"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"');
       return ppHero('You owe',''+ppN(pr.left),pr.n+' debt'+(pr.n!==1?'s':''),[pc,'paid','#FF4D5E'],
-        [['PAID',ppN(pr.paid),'#22DD66'],['OWED',ppN(tot),'#FF4D5E']]).replace('color:#22DD66!important','color:'+(pr.left>0?'#FF4D5E':'#22DD66')+'!important')+ // v21.0: a debt shows red
+        [['PAID',ppN(pr.paid),'#22DD66'],['TOTAL',ppN(tot),'#FF4D5E']]).replace('color:#22DD66!important','color:'+(pr.left>0?'#FF4D5E':'#22DD66')+'!important')+ // v21.0: a debt shows red
         ppQA([['plus','Add debt',"ppClickText(/Add (new )?debt/i)"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"');
     }
     if(tab==='savings'){
-      if(savSide!=='income'){ var gs=(typeof savGoals!=='undefined'&&savGoals)||[], tg=0, sd=0; gs.forEach(function(g){ tg+=+(g.target||g.amount||0); sd+=+(g.saved||0); });
-        return ppHero('Saved in goals',''+ppN(sd),gs.length+' goal'+(gs.length!==1?'s':''),[tg>0?Math.round(sd/tg*100):0,'done','#38B6FF'],
-          [['LEFT',ppN(tg-sd),'#38B6FF'],['TARGET',ppN(tg),'#FF4D5E']])+
+      if(savSide!=='income'){ var gs=((typeof savGoals!=='undefined'&&savGoals)||[]).filter(function(g){ return !g.cleared; }), tg=0, sd=0, lf=0; gs.forEach(function(g){ var a=+(g.target||g.amount||0), b=+(g.saved||0); tg+=a; sd+=b; if(!g.completed) lf+=Math.max(a-b,0); }); // v21.4: settled goals left out
+        return ppHero('Saved in goals',''+ppN(sd),gs.length+' goal'+(gs.length!==1?'s':''),[tg>0?Math.min(100,Math.round(sd/tg*100)):0,'done','#38B6FF'],
+          [['LEFT',ppN(lf),'#38B6FF'],['TARGET',ppN(tg),'#FF4D5E']])+
           ppQA([['plus','New goal','openSavModal()']]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"'); }
       var from=rangeFrom(isavPeriod), per=potRows(from,''), T=per.reduce(function(a,r){return {earned:a.earned+r.earned,saved:a.saved+r.saved+r.carry,out:a.out+r.out};},{earned:0,saved:0,out:0});
       var inPots=potRows('','').reduce(function(a,r){return a+r.net;},0), pc=T.earned>0?Math.min(100,Math.round(T.saved/T.earned*100)):0;
@@ -4948,10 +4967,10 @@ function ppTabTop(tab){
         ppQA([['up','Take out',"ppTakeOutPick()"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"');
     }
     if(tab==='budget'){
-      var ym=selBudgetMonth, cur=TODAY.slice(0,7), cats=budgetCats(), subs=subsTotalMonthly();
-      var spent=cats.reduce(function(s,c){return s+catSpentMonth(c.id,ym);},0)+wnSpentMonth(ym)+((ym===cur)?subs:0), planned=monthlyPlan||0, pc=planned>0?Math.min(100,Math.round(spent/planned*100)):0;
+      var ym=selBudgetMonth, cur=TODAY.slice(0,7), cats=budgetCats(), subs=subsSpentMonth(ym);
+      var spent=cats.reduce(function(s,c){return s+catSpentMonth(c.id,ym);},0)+wnSpentMonth(ym)+subs, planned=monthlyPlan||0, pc=planned>0?Math.min(100,Math.round(spent/planned*100)):0;
       return ppHero('Budget left \u00b7 '+monthLabel(ym),''+ppN(planned-spent),'',[pc,'spent','#FFB627'],
-        [['SPENT',ppN(spent),'#22DD66'],['PLANNED',ppN(planned),'#FF4D5E'],['SUBSCRIPTIONS',ppN((ym===cur)?subs:0),'#C9A7FF']])+ // v21.1
+        [['SPENT',ppN(spent),'#22DD66'],['PLANNED',ppN(planned),'#FF4D5E'],['SUBSCRIPTIONS',ppN(subs),'#C9A7FF']])+ // v21.1
         ppQA([['up','Log spending',"ppSheet('spend')"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"');
     }
     if(tab==='wn'){
@@ -4964,7 +4983,7 @@ function ppTabTop(tab){
       var pr=periodRange(), list=incomeData.entries.filter(function(e){return inRange(e.date,pr.from,pr.to);});
       var inT=incomeTotal(pr.from,pr.to), sv=list.reduce(function(a,e){return a+(e.build||0);},0), lv=list.reduce(function(a,e){return a+(e.live||0);},0);
       return ppHero('Money in \u00b7 '+pr.label.toLowerCase(),''+ppN(inT),list.length+' payment'+(list.length!==1?'s':''),[inT>0?Math.round(sv/inT*100):0,'saved','#22DD66'],
-        [['SAVED',ppN(sv),'#22DD66'],['TO SPEND',ppN(lv),'#FFB627'],['SOURCES',sources.length,'#C77DFF']])+
+        [['SAVED',ppN(sv),'#22DD66'],['TO SPEND',ppN(lv),'#FFB627'],['SOURCES',list.reduce(function(a,e){ if(a.indexOf(String(e.src||'src_oth'))<0) a.push(String(e.src||'src_oth')); return a; },[]).length,'#C77DFF']])+
         ppQA([['wallet','Add income',"ppSheet('income')"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"')+ppIncChart(list,inT,pr.label);
     }
   }catch(e){ console.log(e); }
@@ -5070,7 +5089,7 @@ function dueFor(side){ let n=0, k=0;
   else pActive(side).forEach(function(p){ k++; n+=planDue(p,pPaid(side,p),p.amount); });
   return {due:Math.round(n),count:k}; }
 function budgetDay(){ var ym=TODAY.slice(0,7), planned=monthlyPlan||0; if(!(planned>0)) return null;
-  var spent=budgetCats().reduce(function(s,c){return s+catSpentMonth(c.id,ym);},0)+wnSpentMonth(ym)+subsTotalMonthly(), left=planned-spent;
+  var spent=budgetCats().reduce(function(s,c){return s+catSpentMonth(c.id,ym);},0)+wnSpentMonth(ym)+subsSpentMonth(ym), left=planned-spent;
   var y=+TODAY.slice(0,4), m=+TODAY.slice(5,7), dim=new Date(y,m,0).getDate(), dl=dim-(+TODAY.slice(8,10))+1;
   return {left:left, perDay:Math.floor(left/Math.max(dl,1))}; }
 function ppDue(side,amt){ if(amt>0) openLogPicker(side,amt); }
