@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v21.7</title>
+<title>Philip's Finance Hub v21.8</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v21.7</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v21.8</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -3264,6 +3264,22 @@ function subsCommittedMonth(ym){
   subs.filter(x=>!x.cancelled).forEach(x=>{ if(!paid.some(e=>e.sub?String(e.sub)===String(x.id):e.desc===x.name)) t+=(x.amount||0); });
   return t;
 }
+// v21.8: Withdraw. Record taking your "to spend" money out. Kept on the income side only (not spending, not budget).
+const WD_KEY="pfhub_withdraw_v1";
+let wdData=(function(){ try{ const r=JSON.parse(localStorage.getItem(WD_KEY)||"null"); if(r&&Array.isArray(r.entries)) return r; }catch(e){} return {entries:[]}; })();
+function saveWd(){ try{ localStorage.setItem(WD_KEY,JSON.stringify(wdData)); }catch(e){} }
+function wdTotal(from,to){ return wdData.entries.filter(e=>(!from||(e.date||"")>=from)&&(!to||(e.date||"")<=to)).reduce((s,e)=>s+(e.amount||0),0); }
+function wdAvail(){ return Math.round((incomeData.entries.reduce((s,e)=>s+(e.live||0),0)-wdTotal('',''))*100)/100; }
+function wdSheet(){ var old=document.getElementById('ppSheet'); if(old) old.remove();
+  var av=wdAvail(), rec=wdData.entries.slice(0,5);
+  var list=rec.length?rec.map(function(e){ return '<div class="pp-hrow"><div style="flex:1;min-width:0"><b>GH\u20b5 '+(e.amount||0).toLocaleString()+'</b><div style="font-size:12px;color:#8a8a90">'+e.date+'</div></div><button onclick="wdDel(\''+e.id+'\')" style="border:none;background:#3A1E2A;color:#FF4D5E;border-radius:10px;padding:8px 12px;font:inherit;font-weight:700">Delete</button></div>'; }).join(''):'<div style="font-size:13px;color:#8a8a90;margin:6px 0 10px">No withdrawals yet</div>';
+  document.body.insertAdjacentHTML('beforeend','<div id="ppSheet" onclick="if(event.target.id===\'ppSheet\')this.remove()"><div class="pp-sh" style="max-height:82vh;overflow:auto"><div class="pp-sh-t">Withdraw</div><div style="font-size:14px;color:#CFC9D5;margin-bottom:12px">Not withdrawn yet: <b style="color:#22DD66">GH\u20b5 '+Math.max(0,av).toLocaleString()+'</b></div><input id="wdAmt" type="number" inputmode="decimal" placeholder="Amount"><button class="pp-sh-go" onclick="wdSave()">Withdraw</button>'+list+'<button class="pp-sh-x" onclick="document.getElementById(\'ppSheet\').remove()">Close</button></div></div>'); }
+function wdSave(){ var v=parseFloat((document.getElementById('wdAmt')||{}).value||''); if(!(v>0)){ showToast('Enter an amount','#FF453A'); return; }
+  var av=wdAvail(); if(v>av+0.001){ showToast('Only GH\u20b5 '+Math.max(0,av).toLocaleString()+' not withdrawn','#FF453A'); return; }
+  wdData.entries.unshift({id:uid('wd_'),date:TODAY,amount:Math.round(v*100)/100}); saveWd();
+  try{ rec("income",`Withdrew ${fmtC(v)}`,null,null); }catch(e){}
+  var o=document.getElementById('ppSheet'); if(o) o.remove(); showToast('Withdrew GH\u20b5 '+v.toLocaleString()); goMoney('income'); }
+function wdDel(id){ wdData.entries=wdData.entries.filter(function(e){ return String(e.id)!==String(id); }); saveWd(); wdSheet(); goMoney('income'); setTimeout(wdSheet,50); }
 function budgetWeek(){
   const t=ymdParse(TODAY), mon=new Date(t); mon.setDate(t.getDate()-((t.getDay()+6)%7));
   const days=[]; for(let i=0;i<7;i++){ const d=new Date(mon); d.setDate(mon.getDate()+i); days.push(ymdStr(d)); }
@@ -3459,6 +3475,7 @@ function renderBudget(){
 function exportData(){
   const backupData={...state, debtGoals, goalOrder, savGoals, savOrder, wnData, spendData, spendCats, budgets, subs, monthlyPlan, archive:archiveData, dailyDebt:DAILY_DEBT, dailySav:DAILY_SAV, subOrder, buyPlans, incomeData, sources, splitPct, sentData, dest, catIn, dailyTarget, incSav, history:histData};
   try{ backupData.srcLogos=srcLogosGet(); }catch(e){}
+  backupData.withdraws=wdData; // v21.8
   try{ var _ph=localStorage.getItem('pfhub_profile_photo_v1'); if(_ph) backupData.profilePhoto=_ph; }catch(e){} // v21.0
   const blob=new Blob([JSON.stringify(backupData,null,2)],{type:"application/json"});
   const url=URL.createObjectURL(blob);
@@ -3481,6 +3498,7 @@ function importData(event){
       if(parsed.savOrder){savOrder=parsed.savOrder;saveSavOrder();}
       if(parsed.wnData){wnData=parsed.wnData;saveWN();}
       if(parsed.srcLogos){srcLogosSet(parsed.srcLogos);}
+      if(parsed.withdraws&&Array.isArray(parsed.withdraws.entries)){ wdData=parsed.withdraws; saveWd(); } // v21.8
       if(parsed.profilePhoto){ try{ localStorage.setItem('pfhub_profile_photo_v1',parsed.profilePhoto); }catch(e){} } // v21.0
       if(parsed.spendData){spendData=parsed.spendData;saveSpend();}
       if(parsed.spendCats){
@@ -4977,16 +4995,16 @@ function ppClearSel(){
 }
 // v19.5: every top card reads done -> left -> total
 // v20.8: green = money you have or paid, blue = saved or left, red = target, owed, spent, taken out
-var PP_BOXCOL={PAID:'#22DD66',EARNED:'#22DD66',BOUGHT:'#22DD66','TO SPEND':'#22DD66','YOU HAD':'#22DD66',SAVED:'#38B6FF',LEFT:'#38B6FF',PLANNED:'#38B6FF',NEEDS:'#38B6FF',TARGET:'#FF4D5E',OWED:'#FF4D5E','TAKEN OUT':'#FF4D5E',SPENT:'#FF4D5E',WANTS:'#FF4D5E',SOURCES:'#FFFFFF',SUBSCRIPTIONS:'#C9A7FF'};
-var PP_RANK={SAVED:0,INCOME:0,PAID:0,EARNED:0,SPENT:0,BOUGHT:0,LEFT:1,PLANNED:2,TARGET:2,TOTAL:2,OWED:2,'TAKEN OUT':2,'TO SPEND':2,WANTS:2,SUBSCRIPTIONS:3};
+var PP_BOXCOL={POTS:'#C77DFF',PAID:'#22DD66',EARNED:'#22DD66',BOUGHT:'#22DD66','TO SPEND':'#22DD66','YOU HAD':'#22DD66',SAVED:'#38B6FF',LEFT:'#38B6FF',PLANNED:'#38B6FF',NEEDS:'#38B6FF',TARGET:'#FF4D5E',OWED:'#FF4D5E','TAKEN OUT':'#FF4D5E',SPENT:'#FF4D5E',WANTS:'#FF4D5E',SOURCES:'#FFFFFF',SUBSCRIPTIONS:'#C9A7FF'};
+var PP_RANK={POTS:1,SAVED:0,INCOME:0,PAID:0,EARNED:0,SPENT:0,BOUGHT:0,LEFT:1,PLANNED:2,TARGET:2,TOTAL:2,OWED:2,'TAKEN OUT':2,'TO SPEND':2,WANTS:2,SUBSCRIPTIONS:3};
 function ppHero(l,v,g,ring,mini){
   // v17.9: same colour order on every tab: green first, blue middle, red last
   // v20.2: a card can carry 2 boxes (the box that repeated the big number is gone); each box keeps its rank colour
   if(mini&&mini.length){ var ppPal=['#22DD66','#38B6FF','#FF4D5E'];
-    mini=mini.map(function(m,i){ return [m,i]; }).sort(function(a,b){ var ra=PP_RANK[a[0][0]]===undefined?1:PP_RANK[a[0][0]], rb=PP_RANK[b[0][0]]===undefined?1:PP_RANK[b[0][0]]; return ra-rb||a[1]-b[1]; }).map(function(x,i){ var rk=PP_RANK[x[0][0]]===undefined?1:PP_RANK[x[0][0]]; return [x[0][0],x[0][1],PP_BOXCOL[x[0][0]]||'#FFFFFF']; }); } // v20.8: one fixed colour per label on every tab
+    mini=mini.map(function(m,i){ return [m,i]; }).sort(function(a,b){ var ra=PP_RANK[a[0][0]]===undefined?1:PP_RANK[a[0][0]], rb=PP_RANK[b[0][0]]===undefined?1:PP_RANK[b[0][0]]; return ra-rb||a[1]-b[1]; }).map(function(x,i){ var rk=PP_RANK[x[0][0]]===undefined?1:PP_RANK[x[0][0]]; return [x[0][0],x[0][1],PP_BOXCOL[x[0][0]]||'#FFFFFF',x[0][3]]; }); } // v20.8: one fixed colour per label on every tab
   return '<div class="pp-hero"><div class="pp-row"><div style="min-width:0"><div class="pp-l">'+l+'</div><div class="pp-v" style="color:'+(/-\d/.test(String(v))?'#FF4D5E':'#22DD66')+'!important">'+v+'</div>'+(g?'<div class="pp-g">'+g+'</div>':'')+'</div>'+
     (ring?'<div class="pp-ring" style="background:conic-gradient('+ppPctCol(ring[0],/spent/i.test(ring[1]))+' 0 '+ring[0]+'%,rgba(255,255,255,.12) '+ring[0]+'% 100%)"><div>'+ring[0]+'%<small>'+ring[1]+'</small></div></div>':'')+'</div>'+
-    '<div class="pp-mini" style="grid-template-columns:repeat('+mini.length+',1fr)">'+mini.map(function(m){ return '<div style="'+ppTint(m[2])+'"><span>'+m[0]+'</span><b style="color:'+m[2]+'">'+m[1]+'</b></div>'; }).join('')+'</div></div>';
+    '<div class="pp-mini" style="grid-template-columns:repeat('+mini.length+',1fr)">'+mini.map(function(m){ return '<div'+(m[3]?' class="pp-tap" onclick="'+m[3]+'"':'')+' style="'+ppTint(m[2])+'"><span>'+m[0]+'</span><b style="color:'+m[2]+'">'+m[1]+'</b></div>'; }).join('')+'</div></div>';
 }
 var PP_QC=[['#D6ECFA','#0E7FA8'],['#FFE0B8','#C2410C'],['#C9F2DF','#0F9D58']];
 function ppQA(a){ return '<div class="pp-qa">'+a.map(function(x,i){ var q=PP_QC[i%3]; return '<button class="pp-q" style="background:'+q[0]+'" onclick="'+x[2]+'"><span>'+(PP_SVG[x[0]]?ppI(x[0],q[1],24):x[0])+'</span>'+x[1]+'</button>'; }).join('')+'</div>'; }
@@ -5038,7 +5056,7 @@ function ppTabTop(tab){
       var pr=periodRange(), list=incomeData.entries.filter(function(e){return inRange(e.date,pr.from,pr.to);});
       var inT=incomeTotal(pr.from,pr.to), sv=list.reduce(function(a,e){return a+(e.build||0);},0), lv=list.reduce(function(a,e){return a+(e.live||0);},0);
       return ppHero('Money in \u00b7 '+pr.label.toLowerCase(),''+ppN(inT),list.length+' payment'+(list.length!==1?'s':''),[inT>0?Math.round(sv/inT*100):0,'saved','#22DD66'],
-        [['SAVED',ppN(sv),'#22DD66'],['TO SPEND',ppN(lv),'#FFB627'],['SOURCES',list.reduce(function(a,e){ if(a.indexOf(String(e.src||'src_oth'))<0) a.push(String(e.src||'src_oth')); return a; },[]).length,'#C77DFF']])+
+        [['SAVED',ppN(sv),'#22DD66'],['POTS',ppN(potRows('','').reduce(function(a,r){return a+r.net;},0)),'#C77DFF',"goSave('pots')"],['TO SPEND',ppN(Math.max(0,lv-wdTotal(pr.from,pr.to))),'#FFB627','wdSheet()']])+ // v21.8: tap POTS to move pot money, tap TO SPEND to withdraw
         ppQA([['wallet','Add income',"ppSheet('income')"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"')+ppIncChart(list,inT,pr.label);
     }
   }catch(e){ console.log(e); }
@@ -5071,6 +5089,8 @@ function ppAheadPill(tab){
       var ah=ppAheadDays(side);
       if(ah>0) return '<button class="pp-ahead pp-ahead-g"><i class="pp-dot"></i>Ahead <b>'+ah+' day'+(ah!==1?'s':'')+'</b></button>';
       return '<button class="pp-ahead pp-ahead-g"><i class="pp-dot"></i>Today <b>All done</b></button>'; }
+    // v21.8: sources sit at the top of Money > In
+    if(tab==='money'&&moneySide==='income'){ var pr=periodRange(), n=incomeData.entries.filter(function(e){return inRange(e.date,pr.from,pr.to);}).reduce(function(a,e){ var k=String(e.src||'src_oth'); if(a.indexOf(k)<0) a.push(k); return a; },[]).length; return '<button class="pp-ahead pp-src" onclick="openSettings()"><i class="pp-dot"></i>Sources <b>'+n+'</b></button>'; }
     // v21.6: This week pill on Budget (Monday to Sunday)
     if(tab==='budget'){ var w=budgetWeek(); if(!(w.plan>0)) return '';
       var cl=(w.allow<=0||w.spent>w.allow)?'r':(w.spent>=w.allow*0.8?'a':'g');
@@ -5092,13 +5112,16 @@ function ppCatchUp(){ var tr=sideTracker(planSide), old=document.getElementById(
   document.body.insertAdjacentHTML('beforeend','<div id="ppSheet" onclick="if(event.target.id===\'ppSheet\')this.remove()"><div class="pp-sh">'+body+'<button class="pp-sh-x" onclick="document.getElementById(\'ppSheet\').remove()">Close</button></div></div>'); }
 function ppAddChips(pg,tab){
   var tabs=null, per=false, cur='';
-  var MON=[['income','In',"goMoney('income')"],['spend','Out',"goMoney('spend')"],['budget','Budget',"goMoney('budget')"]];
-  var SAV=[['pots','Pots',"goSave('pots')"],['goals','Goals',"goSave('goals')"],['buy','Buy',"goSave('buy')"]];
+  // v21.8: Money = In, Out. Pots open from the POTS box on In. Budget sits with the Lists. Save = Goals, Buy.
+  var MON=[['income','In',"goMoney('income')"],['spend','Out',"goMoney('spend')"]];
+  var SAV=[['goals','Goals',"goSave('goals')"],['buy','Buy',"goSave('buy')"]];
+  var LST=[['wants','Wants',"wnTab='wants';switchTab('wn')"],['needs','Needs',"wnTab='needs';switchTab('wn')"],['budget','Budget',"switchTab('budget')"]];
   if(tab==='money'){ tabs=MON; cur=moneySide; per=true; }
-  else if(tab==='budget'){ tabs=MON; cur='budget'; }
-  else if(tab==='savings'){ tabs=SAV; cur=(savSide==='income'?'pots':'goals'); per=(savSide==='income'); }
+  else if(tab==='budget'){ tabs=LST; cur='budget'; }
+  else if(tab==='savings'&&savSide==='income'){ tabs=MON; cur=''; per=true; }
+  else if(tab==='savings'){ tabs=SAV; cur='goals'; }
   else if(tab==='debt'&&planSide==='buy'){ tabs=SAV; cur='buy'; }
-  else if(tab==='wn'){ tabs=[['wants','Wants',"wnSetTab('wants')"],['needs','Needs',"wnSetTab('needs')"]]; cur=wnTab; }
+  else if(tab==='wn'){ tabs=LST; cur=wnTab; }
   // the old big switches above the card are no longer needed
   [].slice.call(pg.querySelectorAll('.sx-seg')).forEach(function(sg){ if(!sg.closest('.pp-new,.pp-hero')&&/(Income|Spending|Goals|Buy|Debt|Wants|Needs)/.test(sg.innerText||'')) sg.style.display='none'; });
   if(!tabs) return;
@@ -5128,11 +5151,12 @@ function ppIncChart(list,inT,label){
     '<div class="pp-donut" style="background:conic-gradient('+grad+')"><div><small>IN</small><b>'+ppDn(inT)+'</b></div></div>'+
     '<div class="pp-leg">'+rows.slice(0,6).map(function(r){ return '<p><span><i style="background:'+r.c+'"></i>'+sxEsc(r.n)+'</span>'+ppDn(r.a)+'</p>'; }).join('')+'</div></div></div>'; }
 // v19.2: five tabs with one job each. Money = In, Out, Budget. Debts alone. Save = Pots, Goals, Buy.
-var _ppLastMoney='income', _ppLastSave='pots';
-function goMoney(sub){ sub=sub||_ppLastMoney; _ppLastMoney=sub; if(sub==='budget'){ switchTab('budget'); } else { moneySide=sub; switchTab('money'); } }
+var _ppLastMoney='income', _ppLastSave='goals';
+function goMoney(sub){ sub=sub||_ppLastMoney; if(sub==='budget'){ switchTab('budget'); } else { _ppLastMoney=sub; moneySide=sub; switchTab('money'); } } // v21.8: Budget now lives with the Lists
 function goDebts(){ planSide='debt'; switchTab('debt'); }
-function goSave(sub){ sub=sub||_ppLastSave; _ppLastSave=sub; if(sub==='buy'){ planSide='buy'; switchTab('debt'); } else { savSide=(sub==='pots'?'income':'goals'); switchTab('savings'); } }
-function ppNavKey(t){ if(t==='budget') return 'money'; if(t==='debt'&&planSide==='buy') return 'savings'; return t; }
+function goSave(sub){ sub=sub||_ppLastSave; if(sub!=='pots') _ppLastSave=sub; // v21.8: the Save button opens Goals or Buy; Pots open from Money > In
+  if(sub==='buy'){ planSide='buy'; switchTab('debt'); } else { savSide=(sub==='pots'?'income':'goals'); switchTab('savings'); } }
+function ppNavKey(t){ if(t==='budget') return 'wn'; if(t==='savings'&&savSide==='income') return 'money'; if(t==='debt'&&planSide==='buy') return 'savings'; return t; }
 function ppNavFix(){ var pg=document.querySelector('[id^=page-].active'); if(!pg) return; var n=ppNavKey(pg.id.slice(5));
   TABS.forEach(function(x){ var b=document.getElementById('nav-'+x); if(b) b.classList.toggle('active',x===n); }); }
 (function(){ var o=switchTab; switchTab=function(t){ var r=o.apply(this,arguments); try{ ppNavFix(); }catch(e){} return r; }; })();
@@ -5521,6 +5545,8 @@ html body .pp-hero.pp-hastabs.pp-hasring .pp-mini>div{padding-top:6px!important;
 html body .pp-hero.pp-hastabs:not(.pp-hasring){padding-top:14px!important;padding-bottom:15px!important}
 html body .pp-hero.pp-hastabs:not(.pp-hasring) .pp-chrow{margin-bottom:5px!important}
 html body .v21-catcard .soft-bub{width:36px!important;height:36px!important;min-width:36px!important;border-radius:11px!important;display:flex!important;align-items:center;justify-content:center}html body .v21-catcard .soft-bub svg{width:19px!important;height:19px!important}
+.pp-tap{cursor:pointer;position:relative}.pp-tap::after{content:'\203A';position:absolute;right:9px;top:5px;color:#8a8a90;font-size:15px;font-weight:700}
+html body .pp-ahead.pp-src{background:#241A2E;border:1px solid #4A3A5C}html body .pp-ahead.pp-src .pp-dot{background:#C77DFF}html body .pp-ahead.pp-src b{color:#C77DFF}
 .v21-sring{width:52px;height:52px;flex:none;position:relative;display:flex;align-items:center;justify-content:center;color:#D4D4D8}
 .v21-sring svg{position:absolute;inset:0;width:52px;height:52px}
 .v21-sring .tr{fill:none;stroke:#2E2E33;stroke-width:5}.v21-sring .fl{fill:none;stroke:currentColor;stroke-width:5;stroke-linecap:round}
