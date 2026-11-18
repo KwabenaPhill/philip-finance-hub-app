@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v22.6</title>
+<title>Philip's Finance Hub v22.7</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v22.6</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v22.7</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -6053,15 +6053,15 @@ function dayName(d){ if(d===TODAY) return 'Today'; var y=new Date(TODAY+'T00:00:
   var x=new Date(d+'T00:00:00'); if(isNaN(x)) return d; return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][x.getDay()]+' '+x.getDate()+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][x.getMonth()]+(x.getFullYear()!==y.getFullYear()?' '+x.getFullYear():''); }
 function data(){
   var pr=periodRange(), all=getPeriodEntries(), arch=archiveForPeriod();
-  var out=all.filter(function(e){ return e.cat!=='sav'; }), sav=all.filter(function(e){ return e.cat==='sav'; });
-  var debts=out.filter(function(e){ return e.cat==='debt'; }).reduce(function(s,e){ return s+(e.amount||0); },0)+(arch.debt||0);
+  var out=all.filter(function(e){ return e.cat!=='sav'&&e.cat!=='debt'; }), sav=[]; // v22.7: no debts or savings on Out
+  var debts=out.filter(function(e){ return e.cat==='debt'; }).reduce(function(s,e){ return s+(e.amount||0); },0);
   var spent=out.filter(function(e){ return e.cat!=='debt'; }).reduce(function(s,e){ return s+(e.amount||0); },0)+(arch.wants||0)+(arch.needs||0)+(arch.budget||0);
   var wds=[]; try{ (wdData.entries||[]).forEach(function(w){ if(inRange(w.date,pr.from,pr.to)) wds.push({id:w.id,date:w.date,desc:'Withdrawn to MoMo',amount:w.amount,k:'wd',sub:'Withdrawn'}); }); }catch(e){}
   try{ ((incSav&&incSav.moves)||[]).forEach(function(m){ if(m.kind==='out'&&inRange(m.d,pr.from,pr.to)){ var nm=''; try{ nm=getSource(m.src).name; }catch(x){} wds.push({id:m.id,date:m.d,desc:'Taken out of '+nm,amount:m.a,k:'wd',sub:'From your pot'+(m.note?' · '+m.note:'')}); } }); }catch(e){}
   var wd=wds.reduce(function(s,e){ return s+(e.amount||0); },0);
   var byCat={}, used={};
   out.forEach(function(e){ var c=getCat(e.cat)||{}; var k=c.label||e.cat; if(!byCat[k]) byCat[k]={l:k,a:0,n:0,id:e.cat,cat:c,c:catCol(e.cat,c.color)}; byCat[k].a+=(e.amount||0); byCat[k].n++; });
-  var archOut=(arch.debt||0)+(arch.wants||0)+(arch.needs||0)+(arch.budget||0); if(archOut>0) byCat['Older']={l:'Older',a:archOut,n:arch.count||0,id:'old',cat:{},c:'#8A8A90'};
+  var archOut=(arch.wants||0)+(arch.needs||0)+(arch.budget||0); if(archOut>0) byCat['Older']={l:'Older',a:archOut,n:arch.count||0,id:'old',cat:{},c:'#8A8A90'};
   var cats=Object.keys(byCat).map(function(k){ return byCat[k]; }).sort(function(a,b){ return b.a-a.a; }), ai=0;
   cats.forEach(function(c){ var key=String(c.c).toUpperCase(); if(used[key]){ while(ai<ALT.length&&used[ALT[ai].toUpperCase()]) ai++; c.c=ALT[ai%ALT.length]; ai++; key=String(c.c).toUpperCase(); } used[key]=1; });
   return {pr:pr,out:out,sav:sav,wds:wds,wd:wd,debts:debts,spent:spent,total:debts+spent,cats:cats,n:out.length+(arch.count||0),arch:arch};
@@ -6094,15 +6094,15 @@ window.sxSpend=function(){
   var savL=(getCat('sav')||{}).label||'Savings';
   var rows=[];
   D.out.forEach(function(e){ var c=getCat(e.cat)||{}; rows.push({id:e.id,date:e.date,desc:e.desc,amount:e.amount,k:e.cat==='debt'?'debt':'spent',sub:(e.cat==='debt'?'Debt paid':(c.label||'Spent')),col:catCol(e.cat,c.color),ic:e.cat==='debt'?'card':ico(c),sign:'−',ac:RED}); });
-  D.wds.forEach(function(e){ rows.push({id:e.id,date:e.date,desc:e.desc,amount:e.amount,k:'wd',sub:e.sub,col:BLUE,ic:'dl',sign:'',ac:BLUE}); });
+  D.wds.forEach(function(e){ rows.push({id:e.id,date:e.date,desc:e.desc,amount:e.amount,k:'wd',sub:e.sub,col:BLUE,ic:'dl',sign:'\u2212',ac:BLUE}); });
   D.sav.forEach(function(e){ rows.push({id:e.id,date:e.date,desc:e.desc,amount:e.amount,k:'wd',sub:'Saved to goal',col:BLUE,ic:'pig',sign:'',ac:BLUE}); });
   rows.sort(function(a,b){ return String(b.date).localeCompare(String(a.date))||String(b.id).localeCompare(String(a.id)); });
   var days=[], by={}; rows.forEach(function(r){ if(!by[r.date]){ by[r.date]=[]; days.push(r.date); } by[r.date].push(r); });
-  var tx=days.map(function(d){ var dt=by[d].filter(function(r){ return r.k!=='wd'; }).reduce(function(s,r){ return s+(r.amount||0); },0);
+  var tx=days.map(function(d){ var dt=by[d].reduce(function(s,r){ return s+(r.amount||0); },0);
     return '<div class="v221-day"><div class="v221-dh"><span>'+dayName(d)+'</span>'+(dt>0?'<span style="color:'+RED+'">−'+G(dt)+'</span>':'')+'</div><div class="v221-card">'+
       by[d].map(function(r){ var tm=tOf(r.id); return '<div class="v221-tx" data-k="'+r.k+'"><div class="v221-bub" style="background:'+rgba(r.col,.18)+';color:'+r.col+'">'+svg(r.ic)+'</div>'+
         '<div class="v221-tm"><b>'+esc(r.desc)+'</b><small>'+esc(r.sub)+(tm?' · '+tm:'')+'</small></div><div class="v221-amt" style="color:'+r.ac+'">'+r.sign+G(r.amount)+'</div></div>'; }).join('')+'</div></div>'; }).join('');
-  var F=[['all','All'],['spent','Spent'],['debt','Debts'],['wd','Withdrawn']];
+  var F=[['all','All'],['spent','Spent'],['wd','Withdrawn']];
   var h='<div class="sx">'+
     '<div class="v221-sec"><div class="v221-h"><span>Top categories</span><i>'+esc(D.pr.label)+'</i></div><div class="v221-card">'+catRows+'</div></div>'+
     '<div class="v221-sec"><div class="v221-h sx-h2"><span>Transactions</span></div>'+
@@ -6154,16 +6154,16 @@ function G(v){ var n=Math.round(v||0); return (n<0?'-':'')+'GH₵ '+Math.abs(n).
 var PL={week:'This week',month:'This month',year:'This year',lifetime:'All time'};
 window.ppTop=function(){
   var pr=periodRange(), all=getPeriodEntries(), arch=archiveForPeriod();
-  var out=all.filter(function(e){ return e.cat!=='sav'; });
-  var debts=out.filter(function(e){ return e.cat==='debt'; }).reduce(function(s,e){ return s+(e.amount||0); },0)+(arch.debt||0);
-  var spent=out.filter(function(e){ return e.cat!=='debt'; }).reduce(function(s,e){ return s+(e.amount||0); },0)+(arch.wants||0)+(arch.needs||0)+(arch.budget||0);
-  var wd=0; try{ (wdData.entries||[]).forEach(function(w){ if(inRange(w.date,pr.from,pr.to)) wd+=(w.amount||0); }); ((incSav&&incSav.moves)||[]).forEach(function(m){ if(m.kind==='out'&&inRange(m.d,pr.from,pr.to)) wd+=(m.a||0); }); }catch(e){}
-  var tot=debts+spent, n=out.length+(arch.count||0), ps=tot>0?Math.round(spent/tot*100):0, pd=tot>0?100-ps:0;
+  var out=all.filter(function(e){ return e.cat!=='sav'&&e.cat!=='debt'; }); // v22.7: Out = spending and withdrawals only
+  var debts=0;
+  var spent=out.reduce(function(s,e){ return s+(e.amount||0); },0)+(arch.wants||0)+(arch.needs||0)+(arch.budget||0);
+  var wd=0, wn=0; try{ (wdData.entries||[]).forEach(function(w){ if(inRange(w.date,pr.from,pr.to)) wd+=(w.amount||0), wn++; }); ((incSav&&incSav.moves)||[]).forEach(function(m){ if(m.kind==='out'&&inRange(m.d,pr.from,pr.to)) wd+=(m.a||0), wn++; }); }catch(e){}
+  var tot=spent+wd, n=out.length+(arch.count||0)+wn, ps=tot>0?Math.round(spent/tot*100):0, pd=tot>0?100-ps:0;
   return '<div class="pp-hd"><div><div class="pp-t1">Money overview</div><div class="pp-t2">Your numbers, your plan.</div></div></div>'+
     '<div class="pp-hero v223-out"><div class="v223-top"><div style="min-width:0"><div class="pp-l">Total out · '+pr.label.toLowerCase()+'</div><div class="pp-v" style="color:'+(tot>0?RED:'#22DD66')+'!important">'+G(tot)+'</div><div class="pp-g">'+n+' payment'+(n!==1?'s':'')+'</div></div>'+
     '</div>'+
-    '<div class="v223-bar">'+(tot>0?'<i style="width:'+ps+'%;background:'+RED+'"></i><i style="width:'+pd+'%;background:'+AMB+'"></i>':'')+'</div>'+
-    '<div class="pp-mini" style="grid-template-columns:repeat(3,1fr)"><div style="'+ppTint(RED)+'"><span>SPENT</span><b style="color:'+RED+'">'+G(spent)+'</b></div><div style="'+ppTint(AMB)+'"><span>DEBTS</span><b style="color:'+AMB+'">'+G(debts)+'</b></div><div style="'+ppTint(BLUE)+'"><span>WITHDRAWN</span><b style="color:'+BLUE+'">'+G(wd)+'</b></div></div></div>';
+    '<div class="v223-bar">'+(tot>0?'<i style="width:'+ps+'%;background:'+RED+'"></i><i style="width:'+pd+'%;background:'+BLUE+'"></i>':'')+'</div>'+
+    '<div class="pp-mini" style="grid-template-columns:1fr 1fr"><div style="'+ppTint(RED)+'"><span>SPENT</span><b style="color:'+RED+'">'+G(spent)+'</b></div><div style="'+ppTint(BLUE)+'"><span>WITHDRAWN</span><b style="color:'+BLUE+'">'+G(wd)+'</b></div></div></div>';
 };
 window.v223Per=function(){ var old=document.getElementById('ppSheet'); if(old) old.remove();
   var cur=(ppActive()==='savings'?isavPeriod:spendPeriod);
@@ -6235,11 +6235,13 @@ var oSx=sxSpend;
 window.sxSpend=function(){ var r=oSx.apply(this,arguments);
   try{
     var pg=document.getElementById('page-money'), card=pg&&pg.querySelector('.v221-sec .v221-card'); if(!card) return r;
-    var all=getPeriodEntries().filter(function(e){ return e.cat!=='sav'; }), arch=archiveForPeriod(), by={}, used={}, ai=0;
+    var all=getPeriodEntries().filter(function(e){ return e.cat!=='sav'&&e.cat!=='debt'; }), arch=archiveForPeriod(), by={}, used={}, ai=0;
+    var _pr=periodRange(), _wd=0; try{ (wdData.entries||[]).forEach(function(w){ if(inRange(w.date,_pr.from,_pr.to)) _wd+=(w.amount||0); }); ((incSav&&incSav.moves)||[]).forEach(function(m){ if(m.kind==='out'&&inRange(m.d,_pr.from,_pr.to)) _wd+=(m.a||0); }); }catch(e){}
+    if(_wd>0) by['Withdrawn']={l:'Withdrawn',a:_wd,c:'#38B6FF'}; used['#38B6FF']=1;
     all.forEach(function(e){ var c=getCat(e.cat)||{}; var k=c.label||e.cat; if(!by[k]) by[k]={l:k,a:0,c:col(e.cat,c.color)}; by[k].a+=(e.amount||0); });
-    var ao=(arch.debt||0)+(arch.wants||0)+(arch.needs||0)+(arch.budget||0); if(ao>0) by['Older']={l:'Older',a:ao,c:'#8A8A90'};
+    var ao=(arch.wants||0)+(arch.needs||0)+(arch.budget||0); if(ao>0) by['Older']={l:'Older',a:ao,c:'#8A8A90'};
     var cats=Object.keys(by).map(function(k){ return by[k]; }).sort(function(a,b){ return b.a-a.a; });
-    cats.forEach(function(c){ var k=String(c.c).toUpperCase(); if(used[k]){ while(ai<ALT.length&&used[ALT[ai].toUpperCase()]) ai++; c.c=ALT[ai%ALT.length]; ai++; k=String(c.c).toUpperCase(); } used[k]=1; });
+    used={'#38B6FF':1,'#64D2FF':1,'#5AC8FA':1,'#32ADE6':1}; cats.forEach(function(c){ if(c.l==='Withdrawn') return; var k=String(c.c).toUpperCase(); if(used[k]){ while(ai<ALT.length&&used[ALT[ai].toUpperCase()]) ai++; c.c=ALT[ai%ALT.length]; ai++; k=String(c.c).toUpperCase(); } used[k]=1; });
     if(cats.length>6){ var rest=cats.slice(5).reduce(function(s,c){ return s+c.a; },0); cats=cats.slice(0,5).concat([{l:'Other',a:rest,c:'#8A8A90'}]); }
     var tot=cats.reduce(function(s,c){ return s+c.a; },0), at=0;
     if(!(tot>0)){ card.innerHTML='<div class="v221-none">Nothing has gone out yet.</div>'; return r; }
