@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v22.1</title>
+<title>Philip's Finance Hub v22.3</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v22.1</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v22.3</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -6143,6 +6143,53 @@ function add(){ try{ document.body.appendChild(css); }catch(e){} }
 add();
 function go(){ try{ if(ppActive()==='money') switchTab('money'); }catch(e){} }
 setTimeout(go,0); window.addEventListener('load',function(){ setTimeout(go,0); });
+})();
+</script>
+<script>
+// v22.3 (Philip, 18 Nov 2026): Out top card like the "Monthly Budget" card in his picture (amount, bar, one line, no ring).
+// Period chips W M Y All become one "This week" button that opens a list; tabs (In/Out etc.) get the room.
+(function(){
+var RED='#FF4D5E', AMB='#FF9F0A', BLUE='#38B6FF';
+function G(v){ var n=Math.round(v||0); return (n<0?'-':'')+'GH₵ '+Math.abs(n).toLocaleString(); }
+var PL={week:'This week',month:'This month',year:'This year',lifetime:'All time'};
+window.ppTop=function(){
+  var pr=periodRange(), all=getPeriodEntries(), arch=archiveForPeriod();
+  var out=all.filter(function(e){ return e.cat!=='sav'; });
+  var debts=out.filter(function(e){ return e.cat==='debt'; }).reduce(function(s,e){ return s+(e.amount||0); },0)+(arch.debt||0);
+  var spent=out.filter(function(e){ return e.cat!=='debt'; }).reduce(function(s,e){ return s+(e.amount||0); },0)+(arch.wants||0)+(arch.needs||0)+(arch.budget||0);
+  var wd=0; try{ (wdData.entries||[]).forEach(function(w){ if(inRange(w.date,pr.from,pr.to)) wd+=(w.amount||0); }); ((incSav&&incSav.moves)||[]).forEach(function(m){ if(m.kind==='out'&&inRange(m.d,pr.from,pr.to)) wd+=(m.a||0); }); }catch(e){}
+  var tot=debts+spent, n=out.length+(arch.count||0), ps=tot>0?Math.round(spent/tot*100):0, pd=tot>0?100-ps:0;
+  return '<div class="pp-hd"><div><div class="pp-t1">Money overview</div><div class="pp-t2">Your numbers, your plan.</div></div></div>'+
+    '<div class="pp-hero v223-out"><div class="v223-top"><div style="min-width:0"><div class="pp-l">Total out · '+pr.label.toLowerCase()+'</div><div class="pp-v" style="color:'+(tot>0?RED:'#22DD66')+'!important">'+G(tot)+'</div></div>'+
+    '<div class="v223-r"><span>Withdrawn</span><b>'+G(wd)+'</b></div></div>'+
+    '<div class="v223-bar">'+(tot>0?'<i style="width:'+ps+'%;background:'+RED+'"></i><i style="width:'+pd+'%;background:'+AMB+'"></i>':'')+'</div>'+
+    '<div class="v223-cap"><span><i style="background:'+RED+'"></i>Spent '+G(spent)+'</span><span><i style="background:'+AMB+'"></i>Debts '+G(debts)+'</span><span>'+n+' payment'+(n!==1?'s':'')+'</span></div></div>';
+};
+window.v223Per=function(){ var old=document.getElementById('ppSheet'); if(old) old.remove();
+  var cur=(ppActive()==='savings'?isavPeriod:spendPeriod);
+  document.body.insertAdjacentHTML('beforeend','<div id="ppSheet" onclick="if(event.target.id===\'ppSheet\')this.remove()"><div class="pp-sh"><div class="pp-sh-t">Show</div>'+
+    ['week','month','year','lifetime'].map(function(k){ return '<button class="v223-opt'+(cur===k?' on':'')+'" onclick="document.getElementById(\'ppSheet\').remove();ppPer(\''+k+'\')">'+PL[k]+(cur===k?' <b>✓</b>':'')+'</button>'; }).join('')+
+    '<button class="pp-sh-x" onclick="document.getElementById(\'ppSheet\').remove()">Close</button></div></div>'); };
+var oCh=ppAddChips;
+window.ppAddChips=function(pg,tab){ var r=oCh.apply(this,arguments);
+  try{ var hero=pg.querySelector('.pp-new .pp-hero')||pg.querySelector('.pp-hero'); var ch=hero&&hero.querySelector('.pp-chips');
+    if(ch){ var cur=(tab==='savings'?isavPeriod:spendPeriod); var b=document.createElement('button'); b.className='v223-perb'; b.setAttribute('onclick','v223Per()'); b.innerHTML=(PL[cur]||'This week')+' <i>▾</i>'; ch.replaceWith(b); }
+    var tb=hero&&hero.querySelector('.pp-tabs'); if(tb){ [].slice.call(tb.querySelectorAll('button')).forEach(function(x){ x.style.removeProperty('font-size'); x.style.removeProperty('padding'); }); }
+  }catch(e){} return r; };
+var css=document.createElement('style');
+css.textContent=
+ 'html body .pp-hero .pp-chrow{display:flex!important;align-items:center!important;gap:8px!important}'+
+ 'html body .pp-hero .pp-chrow .pp-tabs{flex:1 1 auto!important;display:flex!important;min-width:0}'+
+ 'html body .pp-hero .pp-chrow .pp-tabs button{flex:1 1 0!important;font-size:14px!important;padding:7px 10px!important;text-align:center}'+
+ '.v223-perb{flex:none;border:1px solid #4A3A5C;background:#1E1828;color:#E8E2EE;font:inherit;font-size:12.5px;font-weight:700;padding:7px 11px;border-radius:12px;white-space:nowrap;cursor:pointer}.v223-perb i{font-style:normal;color:#C77DFF;margin-left:2px}'+
+ '.v223-opt{display:flex;justify-content:space-between;width:100%;background:#1C1C1F;border:1px solid #2C2C30;color:#fff;font:inherit;font-size:15px;font-weight:700;padding:13px 14px;border-radius:13px;margin-bottom:8px;cursor:pointer;text-align:left}.v223-opt.on{border-color:#7C3AED;background:#241A2E}.v223-opt b{color:#C77DFF}'+
+ 'html body .page .pp-hero.v223-out{padding:16px 17px 17px!important}'+
+ '.v223-top{display:flex;justify-content:space-between;align-items:flex-end;gap:10px}.v223-r{text-align:right;flex:none}.v223-r span{display:block;font-size:12px;color:#C9C2CF;font-weight:700}.v223-r b{display:block;font-size:17px;color:#38B6FF;font-weight:800;margin-top:2px}'+
+ 'html body .page .pp-hero.v223-out .pp-v{font-size:32px!important;margin:4px 0 0!important}'+
+ '.v223-bar{display:flex;height:10px;border-radius:6px;background:rgba(255,255,255,.12);overflow:hidden;margin:14px 0 10px}.v223-bar i{display:block;height:100%}'+
+ '.v223-cap{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:#D6D0DC;font-weight:600;white-space:nowrap}.v223-cap span{display:flex;align-items:center;gap:5px}.v223-cap i{display:inline-block;width:8px;height:8px;border-radius:50%}';
+document.head.appendChild(css);
+setTimeout(function(){ try{ switchTab(ppActive()); }catch(e){} },0);
 })();
 </script>
 </body>
