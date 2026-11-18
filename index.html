@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v21.6</title>
+<title>Philip's Finance Hub v21.7</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v21.6</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v21.7</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -4788,22 +4788,25 @@ function ppTop(){
   // v18.5: Available = income - saved to pots + taken out of pots - moved - spent
   var potIn=0, potOut=0; try{ incomeData.entries.filter(function(e){return inRange(e.date,pr.from,pr.to);}).forEach(function(e){ potIn+=(e.build||0); }); (incSav.moves||[]).filter(function(m){return m.kind==='out'&&inRange(m.d,pr.from,pr.to);}).forEach(function(m){ potOut+=(m.a||0); }); }catch(e){}
   // v19.4: Out shows your spending money only: TO SPEND (spend share of income + money taken out of pots) - MOVED - SPENT = Available
-  var toSpend=inc-potIn+potOut, avail=toSpend-moved-spent, pct=toSpend>0?Math.max(0,Math.min(100,Math.round(avail/toSpend*100))):0;
-  var byCat={}; all.filter(function(e){return !isMove(e);}).forEach(function(e){ var c=getCat(e.cat)||{label:e.cat,color:'#8A5BA6'}; var k=c.label||e.cat; if(!byCat[k]) byCat[k]={l:k,a:0,c:ppDkCol(c.color||'#8A5BA6',e.cat)}; byCat[k].a+=e.amount; });
+  // v21.7: Out = every cedi that left, nothing more. It no longer works out a "left" number (that lives on Budget only),
+  // so paying a debt never fights with the budget. Spending = what counts in the budget; debts and savings are your own funds.
+  var debtOut=all.filter(function(e){return e.cat==='debt';}).reduce(function(s,e){return s+e.amount;},0)+arch.debt;
+  var spendOut=spent-debtOut, outTot=spendOut+debtOut+moved, pct=outTot>0?Math.round((debtOut+moved)/outTot*100):0;
+  var byCat={}; all.forEach(function(e){ var c=getCat(e.cat)||{label:e.cat,color:'#8A5BA6'}; var k=c.label||e.cat; if(!byCat[k]) byCat[k]={l:k,a:0,c:ppDkCol(c.color||'#8A5BA6',e.cat)}; byCat[k].a+=e.amount; });
   var cats=Object.keys(byCat).map(function(k){return byCat[k];}).sort(function(a,b){return b.a-a.a;});
   var tot=cats.reduce(function(s,c){return s+c.a;},0), at=0;
   var grad=tot>0?cats.map(function(c){ var a=at; at+=c.a/tot*100; return c.c+' '+a.toFixed(2)+'% '+at.toFixed(2)+'%'; }).join(','):'var(--line,#2a2a2e) 0 100%';
   var acc='var(--acc,#3F1747)';
   var q=function(ic,l,go){ return '<button onclick="'+go+'" class="pp-q"><span>'+ic+'</span>'+l+'</button>'; };
   return '<div class="pp-hd"><div><div class="pp-t1">Money overview</div><div class="pp-t2">Your numbers, your plan.</div></div></div>'+
-    '<div class="pp-hero"><div class="pp-row"><div><div class="pp-l">Left to spend · '+pr.label.toLowerCase()+'</div><div class="pp-v" style="color:'+(avail<0?'#FF4D5E':'#22DD66')+'!important">GH\u20b5 '+Math.round(avail).toLocaleString()+'</div>'+
-    (inc>0?'':'<div class="pp-g" style="color:#30D158">Add your income to see what is left</div>')+'</div>'+
-    '<div class="pp-ring" style="background:conic-gradient('+(typeof ppPctCol==='function'?ppPctCol(pct):'#22DD66')+' 0 '+pct+'%,rgba(255,255,255,.08) '+pct+'% 100%)"><div>'+pct+'%<small>left</small></div></div></div>'+
-    '<div class="pp-mini" style="grid-template-columns:1fr 1fr"><div style="'+ppTint('#38B6FF')+'"><span>SAVED</span><b style="color:#38B6FF">'+ppNum(moved)+'</b></div><div style="'+ppTint('#FF4D5E')+'"><span>YOU HAD</span><b style="color:#22DD66">'+ppNum(toSpend)+'</b></div></div></div>'+
+    '<div class="pp-hero"><div class="pp-row"><div><div class="pp-l">Money out · '+pr.label.toLowerCase()+'</div><div class="pp-v" style="color:'+(outTot>0?'#FF4D5E':'#22DD66')+'!important">GH\u20b5 '+Math.round(outTot).toLocaleString()+'</div>'+
+    '<div class="pp-g" style="color:#8a8a90">Came in: GH\u20b5 '+Math.round(inc).toLocaleString()+'</div></div>'+
+    '<div class="pp-ring" style="background:conic-gradient(#38B6FF 0 '+pct+'%,rgba(255,255,255,.08) '+pct+'% 100%)"><div>'+pct+'%<small>debt &amp; save</small></div></div></div>'+
+    '<div class="pp-mini"><div style="'+ppTint('#FF4D5E')+'"><span>SPENDING</span><b style="color:#FF4D5E">'+ppNum(spendOut)+'</b></div><div style="'+ppTint('#FF9F0A')+'"><span>DEBTS</span><b style="color:#FF9F0A">'+ppNum(debtOut)+'</b></div><div style="'+ppTint('#38B6FF')+'"><span>SAVED</span><b style="color:#38B6FF">'+ppNum(moved)+'</b></div></div></div>'+
     '<div class="pp-qa" style="grid-template-columns:1fr">'+q(ppI('up','#FF4D5E',30),'Add spending',"ppSheet('spend')")+'</div>'+
-    '<div class="pp-card"><div class="pp-ch">Spending by category<span>'+pr.label+'</span></div><div class="pp-row" style="gap:16px">'+
-    '<div class="pp-donut" style="background:conic-gradient('+grad+')"><div><small>SPENT</small><b>'+ppDn(spent)+'</b></div></div>'+
-    '<div class="pp-leg">'+(cats.length?cats.slice(0,6).map(function(c){return '<p><span><i style="background:'+c.c+'"></i>'+sxEsc(c.l)+'</span>'+ppDn(c.a)+'</p>';}).join(''):'<p style="color:var(--muted,#8a8a90)">No spending yet</p>')+'</div></div></div>';
+    '<div class="pp-card"><div class="pp-ch">Money out by category<span>'+pr.label+'</span></div><div class="pp-row" style="gap:16px">'+
+    '<div class="pp-donut" style="background:conic-gradient('+grad+')"><div><small>OUT</small><b>'+ppDn(tot)+'</b></div></div>'+
+    '<div class="pp-leg">'+(cats.length?cats.slice(0,6).map(function(c){return '<p><span><i style="background:'+c.c+'"></i>'+sxEsc(c.l)+'</span>'+ppDn(c.a)+'</p>';}).join(''):'<p style="color:var(--muted,#8a8a90)">Nothing out yet</p>')+'</div></div></div>';
 }
 (function(){
   var css=document.createElement('style');
