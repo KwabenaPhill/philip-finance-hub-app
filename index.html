@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v22.4</title>
+<title>Philip's Finance Hub v22.5</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v22.4</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v22.5</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -6224,6 +6224,38 @@ css.textContent=
  '.v224-t{cursor:pointer}.v224-in .v223-r span{color:#C9C2CF}';
 document.body.appendChild(css);
 setTimeout(function(){ try{ switchTab(ppActive()); }catch(e){} },0);
+})();
+</script>
+<script>
+// v22.5 (Philip, 18 Nov 2026): Top categories on Money Out as a donut with a legend (design 2).
+(function(){
+var AMB='#FF9F0A', ALT=['#FFD60A','#64D2FF','#BF5AF2','#FF5CA8','#30D158','#C77DFF','#FFB627','#5AC8FA'];
+function esc(s){ try{ return sxEsc(s); }catch(e){ return String(s||''); } }
+function col(id,c){ if(id==='debt') return AMB; try{ return ppDkCol(c||'#8A5BA6',id); }catch(e){ return c||'#8A5BA6'; } }
+var oSx=sxSpend;
+window.sxSpend=function(){ var r=oSx.apply(this,arguments);
+  try{
+    var pg=document.getElementById('page-money'), card=pg&&pg.querySelector('.v221-sec .v221-card'); if(!card) return r;
+    var all=getPeriodEntries().filter(function(e){ return e.cat!=='sav'; }), arch=archiveForPeriod(), by={}, used={}, ai=0;
+    all.forEach(function(e){ var c=getCat(e.cat)||{}; var k=c.label||e.cat; if(!by[k]) by[k]={l:k,a:0,c:col(e.cat,c.color)}; by[k].a+=(e.amount||0); });
+    var ao=(arch.debt||0)+(arch.wants||0)+(arch.needs||0)+(arch.budget||0); if(ao>0) by['Older']={l:'Older',a:ao,c:'#8A8A90'};
+    var cats=Object.keys(by).map(function(k){ return by[k]; }).sort(function(a,b){ return b.a-a.a; });
+    cats.forEach(function(c){ var k=String(c.c).toUpperCase(); if(used[k]){ while(ai<ALT.length&&used[ALT[ai].toUpperCase()]) ai++; c.c=ALT[ai%ALT.length]; ai++; k=String(c.c).toUpperCase(); } used[k]=1; });
+    if(cats.length>6){ var rest=cats.slice(5).reduce(function(s,c){ return s+c.a; },0); cats=cats.slice(0,5).concat([{l:'Other',a:rest,c:'#8A8A90'}]); }
+    var tot=cats.reduce(function(s,c){ return s+c.a; },0), at=0;
+    if(!(tot>0)){ card.innerHTML='<div class="v221-none">Nothing has gone out yet.</div>'; return r; }
+    var grad=cats.map(function(c){ var a=at; at+=c.a/tot*100; return c.c+' '+a.toFixed(2)+'% '+at.toFixed(2)+'%'; }).join(',');
+    card.innerHTML='<div class="v225"><div class="v225-d" style="background:conic-gradient('+grad+')"><div><b>'+ppDn(tot)+'</b><small>OUT</small></div></div>'+
+      '<div class="v225-l">'+cats.map(function(c){ return '<p><span><i style="background:'+c.c+'"></i>'+esc(c.l)+'</span><b>'+Math.round(c.a/tot*100)+'%</b></p>'; }).join('')+'</div></div>';
+  }catch(e){ console.log(e); }
+  return r; };
+var css=document.createElement('style');
+css.textContent='.v225{display:flex;align-items:center;gap:18px;padding:12px 2px}.v225-d{width:118px;height:118px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center}'+
+ '.v225-d>div{width:84px;height:84px;border-radius:50%;background:#1C1C1F;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;line-height:1}.v225-d b{font-size:19px;font-weight:800;color:#fff}.v225-d small{font-size:11px;font-weight:700;color:#BDB6C6;letter-spacing:.5px}'+
+ '.v225-l{flex:1;min-width:0}.v225-l p{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:7px 0;font-size:14px;color:#fff}.v225-l span{display:flex;align-items:center;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}'+
+ '.v225-l i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px;flex:none}.v225-l b{font-weight:800}';
+document.body.appendChild(css);
+setTimeout(function(){ try{ if(ppActive()==='money') switchTab('money'); }catch(e){} },0);
 })();
 </script>
 </body>
