@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v22.7</title>
+<title>Philip's Finance Hub v22.8</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -429,6 +429,8 @@
   body.look-bank .custom-log-input{border-color:#24344D !important}
   body.look-bank #dragGhost{background:#1B2A40 !important}
 </style>
+<style>html.fh-boot body .page,html.fh-boot body .bottom-nav{visibility:hidden!important}</style>
+<script>document.documentElement.classList.add('fh-boot');setTimeout(function(){document.documentElement.classList.remove('fh-boot');},2500);</script>
 </head>
 <body>
 
@@ -449,7 +451,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v22.7</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v22.8</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -2722,7 +2724,7 @@ function setISavPeriod(value){
 function periodBarHTML(){
   return periodSelectHTML(spendPeriod,"setSpendPeriod","#333333");
 }
-let moneySide="spend";
+let moneySide="income"; // v22.8: the app opens on Money > In
 function setMoneySide(x){ moneySide=x; renderMoney(); }
 function moneyToggleHTML(){
   const b=(id,lab,col)=>`<button onclick="setMoneySide('${id}')" style="flex:1;padding:11px 6px;border:none;border-radius:11px;background:${moneySide===id?col:'transparent'};color:${moneySide===id?'#0A0A0A':'#9A9A9A'};font-size:13px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">${lab}</button>`;
@@ -6258,6 +6260,12 @@ css.textContent='.v225{display:flex;align-items:center;gap:18px;padding:12px 2px
 document.body.appendChild(css);
 setTimeout(function(){ try{ if(ppActive()==='money') switchTab('money'); }catch(e){} },0);
 })();
+</script>
+<script>
+// v22.8: smooth start. Draw Money > In once, after every part has loaded, then show the page.
+(function(){ function boot(){ try{ moneySide='income'; _ppLastMoney='income'; switchTab('money'); }catch(e){}
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ document.documentElement.classList.remove('fh-boot'); }); }); }
+  if(document.readyState==='complete') setTimeout(boot,30); else window.addEventListener('load',function(){ setTimeout(boot,30); }); })();
 </script>
 </body>
 </html>
