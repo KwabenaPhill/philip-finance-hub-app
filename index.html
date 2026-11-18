@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v22.9</title>
+<title>Philip's Finance Hub v23.0</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -453,7 +453,7 @@ html body #page-money .sx > .sx-seg{display:none!important}</style>
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v22.9</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v23.0</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -3481,6 +3481,7 @@ function exportData(){
   try{ backupData.srcLogos=srcLogosGet(); }catch(e){}
   backupData.withdraws=wdData; // v21.8
   try{ var _ph=localStorage.getItem('pfhub_profile_photo_v1'); if(_ph) backupData.profilePhoto=_ph; }catch(e){} // v21.0
+  try{ var _mp=localStorage.getItem('pfhub_pics_v1'); if(_mp) backupData.myPics=_mp; }catch(e){} // v23.0 his own pictures
   const blob=new Blob([JSON.stringify(backupData,null,2)],{type:"application/json"});
   const url=URL.createObjectURL(blob);
   const a=document.createElement("a");a.href=url;
@@ -3504,6 +3505,7 @@ function importData(event){
       if(parsed.srcLogos){srcLogosSet(parsed.srcLogos);}
       if(parsed.withdraws&&Array.isArray(parsed.withdraws.entries)){ wdData=parsed.withdraws; saveWd(); } // v21.8
       if(parsed.profilePhoto){ try{ localStorage.setItem('pfhub_profile_photo_v1',parsed.profilePhoto); }catch(e){} } // v21.0
+      if(parsed.myPics){ try{ localStorage.setItem('pfhub_pics_v1',parsed.myPics); }catch(e){} } // v23.0
       if(parsed.spendData){spendData=parsed.spendData;saveSpend();}
       if(parsed.spendCats){
         spendCats=parsed.spendCats;
@@ -6268,6 +6270,107 @@ setTimeout(function(){ try{ if(ppActive()==='money') switchTab('money'); }catch(
 (function(){ function boot(){ try{ moneySide='income'; _ppLastMoney='income'; switchTab('money'); }catch(e){}
   requestAnimationFrame(function(){ requestAnimationFrame(function(){ document.documentElement.classList.remove('fh-boot'); }); }); }
   if(document.readyState==='complete') setTimeout(boot,30); else window.addEventListener('load',function(){ setTimeout(boot,30); }); })();
+</script>
+<script>
+var V23_PICS=(function(){ var B="https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/", P={"money_bag":"assets/Money%20bag/3D/money_bag_3d.png","card_index_dividers":"assets/Card%20index%20dividers/3D/card_index_dividers_3d.png","repeat_button":"assets/Repeat%20button/3D/repeat_button_3d.png","television":"assets/Television/3D/television_3d.png","mantelpiece_clock":"assets/Mantelpiece%20clock/3D/mantelpiece_clock_3d.png","floppy_disk":"assets/Floppy%20disk/3D/floppy_disk_3d.png","wastebasket":"assets/Wastebasket/3D/wastebasket_3d.png","mobile_phone_with_arrow":"assets/Mobile%20phone%20with%20arrow/3D/mobile_phone_with_arrow_3d.png","clipboard":"assets/Clipboard/3D/clipboard_3d.png","shopping_bags":"assets/Shopping%20bags/3D/shopping_bags_3d.png","game_die":"assets/Game%20die/3D/game_die_3d.png","pot_of_food":"assets/Pot%20of%20food/3D/pot_of_food_3d.png","mobile_phone":"assets/Mobile%20phone/3D/mobile_phone_3d.png","antenna_bars":"assets/Antenna%20bars/3D/antenna_bars_3d.png","minibus":"assets/Minibus/3D/minibus_3d.png","receipt":"assets/Receipt/3D/receipt_3d.png","package":"assets/Package/3D/package_3d.png","credit_card":"assets/Credit%20card/3D/credit_card_3d.png","coin":"assets/Coin/3D/coin_3d.png","shopping_cart":"assets/Shopping%20cart/3D/shopping_cart_3d.png","label":"assets/Label/3D/label_3d.png","house":"assets/House/3D/house_3d.png","high_voltage":"assets/High%20voltage/3D/high_voltage_3d.png","droplet":"assets/Droplet/3D/droplet_3d.png","pill":"assets/Pill/3D/pill_3d.png","graduation_cap":"assets/Graduation%20cap/3D/graduation_cap_3d.png","church":"assets/Church/3D/church_3d.png","wrapped_gift":"assets/Wrapped%20gift/3D/wrapped_gift_3d.png","t_shirt":"assets/T-shirt/3D/t-shirt_3d.png","fuel_pump":"assets/Fuel%20pump/3D/fuel_pump_3d.png","video_game":"assets/Video%20game/3D/video_game_3d.png","airplane":"assets/Airplane/3D/airplane_3d.png","fish":"assets/Fish/3D/fish_3d.png","hospital":"assets/Hospital/3D/hospital_3d.png","musical_note":"assets/Musical%20note/3D/musical_note_3d.png","books":"assets/Books/3D/books_3d.png","barber_pole":"assets/Barber%20pole/3D/barber_pole_3d.png"}, o={}; for(var k in P) o[k]=B+P[k]; return o; })();
+// v23.0 (Philip, 18 Nov 2026): F1 Saved sheet shows this month. F2 Money Out donut counts debts paid (Debt Paid) with amounts, top card unchanged.
+// F3 Budget tab row sits exactly like Needs and Wants. F4 real pictures for Settings tiles and Budget categories; hold a picture to use your own.
+// F5 plans with no target date: pace and Pay today use the same daily amount the card shows. Saved data and storage keys unchanged (new key pfhub_pics_v1 for his own pictures).
+(function(){
+var AMB='#FF9F0A', ALT=['#FFD60A','#64D2FF','#BF5AF2','#FF5CA8','#30D158','#C77DFF','#FFB627','#5AC8FA'];
+function esc(s){ try{ return sxEsc(s); }catch(e){ return String(s||''); } }
+
+// ---------- F1: Saved sheet = this month ----------
+var oSS=window.ppSavedSheet;
+if(typeof oSS==='function') window.ppSavedSheet=function(){ var k=spendPeriod; spendPeriod='month'; try{ return oSS.apply(this,arguments); } finally{ spendPeriod=k; } };
+
+// ---------- F2: Money Out donut with Debt Paid, amounts in the legend ----------
+function col(id,c){ if(id==='debt') return AMB; try{ return ppDkCol(c||'#8A5BA6',id); }catch(e){ return c||'#8A5BA6'; } }
+var oSx=sxSpend;
+window.sxSpend=function(){ var r=oSx.apply(this,arguments);
+  try{
+    var pg=document.getElementById('page-money'), card=pg&&pg.querySelector('.v221-sec .v221-card'); if(!card) return r;
+    var all=getPeriodEntries().filter(function(e){ return e.cat!=='sav'; }), arch=archiveForPeriod(), by={}, used={}, ai=0;
+    var pr=periodRange(), wd=0; try{ (wdData.entries||[]).forEach(function(w){ if(inRange(w.date,pr.from,pr.to)) wd+=(w.amount||0); }); ((incSav&&incSav.moves)||[]).forEach(function(m){ if(m.kind==='out'&&inRange(m.d,pr.from,pr.to)) wd+=(m.a||0); }); }catch(e){}
+    if(wd>0) by['Withdrawn']={l:'Withdrawn',a:wd,c:'#38B6FF'};
+    all.forEach(function(e){ var c=getCat(e.cat)||{}; var k=c.label||e.cat; if(!by[k]) by[k]={l:k,a:0,c:col(e.cat,c.color),id:e.cat}; by[k].a+=(e.amount||0); });
+    var ao=(arch.debt||0)+(arch.wants||0)+(arch.needs||0)+(arch.budget||0); if(ao>0) by['Older']={l:'Older',a:ao,c:'#8A8A90'};
+    var cats=Object.keys(by).map(function(k){ return by[k]; }).filter(function(c){ return c.a>0; }).sort(function(a,b){ return b.a-a.a; });
+    used={'#38B6FF':1,'#64D2FF':1,'#5AC8FA':1,'#32ADE6':1};
+    cats.forEach(function(c){ if(c.id==='debt') used[AMB]=1; });
+    cats.forEach(function(c){ if(c.l==='Withdrawn'||c.id==='debt') return; var k=String(c.c).toUpperCase(); if(used[k]){ while(ai<ALT.length&&used[ALT[ai].toUpperCase()]) ai++; c.c=ALT[ai%ALT.length]; ai++; k=String(c.c).toUpperCase(); } used[k]=1; });
+    if(cats.length>6){ var rest=cats.slice(5).reduce(function(s,c){ return s+c.a; },0); cats=cats.slice(0,5).concat([{l:'Other',a:rest,c:'#8A8A90'}]); }
+    var tot=cats.reduce(function(s,c){ return s+c.a; },0), at=0;
+    if(!(tot>0)){ card.innerHTML='<div class="v221-none">Nothing has gone out yet.</div>'; return r; }
+    var grad=cats.map(function(c){ var a=at; at+=c.a/tot*100; return c.c+' '+a.toFixed(2)+'% '+at.toFixed(2)+'%'; }).join(',');
+    card.innerHTML='<div class="v225"><div class="v225-d" style="background:conic-gradient('+grad+')"><div><b>'+ppDn(tot)+'</b><small>OUT</small></div></div>'+
+      '<div class="v225-l">'+cats.map(function(c){ return '<p><span><i style="background:'+c.c+'"></i>'+esc(c.l)+'</span><b>'+Math.round(c.a).toLocaleString()+'</b></p>'; }).join('')+'</div></div>';
+  }catch(e){ console.log(e); }
+  return r; };
+
+// ---------- F5: no target date = the card's daily amount drives pace and Pay today ----------
+function fbAmt(o){ try{
+  if((savGoals||[]).indexOf(o)>=0) return o.dailyTarget>0?o.dailyTarget:DAILY_SAV;
+  if((typeof buyPlans!=='undefined'&&buyPlans||[]).indexOf(o)>=0) return pDaily('buy',o);
+  if((debtGoals||[]).indexOf(o)>=0) return pDaily('debt',o);
+}catch(e){} return 0; }
+function withFb(o){ if(!o||o.planAmt>0||o.planDaily>0||o.dailyTarget>0) return o; var f=fbAmt(o); if(!(f>0)) return o; var c={}; for(var k in o) c[k]=o[k]; c.planAmt=f; c.planFreq='day'; return c; }
+var oPU=paceUnits; paceUnits=function(o,paid,total){ return oPU.call(this,withFb(o),paid,total); };
+var oPD=planDue; planDue=function(o,paid,total){ return oPD.call(this,withFb(o),paid,total); };
+
+// ---------- F4: real pictures ----------
+var PK='pfhub_pics_v1';
+function mine(){ try{ return JSON.parse(localStorage.getItem(PK)||'{}')||{}; }catch(e){ return {}; } }
+function saveMine(m){ try{ localStorage.setItem(PK,JSON.stringify(m)); return true; }catch(e){ showToast('Phone storage is full. Picture not saved.','#FF453A'); return false; } }
+var SET={'Money settings':'money_bag','Categories':'card_index_dividers','Subscriptions':'repeat_button','Channel logos':'television','History':'mantelpiece_clock','Backup':'floppy_disk','Reset Finance Hub':'wastebasket','Install Finance Hub':'mobile_phone_with_arrow'};
+var CAT={needs:'clipboard',wants:'shopping_bags',cat_1777886325794:'game_die',food:'pot_of_food',airtime:'mobile_phone',bundles:'antenna_bars',transport:'minibus',personal:'t_shirt',bills:'receipt',other:'package',subs:'repeat_button',debt:'credit_card',sav:'coin',buy:'shopping_cart'};
+var WORDS=[[/bet/,'game_die'],[/rent|house|home/,'house'],[/light|electric|ecg|power/,'high_voltage'],[/water/,'droplet'],[/hospital|clinic/,'hospital'],[/health|medic|drug|pill/,'pill'],[/school|fees/,'graduation_cap'],[/book/,'books'],[/church|tithe|offering/,'church'],[/gift/,'wrapped_gift'],[/cloth|dress|shirt|wear/,'t_shirt'],[/fuel|petrol|diesel/,'fuel_pump'],[/game/,'video_game'],[/travel|flight|trip/,'airplane'],[/fish/,'fish'],[/music/,'musical_note'],[/barber|hair|salon/,'barber_pole'],[/data|bundle|internet|wifi/,'antenna_bars'],[/airtime|call|phone/,'mobile_phone'],[/food|chop|lunch|eat|meal/,'pot_of_food'],[/transport|trotro|taxi|uber|bolt|car/,'minibus'],[/bill/,'receipt'],[/subscri/,'repeat_button'],[/debt/,'credit_card'],[/sav/,'coin'],[/need/,'clipboard'],[/want/,'shopping_bags']];
+function catPic(id){ if(CAT[id]) return CAT[id]; var l=''; try{ l=String((getCat(id)||{}).label||'').toLowerCase(); }catch(e){} for(var i=0;i<WORDS.length;i++){ if(WORDS[i][0].test(l)) return WORDS[i][1]; } return 'label'; }
+function picSrc(key,def){ var m=mine(); return m[key]||V23_PICS[def]||V23_PICS.label; }
+function put(box,key,def){ if(!box) return; var src=picSrc(key,def); if(box.dataset.v23===src.slice(-40)) return;
+  box.innerHTML='<img class="v23-pic" src="'+src+'" alt="">'; box.dataset.v23=src.slice(-40); box.dataset.v23k=key; box.dataset.v23d=def; box.classList.add('v23-box'); }
+function pass(){ try{
+  var set=document.getElementById('page-backup');
+  if(set) [].slice.call(set.querySelectorAll('.v21-ib')).forEach(function(b){ var host=b.parentElement; while(host&&host!==set&&!host.querySelector('.v21-n')) host=host.parentElement; var n=host&&host!==set&&host.querySelector('.v21-n'); var t=n?(n.textContent||'').trim():''; if(SET[t]) put(b,'set:'+t,SET[t]); });
+  var bud=document.getElementById('page-budget');
+  if(bud) [].slice.call(bud.querySelectorAll('.v21-catcard')).forEach(function(card){ var head=card.querySelector('[onclick^="budgetExpandedId="]'); if(!head) return; var m=/budgetExpandedId===?'([^']+)'/.exec(head.getAttribute('onclick')||''); if(!m) return; put(head.querySelector('.v21-catic,.soft-bub,.sx-ic'),'cat:'+m[1],catPic(m[1])); });
+}catch(e){ console.log(e); } }
+var qd=false; function soon(){ if(qd) return; qd=true; requestAnimationFrame(function(){ qd=false; pass(); }); }
+try{ new MutationObserver(soon).observe(document.body,{childList:true,subtree:true}); }catch(e){}
+soon();
+
+// hold a picture: use your own picture, or go back to the default
+var hold=null, eat=false;
+function holdStart(ev){ var b=ev.target&&ev.target.closest&&ev.target.closest('.v23-box'); if(!b) return; clearTimeout(hold); hold=setTimeout(function(){ eat=true; try{ navigator.vibrate&&navigator.vibrate(20); }catch(e){} picSheet(b.dataset.v23k,b.dataset.v23d); },550); }
+function holdEnd(){ clearTimeout(hold); }
+document.addEventListener('pointerdown',holdStart,true);
+['pointerup','pointercancel','pointerleave'].forEach(function(t){ document.addEventListener(t,holdEnd,true); });
+document.addEventListener('pointermove',function(e){ if(hold&&(Math.abs(e.movementX)>6||Math.abs(e.movementY)>6)) holdEnd(); },true);
+document.addEventListener('click',function(e){ if(eat){ eat=false; e.stopPropagation(); e.preventDefault(); } },true);
+document.addEventListener('contextmenu',function(e){ if(e.target&&e.target.closest&&e.target.closest('.v23-box')) e.preventDefault(); },true);
+window.v23Pick=function(key){ var inp=document.createElement('input'); inp.type='file'; inp.accept='image/*';
+  inp.onchange=function(){ var f=inp.files&&inp.files[0]; if(!f) return; var rd=new FileReader();
+    rd.onload=function(){ var im=new Image(); im.onload=function(){ var S=104, cv=document.createElement('canvas'); cv.width=S; cv.height=S; var cx=cv.getContext('2d'), s=Math.min(im.width,im.height);
+        cx.drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,S,S); var u=cv.toDataURL('image/webp',0.82); if(u.indexOf('image/webp')<0) u=cv.toDataURL('image/jpeg',0.85);
+        var m=mine(); m[key]=u; if(saveMine(m)){ v23Close(); soon(); showToast('Picture saved'); } };
+      im.src=rd.result; }; rd.readAsDataURL(f); };
+  inp.click(); };
+window.v23Default=function(key){ var m=mine(); delete m[key]; saveMine(m); v23Close(); soon(); showToast('Back to the default picture'); };
+window.v23Close=function(){ var o=document.getElementById('ppSheet'); if(o) o.remove(); };
+function picSheet(key,def){ v23Close(); var own=!!mine()[key];
+  document.body.insertAdjacentHTML('beforeend','<div id="ppSheet" onclick="if(event.target.id===\'ppSheet\')v23Close()"><div class="pp-sh"><div class="pp-sh-t">Picture</div>'+
+    '<div style="display:flex;justify-content:center;margin:4px 0 14px"><img src="'+picSrc(key,def)+'" alt="" style="width:84px;height:84px;border-radius:20px;object-fit:cover"></div>'+
+    '<button class="v223-opt" onclick="v23Pick(\''+key.replace(/'/g,"\\'")+'\')">Choose your picture</button>'+
+    (own?'<button class="v223-opt" onclick="v23Default(\''+key.replace(/'/g,"\\'")+'\')">Back to default</button>':'')+
+    '<button class="pp-sh-x" onclick="v23Close()">Close</button></div></div>'); }
+
+// ---------- styles: F3 tab row, F4 pictures ----------
+var css=document.createElement('style');
+css.textContent='html body #page-budget .pp-hero.pp-hastabs.pp-hasring{padding-top:16px!important}'+
+ '.v23-box{overflow:hidden;-webkit-touch-callout:none;user-select:none}.v23-box>svg{display:none}'+
+ '.v23-pic{width:78%;height:78%;object-fit:contain;display:block;margin:auto;pointer-events:none;-webkit-user-drag:none}';
+document.head.appendChild(css);
+})();
 </script>
 </body>
 </html>
