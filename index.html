@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v23.0</title>
+<title>Philip's Finance Hub v23.1</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v23.0</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v23.1</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -6194,10 +6194,36 @@ function budgetCards(pg){
     '<div style="flex:1;min-width:0">'+(cats.length?cats.slice(0,6).map(function(c){ return '<p class="fx-lg"><span><i style="background:'+c.c+'"></i>'+esc(c.l)+'</span><b>'+(tot>0?Math.round(c.a/tot*100):0)+'%</b></p>'; }).join(''):'<p class="fx-lg" style="color:'+MUTED+'">No spending yet</p>')+'</div></div></div></div>'+
     '<div class="fx-tip"><div class="fx-tipi">'+(typeof ppI==='function'?ppI('target',GREEN2,20):'')+'</div><div><b>Money tip</b><span>'+esc(tip)+'</span></div></div>';
   var qa=pg.querySelector('.pp-new .pp-qa')||pg.querySelector('.pp-qa'); if(qa) qa.insertAdjacentHTML('afterend',h);
-  [].slice.call(pg.querySelectorAll('.fx-lg,.fx-lg span,.fx-lg b')).forEach(function(e){ e.style.setProperty('color',e.parentElement&&e.parentElement.style.color===MUTED?MUTED:INK,'important'); });
+  [].slice.call(pg.querySelectorAll('.fx-lg,.fx-lg span,.fx-lg b')).forEach(function(e){ e.style.setProperty('color',ON?INK:'#FFFFFF','important'); });
 }
 var oDe=window.ppDecorate;
-window.ppDecorate=function(pg){ var r=oDe.apply(this,arguments); try{ if(ON&&pg&&pg.id==='page-budget') budgetCards(pg); }catch(e){ console.log(e); } if(ON) schedule(); return r; };
+window.ppDecorate=function(pg){ var r=oDe.apply(this,arguments); try{ if(pg&&pg.id==='page-budget') budgetCards(pg); }catch(e){ console.log(e); }
+  if(ON) schedule(); return r; };
+(function(){ var st=document.createElement('style'); st.textContent=
+ '.fx-bars{display:flex;align-items:flex-end;gap:8px;height:150px;padding-top:22px}.fx-b{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;position:relative}'+
+ '.fx-b i{display:block;width:100%;max-width:30px;border-radius:8px;background:#A7DCC3}.fx-b.cur i{background:'+GREEN2+'}.fx-b span{font-size:11px;color:'+MUTED+';margin-top:6px;white-space:nowrap}'+
+ '.fx-b em{position:absolute;top:-4px;left:50%;font-style:normal;font-size:11px;font-weight:700;color:#fff;background:'+GREEN+';padding:3px 7px;border-radius:7px;white-space:nowrap;transform:translate(-50%,-100%)}.fx-b:last-child em,.fx-b:nth-last-child(2) em{left:auto;right:0;transform:translateY(-100%)}.fx-b:first-child em{left:0;transform:translateY(-100%)}'+
+ // Settings as a clean list like the Profile screen
+ 'html body.fx-light .v21-tiles{display:flex!important;flex-direction:column!important;gap:0!important;background:#fff;border-radius:18px;box-shadow:0 2px 12px rgba(16,35,28,.06);overflow:hidden;margin-bottom:12px}'+
+ 'html body.fx-light .v21-tiles .v21-tile{display:flex!important;flex-direction:row!important;align-items:center!important;gap:12px!important;border:none!important;border-radius:0!important;box-shadow:none!important;padding:13px 16px!important;min-height:0!important;border-bottom:1px solid '+LINE+'!important}'+
+ 'html body.fx-light .v21-tiles .v21-tile:last-child{border-bottom:none!important}html body.fx-light .v21-tiles .v21-tile>*{margin:0!important}'+
+ 'html body.fx-light .v21-tiles .v21-tile::after{content:"\\203A";margin-left:auto!important;font-size:22px;color:#9AA6A0}'+
+ '.fx-donut{width:118px;height:118px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center}.fx-donut>div{width:84px;height:84px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}'+
+ '.fx-donut b{font-size:14px;font-weight:800;color:'+INK+'}.fx-donut small{font-size:11px;color:'+MUTED+'}'+
+ 'html body .fx-lg,html body .fx-lg span{color:'+INK+'!important}html body .fx-lg b{color:'+INK+'!important}'+
+ '.fx-lg{display:flex;justify-content:space-between;gap:8px;margin:6px 0;font-size:13px;color:'+INK+'}.fx-lg span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.fx-lg i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px}.fx-lg b{font-weight:700}'+
+ '.fx-tip{display:flex;gap:12px;align-items:flex-start;background:#E6F4EC;border:1px solid #CBE8D8;border-radius:16px;padding:13px 14px;margin:4px 0 14px}.fx-tipi{width:36px;height:36px;border-radius:11px;background:#fff;display:flex;align-items:center;justify-content:center;flex:none}'+
+ '.fx-tip b{display:block;font-size:14px;color:'+GREEN+'}.fx-tip span{display:block;font-size:13px;color:#3D4D46;margin-top:2px;line-height:1.4}'+
+ (ON?'':'.fx-donut>div{background:#1C1C1F!important}.fx-donut b{color:#fff!important}.fx-donut small{color:#BDB6C6!important}.fx-tip{background:#10241B!important;border-color:#1E3D2F!important}.fx-tip b{color:#5FE0A4!important}.fx-tip span{color:#CFE3D8!important}.fx-tipi{background:#173527!important}.fx-b span{color:#9A93A3!important}.fx-b i{background:#2E5E49}.fx-b.cur i{background:#22DD66}')+
+ '.fx-sw{margin-left:auto;width:46px;height:26px;border-radius:13px;background:#C9D3CE;position:relative;flex:none;transition:background .2s}.fx-sw b{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}.fx-sw.on{background:#22DD66}.fx-sw.on b{left:23px}html body .v21-tiles .fx-dm::after{content:none!important;display:none!important}'+
+ 'html body .v21-tiles .fx-dm{display:flex!important;flex-direction:row!important;align-items:center!important;gap:12px!important}html body .v21-tiles .fx-dm .v21-ib{margin:0!important}'+
+ 'html body .v21-tiles .v21-tile.fx-dm i.fx-sw.fx-sw{display:block!important;margin:0 0 0 auto!important;width:46px!important;height:26px!important;min-width:46px}html body .v21-tiles .fx-dm .v21-n{margin:0!important}';
+ (document.body||document.head).appendChild(st); })();
+// v23.1: Dark mode switch, first row of Settings
+function fxDmRow(){ try{ var pg=document.getElementById('page-backup'); var tl=pg&&pg.querySelector('.v21-tiles'); if(!tl||tl.querySelector('.fx-dm')) return; var dk=!ON;
+  tl.insertAdjacentHTML('afterbegin','<div class="v21-tile fx-dm" onclick="fxLight('+(dk?'true':'false')+')"'+(dk?' style="grid-column:1/-1"':'')+'><div class="v21-ib pu"><svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"></path></svg></div><span class="v21-n">Dark mode</span><span class="v21-s">'+(dk?'On':'Off')+'</span><i class="fx-sw'+(dk?' on':'')+'"><b></b></i></div>'); if(ON) schedule(); }catch(e){} }
+(function(){ var o=switchTab; switchTab=function(t){ var r=o.apply(this,arguments); if(t==='backup'){ fxDmRow(); setTimeout(fxDmRow,60); setTimeout(fxDmRow,400); } return r; }; })();
+new MutationObserver(function(){ if(document.querySelector('#page-backup.active .v21-tiles')&&!document.querySelector('#page-backup .fx-dm')) fxDmRow(); }).observe(document.documentElement,{childList:true,subtree:true});
 if(!ON) return;
 // ---------- repaint engine ----------
 function rgb(s){ var m=/rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?\)/.exec(s||''); return m?[+m[1],+m[2],+m[3],m[4]===undefined?1:+m[4]]:null; }
