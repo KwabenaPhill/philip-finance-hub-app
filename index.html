@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v21.9</title>
+<title>Philip's Finance Hub v22.0</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v21.9</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v22.0</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -3273,9 +3273,9 @@ function wdAvail(){ return Math.round((incomeData.entries.reduce((s,e)=>s+(e.liv
 function wdSheet(){ var old=document.getElementById('ppSheet'); if(old) old.remove();
   var av=wdAvail(), rec=wdData.entries.slice(0,5);
   var list=rec.length?rec.map(function(e){ return '<div class="pp-hrow"><div style="flex:1;min-width:0"><b>GH\u20b5 '+(e.amount||0).toLocaleString()+'</b><div style="font-size:12px;color:#8a8a90">'+e.date+'</div></div><button onclick="wdDel(\''+e.id+'\')" style="border:none;background:#3A1E2A;color:#FF4D5E;border-radius:10px;padding:8px 12px;font:inherit;font-weight:700">Delete</button></div>'; }).join(''):'<div style="font-size:13px;color:#8a8a90;margin:6px 0 10px">No withdrawals yet</div>';
-  document.body.insertAdjacentHTML('beforeend','<div id="ppSheet" onclick="if(event.target.id===\'ppSheet\')this.remove()"><div class="pp-sh" style="max-height:82vh;overflow:auto"><div class="pp-sh-t">Withdraw</div><div style="font-size:14px;color:#CFC9D5;margin-bottom:12px">Not withdrawn yet: <b style="color:#22DD66">GH\u20b5 '+Math.max(0,av).toLocaleString()+'</b></div><input id="wdAmt" type="number" inputmode="decimal" placeholder="Amount"><button class="pp-sh-go" onclick="wdSave()">Withdraw</button>'+list+'<button class="pp-sh-x" onclick="document.getElementById(\'ppSheet\').remove()">Close</button></div></div>'); }
+  document.body.insertAdjacentHTML('beforeend','<div id="ppSheet" onclick="if(event.target.id===\'ppSheet\')this.remove()"><div class="pp-sh" style="max-height:82vh;overflow:auto"><div class="pp-sh-t">Withdraw</div><div style="font-size:14px;color:#CFC9D5;margin-bottom:12px">Ready to withdraw: <b style="color:#22DD66">GH\u20b5 '+Math.max(0,av).toLocaleString()+'</b></div><input id="wdAmt" type="number" inputmode="decimal" placeholder="Amount"><button class="pp-sh-go" onclick="wdSave()">Withdraw</button>'+list+'<button class="pp-sh-x" onclick="document.getElementById(\'ppSheet\').remove()">Close</button></div></div>'); }
 function wdSave(){ var v=parseFloat((document.getElementById('wdAmt')||{}).value||''); if(!(v>0)){ showToast('Enter an amount','#FF453A'); return; }
-  var av=wdAvail(); if(v>av+0.001){ showToast('Only GH\u20b5 '+Math.max(0,av).toLocaleString()+' not withdrawn','#FF453A'); return; }
+  var av=wdAvail(); if(v>av+0.001){ showToast('Only GH\u20b5 '+Math.max(0,av).toLocaleString()+' ready to withdraw','#FF453A'); return; }
   wdData.entries.unshift({id:uid('wd_'),date:TODAY,amount:Math.round(v*100)/100}); saveWd();
   try{ rec("income",`Withdrew ${fmtC(v)}`,null,null); }catch(e){}
   var o=document.getElementById('ppSheet'); if(o) o.remove(); showToast('Withdrew GH\u20b5 '+v.toLocaleString()); goMoney('income'); }
@@ -5951,6 +5951,87 @@ css.textContent=
  '.v219-rec{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #2C2C30}.v219-rec:last-of-type{border-bottom:none}'+
  '.v219-none{font-size:13px;color:#8A8A90;margin:4px 0 8px}';
 document.head.appendChild(css);
+})();
+</script>
+<script>
+// v22.0 (Philip, 18 Nov 2026): small fixes. Saved data and storage keys unchanged.
+// Withdraw says "Ready to withdraw". SAVED box on Money > In opens a record of every save.
+// Out top card in the Debts style (big ring, LEFT and TO SPEND boxes). Big rings on every tab like Debts.
+// Lists button is now called Budget. Budget pill is short: "Week GH₵ X", styled like Pay today.
+// The new screens are drawn again once everything has loaded, so the old Out never shows on open.
+(function(){
+var OUTRED='#FF4D5E';
+function fmtG(v){ var n=Math.round(v||0); return (n<0?'-':'')+'GH₵ '+Math.abs(n).toLocaleString(); }
+function esc(s){ try{ return sxEsc(s); }catch(e){ return String(s||''); } }
+// Out: Debts-style top card
+var oTop=ppTop;
+window.ppTop=function(){
+  var h=oTop.apply(this,arguments);
+  try{
+    var pr=periodRange(), out=getPeriodEntries().filter(function(e){ return e.cat!=='sav'; }), arch=archiveForPeriod();
+    var archOut=(arch.debt||0)+(arch.wants||0)+(arch.needs||0)+(arch.budget||0);
+    var outTot=out.reduce(function(s,e){ return s+(e.amount||0); },0)+archOut, n=out.length+(arch.count||0);
+    var lv=0, po=0; (incomeData.entries||[]).forEach(function(e){ if(inRange(e.date,pr.from,pr.to)) lv+=(e.live||0); }); ((incSav&&incSav.moves)||[]).forEach(function(m){ if(m.kind==='out'&&inRange(m.d,pr.from,pr.to)) po+=(m.a||0); });
+    var have=lv+po, left=have-outTot;
+    var tint=function(c){ try{ return ppTint(c); }catch(e){ return ''; } };
+    var mini='<div class="pp-mini" style="grid-template-columns:1fr 1fr"><div style="'+tint('#38B6FF')+'"><span>LEFT</span><b style="color:'+(left<0?OUTRED:'#38B6FF')+'">'+fmtG(left)+'</b></div>'+
+      '<div style="'+tint('#22DD66')+'"><span>TO SPEND</span><b style="color:#22DD66">'+fmtG(have)+'</b></div></div>';
+    h=h.replace(/<div class="pp-g v219-sub">[^<]*<\/div>/,'<div class="pp-g">'+n+' item'+(n!==1?'s':'')+'</div>');
+    var i=h.indexOf('<div class="pp-qa"'); var j=h.lastIndexOf('</div>',i);
+    if(i>0&&j>0) h=h.slice(0,j)+mini+h.slice(j);
+  }catch(e){ console.log(e); }
+  return h;
+};
+// no repeated count on Transactions (the count sits under the big number)
+var oSx=sxSpend;
+window.sxSpend=function(){ var r=oSx.apply(this,arguments);
+  try{ var pg=document.getElementById('page-money'); var h2=[].slice.call(pg.querySelectorAll('.sx-h2')).filter(function(x){ return /Transactions/.test(x.textContent); })[0]; if(h2){ var sp=h2.querySelector('span'); if(sp) sp.textContent=''; }
+  }catch(e){}
+  return r; };
+// SAVED record sheet
+window.ppSavedSheet=function(){
+  var old=document.getElementById('ppSheet'); if(old) old.remove();
+  var pr=periodRange(), list=(incomeData.entries||[]).filter(function(e){ return (e.build||0)>0&&inRange(e.date,pr.from,pr.to); }).slice().sort(function(a,b){ return String(b.date).localeCompare(String(a.date))||String(b.id).localeCompare(String(a.id)); });
+  var tot=list.reduce(function(a,e){ return a+(e.build||0); },0);
+  var tm=function(e){ try{ var m=/^in_([0-9a-z]{8})/.exec(String(e.id)); if(!m) return ''; var t=new Date(parseInt(m[1],36)); if(isNaN(t)||t.getFullYear()<2020) return ''; var h=t.getHours(), mi=t.getMinutes(); return ' · '+((h%12)||12)+':'+(mi<10?'0':'')+mi+(h<12?' AM':' PM'); }catch(x){ return ''; } };
+  var sd=function(d){ try{ return shortDate(d); }catch(x){ return d; } };
+  var rows=list.length?list.map(function(e){ var nm=''; try{ nm=getSource(e.src).name; }catch(x){}
+    return '<div class="v219-rec">'+srcBub(e.src)+'<div class="v219-pn"><b>'+esc(nm)+'</b><small>'+sd(e.date)+tm(e)+' · '+(e.splitAt!=null?e.splitAt:Math.round((e.build||0)/(e.amount||1)*100))+'% of '+fmtG(e.amount)+'</small></div><div style="color:#38B6FF;font-weight:800;white-space:nowrap">'+fmtG(e.build)+'</div></div>'; }).join(''):'<div class="v219-none">Nothing saved '+pr.label.toLowerCase()+'</div>';
+  document.body.insertAdjacentHTML('beforeend','<div id="ppSheet" onclick="if(event.target.id===\'ppSheet\')this.remove()"><div class="pp-sh" style="max-height:84vh;overflow:auto">'+
+    '<div class="pp-sh-t">Saved</div><div style="font-size:14px;color:#CFC9D5;margin-bottom:10px">Saved '+pr.label.toLowerCase()+': <b style="color:#38B6FF">'+fmtG(tot)+'</b></div>'+rows+
+    '<button class="pp-sh-x" onclick="document.getElementById(\'ppSheet\').remove()">Close</button></div></div>');
+};
+// header names and SAVED tap
+PP_NAMES.wn='Budget';
+var oDe=ppDecorate;
+window.ppDecorate=function(pg){ var r=oDe.apply(this,arguments);
+  try{ if(pg&&(pg.id==='page-wn'||pg.id==='page-budget')){ var b=pg.querySelector('.pp-tophd .pp-brand b'); if(b) b.textContent='Budget'; var lg=pg.querySelector('.pp-tophd .pp-logo'); if(lg&&PP_ICON.budget){ lg.style.background=PP_ICON.budget[0]; lg.innerHTML=ppI('budget',PP_ICON.budget[1],22); } }
+    if(pg&&pg.id==='page-money'&&moneySide==='income'){ [].slice.call(pg.querySelectorAll('.pp-mini>div')).forEach(function(d){ var sp=d.querySelector('span'); if(sp&&sp.textContent.trim()==='SAVED'&&!d.classList.contains('pp-tap')){ d.classList.add('pp-tap'); d.setAttribute('onclick','ppSavedSheet()'); } }); }
+  }catch(e){}
+  return r; };
+// Budget pill: "Week GH₵ X", same style as Pay today
+var oAP=ppAheadPill;
+window.ppAheadPill=function(tab){
+  if(tab==='budget'){ try{ var w=budgetWeek(), cl=(w.plan>0)?((w.allow<=0||w.spent>w.allow)?'r':(w.spent>=w.allow*0.8?'a':'g')):'g';
+    return '<button class="pp-ahead pp-ahead-'+cl+'" onclick="budgetWeekInfo()"><i class="pp-dot"></i>Week <b>'+fmtG(w.spent)+'</b></button>'; }catch(e){ return ''; } }
+  return oAP.apply(this,arguments); };
+// bottom button: Lists -> Budget
+function navName(){ try{ var b=document.getElementById('nav-wn'); if(!b) return; b.setAttribute('onclick',"switchTab('budget')");
+  [].slice.call(b.childNodes).forEach(function(n){ if(n.nodeType===3&&/Lists/.test(n.nodeValue)) n.nodeValue=n.nodeValue.replace('Lists','Budget'); });
+  var ic=b.querySelector('.nav-icon'); if(ic&&ic.querySelector('svg')&&NAV_SVG&&NAV_SVG.budget){ NAV_SVG.wn=NAV_SVG.budget; ic.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+NAV_SVG.budget+'</svg>'; } }catch(e){} }
+// big rings like Debts on every tab
+var css=document.createElement('style');
+css.textContent=
+ 'html body .pp-hero.pp-hastabs.pp-hasring .pp-ring{width:92px!important;height:92px!important}'+
+ 'html body .pp-hero.pp-hastabs.pp-hasring .pp-ring div{width:76px!important;height:76px!important;font-size:25px!important}'+
+ 'html body .pp-hero.pp-hastabs.pp-hasring .pp-v{font-size:34px!important;margin:6px 0 4px!important}'+
+ 'html body .pp-hero.pp-hastabs.pp-hasring{padding-top:16px!important;padding-bottom:18px!important}'+
+ 'html body .pp-hero.pp-hastabs.pp-hasring .pp-mini{margin-top:14px!important}'+
+ 'html body .pp-hero.pp-hastabs.pp-hasring .pp-mini>div{padding-top:9px!important;padding-bottom:9px!important}'+
+ 'html body .pp-hero.pp-hastabs .pp-chrow{margin-bottom:10px!important}'+
+ 'html body .pp-hero.pp-hastabs:not(.pp-hasring){padding-top:16px!important;padding-bottom:18px!important}';
+function go(){ navName(); try{ if(!document.body.contains(css)) document.body.appendChild(css); }catch(e){} try{ switchTab(ppActive()); }catch(e){} }
+go(); setTimeout(go,0); window.addEventListener('load',function(){ setTimeout(go,0); });
 })();
 </script>
 </body>
