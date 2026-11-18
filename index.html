@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v22.3</title>
+<title>Philip's Finance Hub v22.4</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v22.3</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v22.4</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -6189,6 +6189,40 @@ css.textContent=
  '.v223-bar{display:flex;height:10px;border-radius:6px;background:rgba(255,255,255,.12);overflow:hidden;margin:14px 0 10px}.v223-bar i{display:block;height:100%}'+
  '.v223-cap{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:#D6D0DC;font-weight:600;white-space:nowrap}.v223-cap span{display:flex;align-items:center;gap:5px}.v223-cap i{display:inline-block;width:8px;height:8px;border-radius:50%}';
 document.head.appendChild(css);
+setTimeout(function(){ try{ switchTab(ppActive()); }catch(e){} },0);
+})();
+</script>
+<script>
+// v22.4 (Philip, 18 Nov 2026): Money In in the same style as Out (amount, bar, one line; tap Pots / Saved / To spend).
+// Cards with a ring: tabs row full width (This week at the right end), smaller ring below it, amount never touches the ring.
+(function(){
+var GRN='#22DD66', BLUE='#38B6FF', VIO='#C77DFF';
+function G(v){ var n=Math.round(v||0); return (n<0?'-':'')+'GH₵ '+Math.abs(n).toLocaleString(); }
+var oTT=ppTabTop;
+window.ppTabTop=function(tab){
+  if(tab==='money'&&typeof moneySide!=='undefined'&&moneySide==='income'){ try{
+    var pr=periodRange(), list=incomeData.entries.filter(function(e){ return inRange(e.date,pr.from,pr.to); });
+    var inT=incomeTotal(pr.from,pr.to), sv=list.reduce(function(a,e){ return a+(e.build||0); },0), lv=list.reduce(function(a,e){ return a+(e.live||0); },0);
+    var wdT=0; try{ wdT=wdTotal(pr.from,pr.to); }catch(e){}
+    var ts=Math.max(0,lv-wdT), pots=potRows('','').reduce(function(a,r){ return a+r.net; },0), n=list.length, ps=inT>0?Math.round(sv/inT*100):0;
+    var tap=function(go,c,l,v){ return '<span class="v224-t" onclick="'+go+'"><i style="background:'+c+'"></i>'+l+' '+G(v)+' ›</span>'; };
+    return '<div class="pp-hero v223-out v224-in"><div class="v223-top"><div style="min-width:0"><div class="pp-l">Money in · '+pr.label.toLowerCase()+'</div><div class="pp-v" style="color:'+GRN+'!important">'+G(inT)+'</div></div>'+
+      '<div class="v223-r" onclick="ppPotsSheet()" style="cursor:pointer"><span>Pots ›</span><b style="color:'+VIO+'!important">'+G(pots)+'</b></div></div>'+
+      '<div class="v223-bar">'+(inT>0?'<i style="width:'+ps+'%;background:'+BLUE+'"></i><i style="width:'+(100-ps)+'%;background:'+GRN+'"></i>':'')+'</div>'+
+      '<div class="v223-cap">'+tap('ppSavedSheet()',BLUE,'Saved',sv)+tap('wdSheet()',GRN,'To spend',ts)+'<span>'+n+' payment'+(n!==1?'s':'')+'</span></div></div>'+
+      ppQA([['wallet','Add income',"ppSheet('income')"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"')+ppIncChart(list,inT,pr.label);
+  }catch(e){ console.log(e); } }
+  return oTT.apply(this,arguments);
+};
+var css=document.createElement('style');
+css.textContent=
+ 'html body .page .pp-hero.pp-hastabs.pp-hasring .pp-chrow{width:100%!important;margin-bottom:8px!important}'+
+ 'html body .page .pp-hero.pp-hastabs.pp-hasring .pp-ring{top:auto!important;bottom:auto!important;margin-top:0!important;width:76px!important;height:76px!important;top:58px!important}'+
+ 'html body .page .pp-hero.pp-hastabs.pp-hasring .pp-ring div{width:62px!important;height:62px!important;font-size:19px!important}html body .page .pp-hero.pp-hastabs.pp-hasring .pp-ring small{font-size:10.5px!important}'+
+ 'html body .page .pp-hero.pp-hastabs.pp-hasring .pp-row>div:first-child{padding-right:92px!important;min-height:86px!important}'+
+ 'html body .page .pp-hero.pp-hastabs.pp-hasring .pp-v{font-size:32px!important}'+
+ '.v224-t{cursor:pointer}.v224-in .v223-r span{color:#C9C2CF}';
+document.body.appendChild(css);
 setTimeout(function(){ try{ switchTab(ppActive()); }catch(e){} },0);
 })();
 </script>
