@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v22.8</title>
+<title>Philip's Finance Hub v22.9</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -429,7 +429,9 @@
   body.look-bank .custom-log-input{border-color:#24344D !important}
   body.look-bank #dragGhost{background:#1B2A40 !important}
 </style>
-<style>html.fh-boot body .page,html.fh-boot body .bottom-nav{visibility:hidden!important}</style>
+<style>html.fh-boot body .page,html.fh-boot body .bottom-nav{visibility:hidden!important}
+/* v22.9: the old Income / Spending switch never shows (In and Out sit in the top card) */
+html body #page-money .sx > .sx-seg{display:none!important}</style>
 <script>document.documentElement.classList.add('fh-boot');setTimeout(function(){document.documentElement.classList.remove('fh-boot');},2500);</script>
 </head>
 <body>
@@ -451,7 +453,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v22.8</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v22.9</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
