@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v21.5</title>
+<title>Philip's Finance Hub v21.6</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v21.5</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v21.6</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -2218,7 +2218,7 @@ function deleteBuyPlan(id){
   const p=buyPlans.find(x=>String(x.id)===String(id)); if(!p) return;
   if(!confirm(`Delete "${p.label}"? This cannot be undone.`)) return;
   if(p.sourceListId){ const it=[...(wnData.wants||[]),...(wnData.needs||[])].find(x=>String(x.id)===String(p.sourceListId)); if(it && !it.bought){ it.pendingBuy=false; it.buyPlanId=null; saveWN(); } }
-  keepSpent('buy', p.label, p.log);
+  keepSpent('buy', p.label, (p.log||[]).map(l=>(l.seed&&p.cleared&&!p.reopened)?{date:p.clearedDate||l.date,amount:l.amount}:l)); // v21.6: a settled plan's saved money stays recorded
   buyPlans=buyPlans.filter(x=>x.id!==id); saveBuy(); renderDebt(); renderWN(); showToast("🗑 Buy plan removed");
 }
 function addToBuyFromList(name, price){
@@ -2447,7 +2447,16 @@ function wnDelete(id){
 function wnToggleBought(id){
   const list=wnTab==="wants"?wnData.wants:wnData.needs;
   const item=list.find(x=>String(x.id)===String(id)); if(!item) return;
+  // v21.6: no price yet? ask for it, so the purchase lands in the budget with its real amount
+  if(!item.bought && !(item.price>0) && !item.buyPlanId){
+    const v=prompt(`How much did you pay for "${item.name}"? (GH₵)`, "");
+    if(v===null) return;
+    const n=parseFloat(String(v).replace(/,/g,""));
+    if(!(n>0)){ showToast("Enter the price to mark it bought","#FF453A"); return; }
+    item.price=Math.round(n*100)/100;
+  }
   item.bought=!item.bought; if(item.bought) item.boughtDate=TODAY; saveWN(); renderWN();
+  try{ renderBudget(); }catch(e){}
 }
 function wnSetTab(tab){
   wnTab=tab;
@@ -2628,7 +2637,8 @@ function getAllEntries(){
   const savE=savGoals.flatMap(g=>(g.log||[]).filter(l=>!l.seed).map(l=>({id:'s'+l.date+g.id,date:l.date,desc:g.name,cat:'sav',amount:l.amount,auto:true})));
   const wantE=(wnData.wants||[]).filter(x=>x.bought&&x.price>0&&!x.buyPlanId).map(x=>({id:'w'+x.id,date:x.boughtDate||TODAY,desc:x.name,cat:'wants',amount:x.price,auto:true}));
   const needE=(wnData.needs||[]).filter(x=>x.bought&&x.price>0&&!x.buyPlanId).map(x=>({id:'n'+x.id,date:x.boughtDate||TODAY,desc:x.name,cat:'needs',amount:x.price,auto:true}));
-  const buyE=(buyPlans||[]).flatMap(p=>(p.log||[]).filter(l=>!l.seed).map(l=>({id:"b"+l.date+p.id,date:l.date,desc:p.label,cat:"buy",amount:l.amount,auto:true})));
+  // v21.6: money typed in as "Already saved" leaves your hand the day the plan is settled, so it shows then
+  const buyE=(buyPlans||[]).flatMap(p=>(p.log||[]).filter(l=>!l.seed||(p.cleared&&!p.reopened)).map(l=>l.seed?({id:"bs"+p.id,date:p.clearedDate||l.date,desc:p.label,cat:"buy",amount:l.amount,auto:true}):({id:"b"+l.date+p.id,date:l.date,desc:p.label,cat:"buy",amount:l.amount,auto:true})));
   return [...debtE,...savE,...buyE,...wantE,...needE,...manual];
 }
 function getPeriodEntries(){
@@ -3212,8 +3222,13 @@ function setMonthlyPlan(){
 
 function monthLabel(ym){ const p=ym.split("-"); return new Date(+p[0],+p[1]-1,1).toLocaleDateString('en-GB',{month:'long',year:'numeric'}); }
 function shiftMonth(ym,delta){ const p=ym.split("-"); const d=new Date(+p[0],+p[1]-1+delta,1); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); }
-function budgetCats(){ return spendCats.filter(c=>!['debt','sav','wants','needs','subs'].includes(c.id)); }
-function entriesForCatMonth(catId,ym){ return spendData.entries.filter(e=>e.cat===catId&&(e.date||"").slice(0,7)===ym); }
+// v21.6: the budget is spending money only. Needs and Wants rows fill in by themselves.
+// Buy plans are own funds, so the Buy Plans row only shows if something was typed into it by hand before.
+function isWN(id){ return id==='wants'||id==='needs'; }
+function budgetCats(){ return spendCats.filter(c=>!['debt','sav','wants','needs','subs'].includes(c.id) && (c.id!=='buy' || spendData.entries.some(e=>e.cat==='buy'&&!e.kept))); }
+function budgetRowCats(){ return ['needs','wants'].map(id=>spendCats.find(c=>c.id===id)).filter(Boolean).concat(budgetCats()); }
+function wnEntriesAll(catId){ try{ return getAllEntries().filter(e=>e.cat===catId); }catch(e){ return []; } }
+function entriesForCatMonth(catId,ym){ if(isWN(catId)) return wnEntriesAll(catId).filter(e=>(e.date||"").slice(0,7)===ym); return spendData.entries.filter(e=>e.cat===catId&&!(catId==='buy'&&e.kept)&&(e.date||"").slice(0,7)===ym); }
 function catArchived(catId){
   let t=0;
   for(const yr of Object.keys(archiveData||{})){
@@ -3223,12 +3238,54 @@ function catArchived(catId){
   return t;
 }
 function catSpentAll(catId){
-  return (spendData.entries||[]).filter(e=>e.cat===catId).reduce((s,e)=>s+(e.amount||0),0) + catArchived(catId);
+  return catEntriesAll(catId).reduce((s,e)=>s+(e.amount||0),0) + catArchived(catId);
 }
-function catEntriesAll(catId){ return (spendData.entries||[]).filter(e=>e.cat===catId); }
+function catEntriesAll(catId){ if(isWN(catId)) return wnEntriesAll(catId); return (spendData.entries||[]).filter(e=>e.cat===catId&&!(catId==='buy'&&e.kept)); }
 function catSpentMonth(catId,ym){ return entriesForCatMonth(catId,ym).reduce((s,e)=>s+e.amount,0); }
 // v18.5: wants and needs you logged or bought this month are real spending, so the budget counts them
 function wnSpentMonth(ym){ try{ return getAllEntries().filter(e=>(e.cat==='wants'||e.cat==='needs')&&(e.date||'').slice(0,7)===ym).reduce((s,e)=>s+(e.amount||0),0); }catch(e){ return 0; } }
+// v21.6: one place for the month's budget spending (rows + Needs/Wants + subscriptions)
+function budgetSpentMonth(ym){ return budgetCats().reduce((s,c)=>s+catSpentMonth(c.id,ym),0)+wnSpentMonth(ym)+subsSpentMonth(ym); }
+// v21.6: "This week" on Budget. Monday to Sunday. The week amount is fixed on Monday:
+// (plan - subscriptions - spent before Monday) / days left in the month counting Monday, times the week's days in that month.
+function ymdStr(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function ymdParse(s){ const p=String(s).split("-"); return new Date(+p[0],+p[1]-1,+p[2]); }
+function budgetSpentBetween(a,b){ // spending money only (no subscriptions), both dates included
+  if(!a||!b||a>b) return 0;
+  const ids=budgetCats().map(c=>c.id); let n=0;
+  for(const e of (spendData.entries||[])){ const d=e.date||""; if(d>=a&&d<=b&&ids.includes(e.cat)&&!(e.cat==='buy'&&e.kept)) n+=(e.amount||0); }
+  for(const e of wnEntriesAll('needs').concat(wnEntriesAll('wants'))){ const d=e.date||""; if(d>=a&&d<=b) n+=(e.amount||0); }
+  return n;
+}
+// subscriptions set aside for a month: renewals paid in it, plus active ones not paid in it yet (same as the Budget card this month)
+function subsCommittedMonth(ym){
+  const paid=(spendData.entries||[]).filter(e=>e.cat==="subs"&&(e.date||"").slice(0,7)===ym);
+  let t=paid.reduce((s,e)=>s+(e.amount||0),0);
+  subs.filter(x=>!x.cancelled).forEach(x=>{ if(!paid.some(e=>e.sub?String(e.sub)===String(x.id):e.desc===x.name)) t+=(x.amount||0); });
+  return t;
+}
+function budgetWeek(){
+  const t=ymdParse(TODAY), mon=new Date(t); mon.setDate(t.getDate()-((t.getDay()+6)%7));
+  const days=[]; for(let i=0;i<7;i++){ const d=new Date(mon); d.setDate(mon.getDate()+i); days.push(ymdStr(d)); }
+  const plan=monthlyPlan||0, cur=TODAY.slice(0,7), byMonth={};
+  for(const d of days){ const m=d.slice(0,7); if(!byMonth[m]) byMonth[m]={first:d,n:0}; byMonth[m].n++; }
+  let allow=0;
+  for(const m of Object.keys(byMonth)){
+    const f=byMonth[m].first, p=m.split("-"), last=new Date(+p[0],+p[1],0);
+    const daysLeft=Math.round((last-ymdParse(f))/86400000)+1;
+    const dayBefore=new Date(ymdParse(f)); dayBefore.setDate(dayBefore.getDate()-1);
+    const before=budgetSpentBetween(m+"-01", ymdStr(dayBefore));
+    const subsPart=subsCommittedMonth(m);
+    const left=plan-subsPart-before;
+    if(left>0&&daysLeft>0) allow+=left/daysLeft*byMonth[m].n;
+  }
+  return { from:days[0], to:days[6], allow:Math.round(allow), spent:Math.round(budgetSpentBetween(days[0],days[6])*100)/100, plan };
+}
+function budgetWeekInfo(){
+  const w=budgetWeek(), f=ymdParse(w.from), t=ymdParse(w.to);
+  const fd=f.toLocaleDateString('en-GB',{weekday:'short',day:'numeric'}), td=t.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+  showToast(`${fd} to ${td} · GH₵ ${w.spent.toLocaleString()} spent of GH₵ ${w.allow.toLocaleString()}`, w.spent>w.allow?"#FF453A":"#30D158");
+}
 function subPaidThisMonth(subId,ym){ return spendData.entries.some(e=>e.cat==="subs"&&e.sub===subId&&(e.date||"").slice(0,7)===ym); }
 function subsTotalMonthly(){ return subs.filter(x=>!x.cancelled).reduce((s,x)=>s+(x.amount||0),0); }
 // v21.4: subscriptions for a month = renewals paid that month; this month also counts active ones not paid yet
@@ -3282,10 +3339,9 @@ function deleteSub(id){
 
 function renderBudget(){
   const ym=selBudgetMonth;
-  const cats=budgetCats();
-  const catsSpent=cats.reduce((s,c)=>s+catSpentMonth(c.id,ym),0);
+  const cats=budgetRowCats();
   const subsM=subsSpentMonth(ym);
-  const spent=catsSpent+wnSpentMonth(ym)+subsM;
+  const spent=budgetSpentMonth(ym);
   const planned=monthlyPlan;
   const left=planned-spent;
   const cur=TODAY.slice(0,7);
@@ -3346,7 +3402,7 @@ function renderBudget(){
             <span style="font-size:10.5px;color:#6E6E6E">GH₵ ${t.toLocaleString()} this month</span></div>
         </div>`:''}
         ${open&&ents.length?`<div class="log-section visible" style="margin-top:10px">
-          ${[...ents].sort((a,b)=>b.date.localeCompare(a.date)).map(e=>`<div class="log-entry"><span style="color:#E5E5E5">${e.desc} · <span style="color:#E5E5E5">${e.date}</span></span><span style="display:flex;gap:8px;align-items:center"><span style="color:${cat.color};font-weight:700">GH₵ ${e.amount.toLocaleString()}</span><button class="btn-del" onclick="deleteSpendEntry('${e.id}')">🗑</button></span></div>`).join("")}
+          ${[...ents].sort((a,b)=>b.date.localeCompare(a.date)).map(e=>`<div class="log-entry"><span style="color:#E5E5E5">${e.desc} · <span style="color:#E5E5E5">${e.date}</span></span><span style="display:flex;gap:8px;align-items:center"><span style="color:${cat.color};font-weight:700">GH₵ ${e.amount.toLocaleString()}</span>${e.auto?`<span style="font-size:10px;color:#8A8A8A">From Lists</span>`:`<button class="btn-del" onclick="deleteSpendEntry('${e.id}')">🗑</button>`}</span></div>`).join("")}
         </div>`:''}
         ${open&&!ents.length?`<div style="font-size:11px;color:#444;margin-top:10px">No entries this month yet.</div>`:''}
       </div>`;
@@ -5012,7 +5068,11 @@ function ppAheadPill(tab){
       var ah=ppAheadDays(side);
       if(ah>0) return '<button class="pp-ahead pp-ahead-g"><i class="pp-dot"></i>Ahead <b>'+ah+' day'+(ah!==1?'s':'')+'</b></button>';
       return '<button class="pp-ahead pp-ahead-g"><i class="pp-dot"></i>Today <b>All done</b></button>'; }
-    // v19.5: no pill on Budget, the card already shows what is left
+    // v21.6: This week pill on Budget (Monday to Sunday)
+    if(tab==='budget'){ var w=budgetWeek(); if(!(w.plan>0)) return '';
+      var cl=(w.allow<=0||w.spent>w.allow)?'r':(w.spent>=w.allow*0.8?'a':'g');
+      var nums=Math.round(w.spent).toLocaleString()+' / '+w.allow.toLocaleString();
+      return '<button class="pp-ahead pp-wk pp-ahead-'+cl+'" onclick="budgetWeekInfo()"><i class="pp-dot"></i>'+(nums.length>12?'Week':'This week')+' <b>GH\u20b5 '+nums+'</b></button>'; }
   }catch(e){}
   return ''; }
 // v19.0: manage spending categories (add or delete) from Settings
@@ -5046,6 +5106,7 @@ function ppAddChips(pg,tab){
     h+='<div class="pp-chips">'+[['week','W'],['month','M'],['year','Y'],['lifetime','All']].map(function(x){ return '<button class="'+(pc===x[0]?'on':'')+'" onclick="ppPer(\''+x[0]+'\')">'+x[1]+'</button>'; }).join('')+'</div>';
     var l=hero.querySelector('.pp-l'); if(l) l.textContent=(l.textContent||'').split(' \u00b7 ')[0]; }
   row.innerHTML=h; hero.insertBefore(row,hero.firstChild);
+  hero.classList.add('pp-hastabs'); if(hero.querySelector('.pp-ring')) hero.classList.add('pp-hasring'); // v21.6: cards with tabs are squeezed to the Debts card size
   // v19.6: tabs and W M Y All always stay on one line; shrink a little until they fit
   var fit=function(){ try{ var bs=[].slice.call(row.querySelectorAll('button')), f=12.5, n=0;
     bs.forEach(function(b){ b.style.removeProperty('font-size'); b.style.removeProperty('padding'); });
@@ -5150,7 +5211,7 @@ function ppSheet(kind){
   var old=document.getElementById('ppSheet'); if(old) old.remove();
   var f;
   if(kind==='spend'){
-    var cats=spendCats.filter(function(c){ return !c.fixed; }); if(!cats.length) cats=spendCats;
+    var cats=spendCats.filter(function(c){ return c.id==='needs'||c.id==='wants'; }).sort(function(a,b){ return a.id==='needs'?-1:1; }).concat(spendCats.filter(function(c){ return !c.fixed; })); if(!cats.length) cats=spendCats; // v21.6: Needs and Wants can be logged straight away
     f='<div class="pp-sh-t">Add spending</div><input id="ppAmt" type="number" inputmode="decimal" placeholder="Amount (GHS)">'+
       '<select id="ppCat">'+cats.map(function(c){return '<option value="'+c.id+'">'+(c.icon||'')+' '+sxEsc(c.label)+'</option>';}).join('')+'</select>'+
       '<input id="ppNote" placeholder="What was it? (optional)"><input id="ppDate" type="date" value="'+TODAY+'">'+
@@ -5443,6 +5504,27 @@ try{ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change'
 .v21-amt{font-size:15px!important;font-weight:800!important;white-space:nowrap;flex:none;margin-right:2px}
 .v21-plus{width:32px!important;height:32px!important;min-width:32px;border-radius:10px!important;border:1px solid #3A3A3A!important;background:#2A2A2A!important;color:#C9A7FF!important;display:flex!important;align-items:center;justify-content:center;padding:0!important;font-size:0!important}
 .v21-plus svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
+/* v21.6: amber week pill, top cards with tabs the same size as Debts, subscription countdown ring */
+html body .pp-ahead.pp-wk{font-size:12.5px;padding:7px 11px;gap:6px;max-width:calc(100vw - 150px);overflow:hidden}html body .pp-ahead.pp-wk b{font-size:12.5px}.pp-ahead-a{background:#2A200E;border:1px solid #8A6A2E}.pp-ahead-a .pp-dot{background:#FFB020}.pp-ahead-a b{color:#FFB020}
+html body .pp-hero.pp-hastabs .pp-chrow{margin-bottom:6px!important}
+html body .pp-hero.pp-hastabs .pp-tabs button{padding:4px 10px!important}
+html body .pp-hero.pp-hastabs .pp-chips button{padding:3px 6px!important}
+html body .pp-hero.pp-hastabs.pp-hasring{padding-top:12px!important;padding-bottom:14px!important}
+html body .pp-hero.pp-hastabs.pp-hasring .pp-ring{width:76px!important;height:76px!important}
+html body .pp-hero.pp-hastabs.pp-hasring .pp-ring div{width:62px!important;height:62px!important;font-size:20px!important}
+html body .pp-hero.pp-hastabs.pp-hasring .pp-v{font-size:30px!important;margin:2px 0 1px!important}
+html body .pp-hero.pp-hastabs.pp-hasring .pp-mini{margin-top:9px!important}
+html body .pp-hero.pp-hastabs.pp-hasring .pp-mini>div{padding-top:6px!important;padding-bottom:6px!important}
+html body .pp-hero.pp-hastabs:not(.pp-hasring){padding-top:14px!important;padding-bottom:15px!important}
+html body .pp-hero.pp-hastabs:not(.pp-hasring) .pp-chrow{margin-bottom:5px!important}
+html body .v21-catcard .soft-bub{width:36px!important;height:36px!important;min-width:36px!important;border-radius:11px!important;display:flex!important;align-items:center;justify-content:center}html body .v21-catcard .soft-bub svg{width:19px!important;height:19px!important}
+.v21-sring{width:52px;height:52px;flex:none;position:relative;display:flex;align-items:center;justify-content:center;color:#D4D4D8}
+.v21-sring svg{position:absolute;inset:0;width:52px;height:52px}
+.v21-sring .tr{fill:none;stroke:#2E2E33;stroke-width:5}.v21-sring .fl{fill:none;stroke:currentColor;stroke-width:5;stroke-linecap:round}
+.v21-sring.g{color:#22DD66}.v21-sring.g .tr{stroke:#173A24}.v21-sring.a{color:#FFB020}.v21-sring.a .tr{stroke:#3A2E14}.v21-sring.r{color:#FF4D5E}.v21-sring.r .tr{stroke:#3A2228}
+.v21-sring .in{position:relative;display:flex;flex-direction:column;align-items:center;line-height:1}
+.v21-sring .in b{font-size:15px!important;font-weight:800!important;color:inherit!important;line-height:1!important}
+.v21-sring .in span{font-size:8.5px!important;font-weight:700!important;letter-spacing:.4px;margin-top:2px;color:inherit!important}
 </style>
 <script>
 // ===== v21.0 (Philip, 15 Nov 2026): the 10 fixes from the "Finance fixes list".
@@ -5534,11 +5616,15 @@ try{ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change'
   // ================= FIX 6: SUBSCRIPTIONS =================
   function subRow(s){
     var dl=deadlineDaysLeft(s.deadline), box;
-    if(s.cancelled) box='<div class="v21-cnt"><b>\u2013</b><span>OFF</span></div>';
-    else if(dl===null) box='<div class="v21-cnt"><b>\u2013</b><span>NO DATE</span></div>';
-    else if(dl<0) box='<div class="v21-cnt r"><b>'+(-dl)+'</b><span>LATE</span></div>';
-    else if(dl===0) box='<div class="v21-cnt r"><b>0</b><span>TODAY</span></div>';
-    else box='<div class="v21-cnt '+(dl<=6?'r':dl<=14?'a':'g')+'"><b>'+dl+'</b><span>DAY'+(dl===1?'':'S')+'</span></div>'; // v21.1: 15+ green, 7-14 amber, 0-6 red
+    // v21.6 style 2: countdown ring. The ring is the days left out of this renewal month and empties as the day comes.
+    var ring=function(cl,frac,big,small){ var C=2*Math.PI*22, f=Math.max(0,Math.min(1,frac)), on=Math.round(C*f*10)/10;
+      return '<div class="v21-sring '+cl+'"><svg viewBox="0 0 52 52" aria-hidden="true"><circle class="tr" cx="26" cy="26" r="22"/>'+(on>0?'<circle class="fl" cx="26" cy="26" r="22" stroke-dasharray="'+on+' '+Math.round(C*10)/10+'" transform="rotate(-90 26 26)"/>':'')+'</svg><div class="in"><b>'+big+'</b><span>'+small+'</span></div></div>'; };
+    var cyc=30; try{ if(s.deadline){ var dd=new Date(s.deadline+'T00:00:00'), pv=new Date(dd); pv.setMonth(pv.getMonth()-1); var c=Math.round((dd-pv)/86400000); if(c>0) cyc=c; } }catch(e){}
+    if(s.cancelled) box=ring('',0,'\u2013','OFF');
+    else if(dl===null) box=ring('',0,'\u2013','NO DATE');
+    else if(dl<0) box=ring('r',1,(-dl),'LATE');
+    else if(dl===0) box=ring('r',0,'0','TODAY');
+    else box=ring(dl<=6?'r':dl<=14?'a':'g',dl/cyc,dl,'DAY'+(dl===1?'':'S')); // v21.1 colours: 15+ green, 7-14 amber, 0-6 red
     var sub=cedi(s.amount)+'/mo'+(s.cancelled?' \u00b7 cancelled':(s.deadline?' \u00b7 '+shortDate(s.deadline):' \u00b7 no date set'));
     var due=!s.cancelled&&dl!==null&&dl<=0;
     return '<div class="v21-card'+(s.cancelled?' off':'')+'">'+box+'<div class="v21-x"><span class="v21-n">'+esc(s.name)+'</span><span class="v21-s">'+sub+'</span></div>'+
@@ -5574,7 +5660,7 @@ try{ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change'
       var st=subEl.textContent||'', am=/GH\u20b5\s*(-?[\d,]+)/.exec(st), cn=/(\d+)\s*entr/.exec(st);
       var amt=am?parseFloat(am[1].replace(/,/g,''))||0:0, cnt=cn?+cn[1]:0; total+=amt; any=true;
       var cat={}; try{ cat=getCat(id)||{}; }catch(e){}
-      var h=hueOf(cat.color), box=card.querySelector('.sx-ic');
+      var h=hueOf(cat.color), box=card.querySelector('.sx-ic')||card.querySelector('.soft-bub'); // v21.6: Needs and Wants rows use the same icon box
       if(box){ box.classList.add('v21-catic'); box.style.setProperty('background',h===null?'#26262A':'hsl('+h+',55%,16%)','important'); box.style.setProperty('color',h===null?'#D4D4D8':'hsl('+h+',85%,'+(h>40&&h<75?'60%':'68%')+')','important'); box.style.setProperty('box-shadow','none','important'); }
       nameEl.className='v21-n'; nameEl.removeAttribute('style');
       subEl.className='v21-s'; subEl.removeAttribute('style'); subEl.textContent=cnt?cnt+' entr'+(cnt===1?'y':'ies'):'No entries';
