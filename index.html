@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v22.0</title>
+<title>Philip's Finance Hub v22.1</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -449,7 +449,7 @@
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v22.0</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v22.1</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -6032,6 +6032,117 @@ css.textContent=
  'html body .pp-hero.pp-hastabs:not(.pp-hasring){padding-top:16px!important;padding-bottom:18px!important}';
 function go(){ navName(); try{ if(!document.body.contains(css)) document.body.appendChild(css); }catch(e){} try{ switchTab(ppActive()); }catch(e){} }
 go(); setTimeout(go,0); window.addEventListener('load',function(){ setTimeout(go,0); });
+})();
+</script>
+<script>
+// v22.1 (Philip, 18 Nov 2026): new Money Out, clean like the reference screens (in the app's dark look).
+// Out = only money that has gone out: spending and debts paid. Withdrawals and money moved show in blue, not added.
+// Top card: total out, category ring, SPENT / DEBTS / WITHDRAWN. No Add spending button.
+// Top categories: icon, amount, bar and %. Transactions: grouped by Today / Yesterday / date, with All / Spent / Debts / Withdrawn filters.
+// Every top card is the same height as the Debts card. Saved data and storage keys unchanged.
+(function(){
+var RED='#FF4D5E', AMB='#FF9F0A', BLUE='#38B6FF', ALT=['#BF5AF2','#FF5CA8','#64D2FF','#FFD60A','#30D158','#C77DFF','#FFB627','#5AC8FA'];
+function G(v){ var n=Math.round(v||0); return (n<0?'-':'')+'GH₵ '+Math.abs(n).toLocaleString(); }
+function esc(s){ try{ return sxEsc(s); }catch(e){ return String(s||''); } }
+function rgba(hex,a){ var m=/^#?([0-9a-f]{6})$/i.exec(String(hex||'')); if(!m) return 'rgba(255,255,255,'+a+')'; var n=parseInt(m[1],16); return 'rgba('+(n>>16)+','+((n>>8)&255)+','+(n&255)+','+a+')'; }
+function ico(cat){ try{ return sxCatIcon(cat).n; }catch(e){ return 'out'; } }
+function svg(n){ try{ return _svg(n,'19px'); }catch(e){ return ''; } }
+function catCol(id,col){ if(id==='debt') return AMB; try{ return ppDkCol(col||'#8A5BA6',id); }catch(e){ return col||'#8A5BA6'; } }
+function tOf(id){ var m=/^[a-z]+_([0-9a-z]{8})/.exec(String(id||'')); if(!m) return ''; var t=new Date(parseInt(m[1],36)); if(isNaN(t)||t.getFullYear()<2020||t.getFullYear()>2100) return ''; var h=t.getHours(), mi=t.getMinutes(); return ((h%12)||12)+':'+(mi<10?'0':'')+mi+(h<12?' AM':' PM'); }
+function dayName(d){ if(d===TODAY) return 'Today'; var y=new Date(TODAY+'T00:00:00'); y.setDate(y.getDate()-1); var ys=y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+String(y.getDate()).padStart(2,'0'); if(d===ys) return 'Yesterday';
+  var x=new Date(d+'T00:00:00'); if(isNaN(x)) return d; return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][x.getDay()]+' '+x.getDate()+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][x.getMonth()]+(x.getFullYear()!==y.getFullYear()?' '+x.getFullYear():''); }
+function data(){
+  var pr=periodRange(), all=getPeriodEntries(), arch=archiveForPeriod();
+  var out=all.filter(function(e){ return e.cat!=='sav'; }), sav=all.filter(function(e){ return e.cat==='sav'; });
+  var debts=out.filter(function(e){ return e.cat==='debt'; }).reduce(function(s,e){ return s+(e.amount||0); },0)+(arch.debt||0);
+  var spent=out.filter(function(e){ return e.cat!=='debt'; }).reduce(function(s,e){ return s+(e.amount||0); },0)+(arch.wants||0)+(arch.needs||0)+(arch.budget||0);
+  var wds=[]; try{ (wdData.entries||[]).forEach(function(w){ if(inRange(w.date,pr.from,pr.to)) wds.push({id:w.id,date:w.date,desc:'Withdrawn to MoMo',amount:w.amount,k:'wd',sub:'Withdrawn'}); }); }catch(e){}
+  try{ ((incSav&&incSav.moves)||[]).forEach(function(m){ if(m.kind==='out'&&inRange(m.d,pr.from,pr.to)){ var nm=''; try{ nm=getSource(m.src).name; }catch(x){} wds.push({id:m.id,date:m.d,desc:'Taken out of '+nm,amount:m.a,k:'wd',sub:'From your pot'+(m.note?' · '+m.note:'')}); } }); }catch(e){}
+  var wd=wds.reduce(function(s,e){ return s+(e.amount||0); },0);
+  var byCat={}, used={};
+  out.forEach(function(e){ var c=getCat(e.cat)||{}; var k=c.label||e.cat; if(!byCat[k]) byCat[k]={l:k,a:0,n:0,id:e.cat,cat:c,c:catCol(e.cat,c.color)}; byCat[k].a+=(e.amount||0); byCat[k].n++; });
+  var archOut=(arch.debt||0)+(arch.wants||0)+(arch.needs||0)+(arch.budget||0); if(archOut>0) byCat['Older']={l:'Older',a:archOut,n:arch.count||0,id:'old',cat:{},c:'#8A8A90'};
+  var cats=Object.keys(byCat).map(function(k){ return byCat[k]; }).sort(function(a,b){ return b.a-a.a; }), ai=0;
+  cats.forEach(function(c){ var key=String(c.c).toUpperCase(); if(used[key]){ while(ai<ALT.length&&used[ALT[ai].toUpperCase()]) ai++; c.c=ALT[ai%ALT.length]; ai++; key=String(c.c).toUpperCase(); } used[key]=1; });
+  return {pr:pr,out:out,sav:sav,wds:wds,wd:wd,debts:debts,spent:spent,total:debts+spent,cats:cats,n:out.length+(arch.count||0),arch:arch};
+}
+window.ppTop=function(){
+  var D=data(), tot=D.cats.reduce(function(s,c){ return s+c.a; },0), at=0;
+  var grad=tot>0?D.cats.map(function(c){ var a=at; at+=c.a/tot*100; return c.c+' '+a.toFixed(2)+'% '+at.toFixed(2)+'%'; }).join(','):'rgba(255,255,255,.12) 0 100%';
+  var top=D.cats[0], tp=(top&&tot>0)?Math.round(top.a/tot*100):0, tl=top?String(top.l):'out'; if(tl.length>9) tl=tl.slice(0,8)+'…';
+  var tint=function(c){ try{ return ppTint(c); }catch(e){ return ''; } };
+  return '<div class="pp-hd"><div><div class="pp-t1">Money overview</div><div class="pp-t2">Your numbers, your plan.</div></div></div>'+
+    '<div class="pp-hero v221-hero"><div class="pp-row"><div style="min-width:0"><div class="pp-l">Total out · '+D.pr.label.toLowerCase()+'</div>'+
+    '<div class="pp-v" style="color:'+(D.total>0?RED:'#22DD66')+'!important">'+G(D.total)+'</div>'+
+    '<div class="pp-g">'+D.n+' payment'+(D.n!==1?'s':'')+'</div></div>'+
+    '<div class="pp-ring" style="background:conic-gradient('+grad+')"><div>'+(top?tp+'%':'0%')+'<small>'+esc(tl.toLowerCase())+'</small></div></div></div>'+
+    '<div class="pp-mini" style="grid-template-columns:repeat(3,1fr)"><div style="'+tint(RED)+'"><span>SPENT</span><b style="color:'+RED+'">'+G(D.spent)+'</b></div>'+
+    '<div style="'+tint(AMB)+'"><span>DEBTS</span><b style="color:'+AMB+'">'+G(D.debts)+'</b></div>'+
+    '<div style="'+tint(BLUE)+'"><span>WITHDRAWN</span><b style="color:'+BLUE+'">'+G(D.wd)+'</b></div></div></div>';
+};
+window._outF=window._outF||'all';
+window.outFilter=function(f){ window._outF=f; var pg=document.getElementById('page-money'); if(!pg) return;
+  [].slice.call(pg.querySelectorAll('.v221-f button')).forEach(function(b){ b.classList.toggle('on',b.getAttribute('data-f')===f); });
+  [].slice.call(pg.querySelectorAll('.v221-day')).forEach(function(d){ var vis=0; [].slice.call(d.querySelectorAll('.v221-tx')).forEach(function(r){ var k=r.getAttribute('data-k'), on=(f==='all'||k===f); r.style.display=on?'':'none'; if(on) vis++; }); d.style.display=vis?'':'none'; });
+  var em=pg.querySelector('.v221-empty'); if(em){ var any=[].slice.call(pg.querySelectorAll('.v221-tx')).some(function(r){ return r.style.display!=='none'; }); em.style.display=any?'none':''; } };
+window.sxSpend=function(){
+  var D=data(), tot=D.total;
+  var catRows=D.cats.length?D.cats.map(function(c){ var p=tot>0?Math.round(c.a/tot*100):0;
+    return '<div class="v221-cat"><div class="v221-bub" style="background:'+rgba(c.c,.18)+';color:'+c.c+'">'+svg(c.id==='debt'?'card':ico(c.cat))+'</div>'+
+      '<div class="v221-cm"><div class="v221-cr"><b>'+esc(c.l)+'</b><span>'+p+'%</span></div><div class="v221-ca">'+G(c.a)+' <i>· '+c.n+' payment'+(c.n!==1?'s':'')+'</i></div>'+
+      '<div class="v221-bar"><i style="width:'+Math.max(p,c.a>0?2:0)+'%;background:'+c.c+'"></i></div></div></div>'; }).join(''):'<div class="v221-none">Nothing has gone out '+D.pr.label.toLowerCase()+'.</div>';
+  var savL=(getCat('sav')||{}).label||'Savings';
+  var rows=[];
+  D.out.forEach(function(e){ var c=getCat(e.cat)||{}; rows.push({id:e.id,date:e.date,desc:e.desc,amount:e.amount,k:e.cat==='debt'?'debt':'spent',sub:(e.cat==='debt'?'Debt paid':(c.label||'Spent')),col:catCol(e.cat,c.color),ic:e.cat==='debt'?'card':ico(c),sign:'−',ac:RED}); });
+  D.wds.forEach(function(e){ rows.push({id:e.id,date:e.date,desc:e.desc,amount:e.amount,k:'wd',sub:e.sub,col:BLUE,ic:'dl',sign:'',ac:BLUE}); });
+  D.sav.forEach(function(e){ rows.push({id:e.id,date:e.date,desc:e.desc,amount:e.amount,k:'wd',sub:'Saved to goal',col:BLUE,ic:'pig',sign:'',ac:BLUE}); });
+  rows.sort(function(a,b){ return String(b.date).localeCompare(String(a.date))||String(b.id).localeCompare(String(a.id)); });
+  var days=[], by={}; rows.forEach(function(r){ if(!by[r.date]){ by[r.date]=[]; days.push(r.date); } by[r.date].push(r); });
+  var tx=days.map(function(d){ var dt=by[d].filter(function(r){ return r.k!=='wd'; }).reduce(function(s,r){ return s+(r.amount||0); },0);
+    return '<div class="v221-day"><div class="v221-dh"><span>'+dayName(d)+'</span>'+(dt>0?'<span style="color:'+RED+'">−'+G(dt)+'</span>':'')+'</div><div class="v221-card">'+
+      by[d].map(function(r){ var tm=tOf(r.id); return '<div class="v221-tx" data-k="'+r.k+'"><div class="v221-bub" style="background:'+rgba(r.col,.18)+';color:'+r.col+'">'+svg(r.ic)+'</div>'+
+        '<div class="v221-tm"><b>'+esc(r.desc)+'</b><small>'+esc(r.sub)+(tm?' · '+tm:'')+'</small></div><div class="v221-amt" style="color:'+r.ac+'">'+r.sign+G(r.amount)+'</div></div>'; }).join('')+'</div></div>'; }).join('');
+  var F=[['all','All'],['spent','Spent'],['debt','Debts'],['wd','Withdrawn']];
+  var h='<div class="sx">'+
+    '<div class="v221-sec"><div class="v221-h"><span>Top categories</span><i>'+esc(D.pr.label)+'</i></div><div class="v221-card">'+catRows+'</div></div>'+
+    '<div class="v221-sec"><div class="v221-h sx-h2"><span>Transactions</span></div>'+
+    '<div class="v221-f">'+F.map(function(x){ return '<button data-f="'+x[0]+'" class="'+(window._outF===x[0]?'on':'')+'" onclick="outFilter(\''+x[0]+'\')">'+x[1]+'</button>'; }).join('')+'</div>'+
+    (tx||'')+'<div class="v221-none v221-empty" style="'+(rows.length?'display:none':'')+'">Nothing to show here.</div></div>'+
+    (spendData.entries.some(function(e){ return !e.auto; })?'<button class="sx-btn2 v221-clear" onclick="ppClearSheet()">'+sxI('trash',18)+' Clear manually</button>':'')+
+    '</div>';
+  document.getElementById('page-money').innerHTML=h;
+  setTimeout(function(){ try{ outFilter(window._outF||'all'); }catch(e){} },0);
+};
+var css=document.createElement('style');
+css.textContent=
+ '.v221-sec{margin:14px 0 4px}.v221-h{display:flex;justify-content:space-between;align-items:baseline;margin:0 4px 10px;font-size:19px;font-weight:700;color:#fff}.v221-h i{font-style:normal;font-size:13px;font-weight:700;color:#FFB627}'+
+ '.v221-card{background:#1C1C1F;border-radius:18px;padding:6px 14px}'+
+ '.v221-cat{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #2A2A2E}.v221-cat:last-child{border-bottom:none}'+
+ '.v221-bub{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex:none}.v221-bub svg{width:20px!important;height:20px!important;stroke:currentColor!important}'+
+ '.v221-cm{flex:1;min-width:0}.v221-cr{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.v221-cr b{font-size:15px;color:#fff;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v221-cr span{font-size:14px;font-weight:800;color:#fff}'+
+ '.v221-ca{font-size:13.5px;font-weight:700;color:#E8E2EE;margin-top:1px}.v221-ca i{font-style:normal;font-weight:500;color:#9A93A3;font-size:12px}'+
+ '.v221-bar{height:7px;border-radius:6px;background:#2C2C31;margin-top:7px;overflow:hidden}.v221-bar i{display:block;height:100%;border-radius:6px}'+
+ '.v221-f{display:flex;gap:6px;background:#1C1C1F;border-radius:14px;padding:4px;margin:0 0 12px}.v221-f button{flex:1;border:none;background:transparent;color:#BDB6C6;font:inherit;font-size:13px;font-weight:700;padding:8px 4px;border-radius:11px;cursor:pointer}.v221-f button.on{background:#5B2A86;color:#fff}'+
+ '.v221-day{margin-bottom:12px}.v221-dh{display:flex;justify-content:space-between;margin:0 6px 6px;font-size:13px;font-weight:700;color:#BDB6C6}'+
+ '.v221-tx{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #2A2A2E}.v221-card .v221-tx:last-child{border-bottom:none}'+
+ '.v221-tm{flex:1;min-width:0}.v221-tm b{display:block;font-size:15px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v221-tm small{display:block;font-size:12.5px;color:#9A93A3;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}'+
+ '.v221-amt{font-size:15px;font-weight:800;white-space:nowrap}'+
+ '.v221-none{font-size:13.5px;color:#9A93A3;text-align:center;padding:16px 0}'+
+ 'html body .v221-clear{border-color:#5A2A33!important;color:#FF4D5E!important}'+
+ // same height as the Debts card: the ring sits beside the tabs instead of below them
+ 'html body .page .pp-hero.pp-hastabs.pp-hasring{position:relative!important;padding-top:17px!important;padding-bottom:17px!important}'+
+ 'html body .page .pp-hero.pp-hastabs.pp-hasring .pp-chrow{margin-bottom:4px!important;width:calc(100% - 104px)!important}'+
+ 'html body .page .pp-hero.pp-hastabs.pp-hasring .pp-row>div:first-child{padding-right:104px;min-width:0;min-height:68px}'+
+ 'html body .page .pp-hero.pp-hastabs.pp-hasring .pp-row{position:static!important;transform:none!important}'+
+ 'html body .page .pp-hero.pp-hastabs.pp-hasring .pp-ring{position:absolute!important;right:15px!important;top:22px!important;width:92px!important;height:92px!important}'+
+ 'html body .page .pp-hero.pp-hastabs.pp-hasring .pp-ring div{width:76px!important;height:76px!important;font-size:25px!important}'+
+ 'html body .page .pp-hero.pp-hastabs.pp-hasring .pp-v{font-size:34px!important;margin:2px 0 1px!important}'+
+ 'html body .page .pp-hero.pp-hastabs.pp-hasring .pp-mini{margin-top:5px!important}'+
+ 'html body .page .pp-hero.pp-hastabs.pp-hasring .pp-mini>div{padding-top:8px!important;padding-bottom:8px!important}';
+function add(){ try{ document.body.appendChild(css); }catch(e){} }
+add();
+function go(){ try{ if(ppActive()==='money') switchTab('money'); }catch(e){} }
+setTimeout(go,0); window.addEventListener('load',function(){ setTimeout(go,0); });
 })();
 </script>
 </body>
