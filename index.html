@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v23.1</title>
+<title>Philip's Finance Hub v23.2</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -453,7 +453,7 @@ html body #page-money .sx > .sx-seg{display:none!important}</style>
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v23.1</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v23.2</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -6321,6 +6321,90 @@ css.textContent='html body .nav-btn{justify-content:flex-start!important}'+
  'html body .nav-btn .nav-icon,html body .nav-btn.active .nav-icon{transform:none!important;height:24px!important;line-height:0!important;display:flex!important;align-items:center!important;justify-content:center!important}'+
  'html body .nav-btn .nav-icon svg{width:22px!important;height:22px!important;display:block!important}';
 document.head.appendChild(css);
+})();
+</script>
+<script>
+// v23.2 (Philip, 19 Nov 2026): every top card the same height as the Debts card; no bar on Money In or Out;
+// Money Out amount red; Out pill shows money out today; pay/save pill reads "-GH₵ X today"; Debts TOTAL red;
+// every page opens at the top so the page name and its pill always show. Saved data and storage keys unchanged.
+(function(){
+var RED='#FF4D5E', GRN='#22DD66';
+function G(v){ return 'GH₵ '+Math.round(v||0).toLocaleString(); }
+// Debts TOTAL box in red
+try{ PP_BOXCOL.TOTAL=RED; }catch(e){}
+// Money Out: the big amount is always red
+var oTop=window.ppTop;
+if(typeof oTop==='function') window.ppTop=function(){ var r=oTop.apply(this,arguments);
+  return (typeof r==='string')?r.replace(/(class="pp-v" style="color:)#22DD66(!important)/,'$1'+RED+'$2'):r; };
+// money that went out today (spending and withdrawals, same as Money Out)
+function outToday(){ var t=0; try{
+  getAllEntries().forEach(function(e){ if(e.date===TODAY&&e.cat!=='sav'&&e.cat!=='debt') t+=(e.amount||0); });
+  (wdData.entries||[]).forEach(function(w){ if(w.date===TODAY) t+=(w.amount||0); });
+  ((incSav&&incSav.moves)||[]).forEach(function(m){ if(m.kind==='out'&&m.d===TODAY) t+=(m.a||0); });
+}catch(e){} return t; }
+var oAP=window.ppAheadPill;
+window.ppAheadPill=function(tab){
+  if(tab==='money'&&typeof moneySide!=='undefined'&&moneySide==='spend'){ var t=outToday();
+    return t>0?'<button class="pp-ahead pp-ahead-r" onclick="v232OutToday()"><i class="pp-dot"></i><b>−'+G(t)+'</b> today</button>'
+              :'<button class="pp-ahead pp-ahead-g" onclick="v232OutToday()"><i class="pp-dot"></i><b>'+G(0)+'</b> today</button>'; }
+  var r=oAP.apply(this,arguments);
+  if(typeof r==='string') r=r.replace(/(?:Pay|Save) today <b>GH₵ ([\d,]+)<\/b>/,'<b>−GH₵ $1</b> today');
+  return r; };
+window.v232OutToday=function(){ try{ showToast(outToday()>0?G(outToday())+' went out today':'Nothing went out today'); }catch(e){} };
+// ---------- every top card the same height as the Debts card ----------
+var H=0;
+function debtsH(pg){
+  try{ var live=document.getElementById('page-debt');
+    if(live&&live.classList.contains('active')&&planSide==='debt'){ var h=live.querySelector('.pp-new .pp-hero')||live.querySelector('.pp-hero'); if(h&&h.offsetHeight>0){ H=h.offsetHeight; return H; } }
+    if(H) return H;
+    var ps=planSide, html=''; planSide='debt'; try{ html=ppTabTop('debt'); } finally{ planSide=ps; }
+    var box=document.createElement('div'); box.className='pp-new'; box.style.cssText='position:absolute;left:0;right:0;top:0;visibility:hidden;pointer-events:none';
+    box.innerHTML=html; (pg||document.body).appendChild(box);
+    var h2=box.querySelector('.pp-hero'); var v=h2?h2.offsetHeight:0; box.remove(); return v;
+  }catch(e){ return 0; } }
+function fit(pg){
+  try{ if(!pg||!pg.classList.contains('active')) return;
+    var hero=pg.querySelector('.pp-new .pp-hero')||pg.querySelector('.pp-hero'); if(!hero) return;
+    var isDebt=pg.id==='page-debt'&&planSide==='debt';
+    if(isDebt){ hero.classList.remove('v232-eq','v232-t1','v232-t2'); hero.style.removeProperty('height'); H=hero.offsetHeight; return; }
+    var h=debtsH(pg); if(!(h>0)) return;
+    hero.classList.add('v232-eq'); hero.classList.remove('v232-t1','v232-t2'); hero.style.setProperty('height',h+'px','important');
+    var place=function(){ var ring=hero.querySelector('.pp-ring'), row=hero.querySelector('.pp-row'), txt=row&&row.firstElementChild; if(!(ring&&row&&hero.classList.contains('pp-hastabs'))) return;
+      var hb=hero.getBoundingClientRect(), tb=(txt||row).getBoundingClientRect(), mini=hero.querySelector('.pp-mini'), lim=mini?mini.getBoundingClientRect().top-6:tb.bottom;
+      var sz=Math.max(56,Math.min(76,Math.floor(lim-tb.top))); // the ring fits beside the amount, never over the boxes
+      ring.style.setProperty('width',sz+'px','important'); ring.style.setProperty('height',sz+'px','important');
+      var inn=ring.querySelector('div'); if(inn){ inn.style.setProperty('width',(sz-14)+'px','important'); inn.style.setProperty('height',(sz-14)+'px','important'); inn.style.setProperty('font-size',Math.round(sz*0.25)+'px','important'); }
+      ring.style.setProperty('top',Math.round(tb.top+(lim-tb.top-sz)/2-hb.top)+'px','important'); };
+    place();
+    if(hero.scrollHeight>h+1){ hero.classList.add('v232-t1'); place(); }
+    if(hero.scrollHeight>h+1){ hero.classList.add('v232-t2'); place(); }
+    if(hero.scrollHeight>h+1){ hero.style.removeProperty('height'); hero.style.setProperty('min-height',h+'px','important'); place(); } // never cut anything off
+  }catch(e){} }
+window.v232Fit=fit;
+var oDe=window.ppDecorate;
+window.ppDecorate=function(pg){ var r=oDe.apply(this,arguments); try{ fit(pg); requestAnimationFrame(function(){ fit(pg); }); }catch(e){} return r; };
+window.addEventListener('resize',function(){ H=0; try{ fit(document.querySelector('[id^=page-].active')); }catch(e){} });
+// ---------- open at the top: the page name and pill always show ----------
+try{ history.scrollRestoration='manual'; }catch(e){}
+function top0(){ try{ window.scrollTo(0,0); document.documentElement.scrollTop=0; document.body.scrollTop=0; }catch(e){} }
+document.addEventListener('click',function(e){ var b=e.target&&e.target.closest&&e.target.closest('.nav-btn,.pp-tabs button,.v223-opt'); if(b) setTimeout(top0,0); },true);
+window.addEventListener('pageshow',function(){ top0(); });
+if(document.readyState==='complete') setTimeout(top0,60); else window.addEventListener('load',function(){ setTimeout(top0,60); });
+var css=document.createElement('style');
+css.textContent=
+ 'html body .v223-bar{display:none!important}'+
+ 'html body .page .pp-hero.v232-eq{display:flex!important;flex-direction:column!important;justify-content:space-between!important;box-sizing:border-box!important;overflow:hidden!important}'+
+ 'html body .page .pp-hero.v232-eq>*{flex:none!important}html body .page .pp-hero.v232-eq{gap:4px!important}'+
+ 'html body .page .pp-hero.v232-eq .pp-mini{margin-top:0!important}'+
+ 'html body .page .pp-hero.v232-eq.pp-hastabs .pp-chrow{margin-bottom:4px!important}'+
+ 'html body .page .pp-hero.v232-eq.pp-hastabs.pp-hasring .pp-row>div:first-child{min-height:0!important}'+
+ 'html body .page .pp-hero.v232-t1{padding-top:12px!important;padding-bottom:12px!important}'+
+ 'html body .page .pp-hero.v232-t1 .pp-chrow .pp-tabs button,html body .page .pp-hero.v232-t1 .v223-perb{padding-top:5px!important;padding-bottom:5px!important}'+
+ 'html body .page .pp-hero.v232-t1 .pp-mini>div{padding-top:7px!important;padding-bottom:7px!important}'+
+ 'html body .page .pp-hero.v232-t2 .pp-v{font-size:28px!important;margin-top:0!important}'+
+ 'html body .page .pp-hero.v232-t2 .pp-l{margin-bottom:0!important}';
+document.head.appendChild(css);
+setTimeout(function(){ try{ fit(document.querySelector('[id^=page-].active')); }catch(e){} },0);
 })();
 </script>
 </body>
