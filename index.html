@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v23.3</title>
+<title>Philip's Finance Hub v23.4</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -453,7 +453,7 @@ html body #page-money .sx > .sx-seg{display:none!important}</style>
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v23.3</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v23.4</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -6407,6 +6407,75 @@ css.textContent=
  'html body .page .pp-hero.v232-t2 .pp-l{margin-bottom:0!important}';
 document.head.appendChild(css);
 setTimeout(function(){ try{ fit(document.querySelector('[id^=page-].active')); }catch(e){} },0);
+})();
+</script>
+<script>
+// v23.4 (Philip, 22 Nov 2026, #FIN1): new top card look on every tab = "graphite + green" (preview style 5).
+// Money In: amount green, "saved" blue, In pots + Ready to spend under it. Every other card keeps its own numbers and buttons, only the look changes.
+(function(){
+var GRN='#2BE07A', BLUE='#38B6FF';
+function G(v){ var n=Math.round(v||0); return (n<0?'-':'')+'GH₵ '+Math.abs(n).toLocaleString(); }
+// ---- Money In card ----
+var oTT=window.ppTabTop;
+window.ppTabTop=function(tab){
+  if(tab==='money'&&typeof moneySide!=='undefined'&&moneySide==='income'){ try{
+    var pr=periodRange(), list=incomeData.entries.filter(function(e){ return inRange(e.date,pr.from,pr.to); });
+    var inT=incomeTotal(pr.from,pr.to), sv=list.reduce(function(a,e){ return a+(e.build||0); },0);
+    var ts=Math.max(0,wdAvail()), pots=potRows('','').reduce(function(a,r){ return a+r.net; },0), n=list.length;
+    return '<div class="pp-hero v223-out v224-in v234-in"><div class="v223-top"><div style="min-width:0"><div class="pp-l">Money in · '+pr.label.toLowerCase()+'</div>'+
+      '<div class="pp-v" style="color:'+GRN+'!important">'+G(inT)+'</div>'+
+      '<div class="v234-sub"><span class="pp-g">'+n+' payment'+(n!==1?'s':'')+'</span><span class="v234-sv" onclick="ppSavedSheet()">'+G(sv)+' saved ›</span></div></div></div>'+
+      '<div class="pp-mini v234-two"><div class="pp-tap" onclick="ppPotsSheet()"><span>In pots</span><b style="color:#fff">'+G(pots)+'</b></div>'+
+      '<div class="pp-tap" onclick="wdSheet()"><span>Ready to spend</span><b style="color:'+GRN+'">'+G(ts)+'</b></div></div></div>'+
+      ppQA([['wallet','Add income',"ppSheet('income')"]]).replace('class="pp-qa"','class="pp-qa" style="grid-template-columns:1fr"')+ppIncChart(list,inT,pr.label);
+  }catch(e){ console.log(e); } }
+  return oTT.apply(this,arguments);
+};
+// ---- small GH₵ inside top cards ----
+function smallCur(root){ try{ (root||document).querySelectorAll('.pp-hero .pp-v, .pp-hero .pp-mini b').forEach(function(b){
+  if(b.querySelector('small')||b.children.length) return; var t=b.textContent; var i=t.indexOf('GH₵'); if(i<0) return;
+  b.innerHTML=t.slice(0,i)+'<small class="v234-c">GH₵</small>'+t.slice(i+3).replace(/^\s+/,''); }); }catch(e){} }
+var busy=false;
+new MutationObserver(function(){ if(busy) return; busy=true; smallCur(); busy=false; }).observe(document.body,{childList:true,subtree:true});
+setTimeout(smallCur,0);
+// ---- look ----
+var P='html body .page ';
+var css=document.createElement('style'); css.id='v234-look';
+css.textContent=
+ // header row
+ P+'.pp-tophd .pp-logo.pp-logo{background:#131316!important}'+
+ P+'.pp-tophd .pp-logo svg, '+P+'.pp-tophd .pp-logo svg *{stroke:'+GRN+'!important}'+
+ P+'.pp-tophd .pp-brand>b{font-family:Inter,sans-serif!important;font-weight:800!important;letter-spacing:-.02em;color:#121212!important}'+
+ P+'.pp-tophd .pp-ahead.pp-ahead{background:#131316!important;border:1px solid #2C2C33!important;font-family:Inter,sans-serif!important}'+
+ P+'.pp-tophd .pp-ahead.pp-src .pp-dot{background:'+GRN+'!important}'+P+'.pp-tophd .pp-ahead.pp-src b{color:'+GRN+'!important}'+
+ // card
+ P+'.pp-hero.pp-hero.pp-hero{background:radial-gradient(120% 90% at 100% 0%,rgba(43,224,122,.16),transparent 55%),#131316!important;border:1px solid #26262C!important;box-shadow:0 8px 22px rgba(0,0,0,.18)!important;font-family:Inter,sans-serif}'+
+ P+'.pp-hero .pp-tabs.pp-tabs{background:#1E1E23!important;border:0!important}'+
+ P+'.pp-hero .pp-tabs button{font-family:Inter,sans-serif!important;color:#9A9AA5!important;background:transparent!important;box-shadow:none!important}'+
+ P+'.pp-hero .pp-tabs button.on{background:'+GRN+'!important;color:#0B0B0D!important;font-weight:800!important}'+
+ P+'.pp-hero .v223-perb.v223-perb{background:transparent!important;border:1px solid #33333A!important;color:#E9E9EE!important;font-family:Inter,sans-serif!important}'+
+ P+'.pp-hero .v223-perb i{color:'+GRN+'!important}'+
+ P+'.pp-hero .pp-l.pp-l{font-family:Inter,sans-serif!important;font-weight:600!important;color:#9A9AA5!important;text-transform:none!important;letter-spacing:0!important}'+
+ P+'.pp-hero .pp-v.pp-v{font-family:Inter,sans-serif!important;font-weight:800!important;letter-spacing:-.03em}'+
+ P+'.pp-hero small.v234-c{font-size:.6em;color:#9A9AA5!important;font-weight:700;margin-right:3px;letter-spacing:0}'+
+ P+'.pp-hero .pp-g.pp-g{display:inline-block;font-family:Inter,sans-serif!important;color:'+GRN+'!important;background:rgba(43,224,122,.12);padding:2px 8px;border-radius:20px;font-size:11.5px!important}'+
+ // stat panel
+ P+'.pp-hero .pp-mini.pp-mini{background:#1B1B20!important;border-radius:14px!important;padding:8px 0!important;gap:0!important;border:0!important}'+
+ P+'.pp-hero .pp-mini>div.pp-mini-x, '+P+'.pp-hero .pp-mini>div{background:transparent!important;border:0!important;border-radius:0!important;padding:0 12px!important;box-shadow:none!important;min-width:0}'+
+ P+'.pp-hero .pp-mini>div+div{border-left:1px solid #2C2C33!important}'+
+ P+'.pp-hero .pp-mini>div span{display:block;font-family:Inter,sans-serif!important;font-weight:600!important;font-size:11px!important;color:#9A9AA5!important;text-transform:lowercase!important;letter-spacing:0!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}'+
+ P+'.pp-hero .pp-mini>div span::first-letter{text-transform:uppercase}'+
+ P+'.pp-hero .pp-mini>div b{font-family:Inter,sans-serif!important;font-weight:800!important;letter-spacing:-.02em;white-space:nowrap}'+
+ P+'.pp-hero .pp-tap::after{display:none!important}'+P+'.pp-hero .pp-tap span::after{content:" \\203a";opacity:.7}'+
+ // ring inside
+ P+'.pp-hero .pp-ring div{background:#131316!important;font-family:Inter,sans-serif!important}'+
+ // Money In extras
+ P+'.v234-in .v234-sub{display:flex;align-items:center;gap:10px;margin-top:5px;flex-wrap:nowrap}'+
+ P+'.v234-in .v234-sv{font:600 11.5px Inter,sans-serif;color:'+BLUE+';cursor:pointer;white-space:nowrap}'+
+ P+'.v234-in .pp-mini.v234-two{grid-template-columns:1fr 1fr!important}'+
+ P+'.v234-in .pp-mini.v234-two>div{padding:0 14px!important}'+
+ P+'.v234-in .pp-mini.v234-two b{font-size:19px!important}';
+document.head.appendChild(css);
 })();
 </script>
 </body>
