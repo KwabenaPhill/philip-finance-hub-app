@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v23.5</title>
+<title>Philip's Finance Hub v23.6</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -453,7 +453,7 @@ html body #page-money .sx > .sx-seg{display:none!important}</style>
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v23.5</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v23.6</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -6409,5 +6409,23 @@ document.head.appendChild(css);
 setTimeout(function(){ try{ fit(document.querySelector('[id^=page-].active')); }catch(e){} },0);
 })();
 </script>
+
+<style id="v236-unslop">
+/* v23.6 (Philip, 26 Nov 2026): unslop polish on the Money tab only (In and Out). Look only, no data touched. */
+/* 2. Labels in sentence case, no wide letter spacing */
+#page-money .pp-mini span,#page-money .pp-l{display:inline-block;text-transform:lowercase!important;letter-spacing:0!important;font-weight:500!important}
+#page-money .pp-mini span::first-letter,#page-money .pp-l::first-letter{text-transform:uppercase!important}
+/* 3. One accent: violet icons instead of cyan */
+#page-money .pp-logo svg,#page-money .pp-logo svg *,body:has(#page-money.active) .pp-tophd .pp-logo svg,body:has(#page-money.active) .pp-tophd .pp-logo svg *,#page-money .pp-q svg,#page-money .pp-q svg *,#page-money .sx-tx .sx-ic svg,#page-money .sx-tx .sx-ic svg *{stroke:#C38BFF!important;color:#C38BFF!important}
+/* 4. Remove the repeated orange "This Week" (the period button already says it) */
+#page-money .pp-ch>span,#page-money .v221-h>i{display:none!important}
+/* 5. Payment count is quiet meta text, not a money colour */
+#page-money .pp-g{color:#B7AEC2!important;font-weight:500!important}
+/* 6. Calmer weights so the big amount stands out */
+#page-money .pp-brand b{font-weight:700!important}
+#page-money .pp-ch,#page-money .v221-h span{font-weight:600!important}
+#page-money .pp-q,#page-money .pp-tabs button,#page-money .v223-perb{font-weight:600!important}
+#page-money .pp-leg span{font-weight:500!important}
+</style>
 </body>
 </html>
