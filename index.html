@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="only light"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Philip's Finance Hub v23.6</title>
+<title>Philip's Finance Hub v24.0</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -453,7 +453,7 @@ html body #page-money .sx > .sx-seg{display:none!important}</style>
 </div>
 <div class="app-header">
   <div class="sub">Philip's</div>
-  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v23.6</span></h1>
+  <h1>Finance Hub <span style="font-size:11px;font-weight:700;color:#FFD700;vertical-align:middle;opacity:.85">v24.0</span></h1>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -6410,22 +6410,104 @@ setTimeout(function(){ try{ fit(document.querySelector('[id^=page-].active')); }
 })();
 </script>
 
-<style id="v236-unslop">
-/* v23.6 (Philip, 26 Nov 2026): unslop polish on the Money tab only (In and Out). Look only, no data touched. */
-/* 2. Labels in sentence case, no wide letter spacing */
-#page-money .pp-mini span,#page-money .pp-l{display:inline-block;text-transform:lowercase!important;letter-spacing:0!important;font-weight:500!important}
-#page-money .pp-mini span::first-letter,#page-money .pp-l::first-letter{text-transform:uppercase!important}
-/* 3. One accent: violet icons instead of cyan */
-#page-money .pp-logo svg,#page-money .pp-logo svg *,body:has(#page-money.active) .pp-tophd .pp-logo svg,body:has(#page-money.active) .pp-tophd .pp-logo svg *,#page-money .pp-q svg,#page-money .pp-q svg *,#page-money .sx-tx .sx-ic svg,#page-money .sx-tx .sx-ic svg *{stroke:#C38BFF!important;color:#C38BFF!important}
-/* 4. Remove the repeated orange "This Week" (the period button already says it) */
+<style id="v240-unslop-full">
+/* unslop full mode (by @heydamir, CC BY 4.0) on the Money tab. Look only, no data touched. */
+@font-face{font-family:'InterU';src:url(fonts/inter-latin-400-normal.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'InterU';src:url(fonts/inter-latin-500-normal.woff2) format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'InterU';src:url(fonts/inter-latin-600-normal.woff2) format('woff2');font-weight:600;font-display:swap}
+body:has(#page-money.active){--u-bg:#141415;--u-card:#19191b;--u-raised:#232325;--u-line:rgba(237,237,237,.08);--u-t1:#ededed;--u-t2:#a1a1a6;--u-t3:#85858b;--u-acc:#B48CFF;--u-pos:#4cc38a;--u-neg:#e5484d;--u-blue:#6aa8e8;background:var(--u-bg)!important}
+#page-money,#page-money *{font-family:'InterU',system-ui,sans-serif!important;letter-spacing:0!important;text-shadow:none!important}
+#page-money{background:var(--u-bg)!important;padding-left:20px!important;padding-right:20px!important}
+/* header */
+#page-money .pp-tophd{padding:16px 0 8px!important}
+#page-money .pp-brand b{color:var(--u-t1)!important;font-weight:500!important;font-size:28px!important;-webkit-text-fill-color:var(--u-t1)!important;background:none!important}
+#page-money .pp-logo{background:var(--u-card)!important;box-shadow:inset 0 0 0 1px var(--u-line)!important}
+#page-money .pp-logo svg,#page-money .pp-logo svg *{stroke:var(--u-t2)!important}
+#page-money .pp-ahead{background:var(--u-card)!important;border:1px solid var(--u-line)!important;box-shadow:none!important;color:var(--u-t2)!important;font-weight:500!important;font-size:13px!important}
+#page-money .pp-ahead b{font-weight:500!important;font-variant-numeric:tabular-nums}
+#page-money .pp-src b{color:var(--u-t1)!important}
+#page-money .pp-src .pp-dot{background:var(--u-acc)!important}
+#page-money .pp-ahead-r b{color:var(--u-neg)!important}
+#page-money .pp-ahead-r .pp-dot{background:var(--u-neg)!important}
+/* top card: one neutral surface, no violet glow */
+#page-money .pp-hero{background:var(--u-card)!important;background-image:none!important;border:1px solid var(--u-line)!important;box-shadow:none!important;border-radius:16px!important;padding:16px!important}
+#page-money .pp-hero::before,#page-money .pp-hero::after{display:none!important}
+#page-money .pp-tabs{background:var(--u-bg)!important;border:1px solid var(--u-line)!important;border-radius:10px!important;padding:2px!important;box-shadow:none!important}
+#page-money .pp-tabs button{border-radius:8px!important;font-weight:500!important;font-size:14px!important;color:var(--u-t2)!important;background:transparent!important;box-shadow:none!important}
+#page-money .pp-tabs button.on{background:var(--u-raised)!important;color:var(--u-t1)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.10)!important}
+#page-money .v223-perb{background:var(--u-bg)!important;border:1px solid var(--u-line)!important;border-radius:10px!important;color:var(--u-t1)!important;font-weight:500!important;font-size:13px!important;box-shadow:none!important}
+#page-money .v223-perb i{color:var(--u-t3)!important}
+#page-money .pp-l{color:var(--u-t2)!important;font-weight:400!important;font-size:13px!important;text-transform:none!important;margin-top:16px!important}
+#page-money .pp-v{font-weight:500!important;font-size:40px!important;line-height:1.1!important;letter-spacing:-0.02em!important;font-variant-numeric:tabular-nums;color:var(--u-t1)!important;margin:4px 0!important}
+#page-money .v224-in .pp-v{color:var(--u-pos)!important}
+#page-money .pp-hero:not(.v224-in) .pp-v{color:var(--u-neg)!important}
+#page-money .pp-g{color:var(--u-t3)!important;font-weight:400!important;font-size:13px!important}
+/* signature: quiet GH₵ before figures */
+#page-money .u-cur{font-size:.55em;font-weight:400;color:var(--u-t3)!important;margin-right:.25em;vertical-align:.32em;letter-spacing:0}
+/* stat boxes: numbers, a small meaning dot, no tinted fills */
+#page-money .pp-mini{gap:8px!important;margin-top:16px!important}
+#page-money .pp-mini>div{background:var(--u-bg)!important;border:1px solid var(--u-line)!important;border-radius:10px!important;padding:12px!important;box-shadow:none!important}
+#page-money .pp-mini>div>span{display:flex!important;align-items:center;gap:6px;text-transform:none!important;color:var(--u-t2)!important;font-weight:400!important;font-size:12px!important}
+#page-money .pp-mini>div>span::before{content:"";width:6px;height:6px;border-radius:3px;background:var(--u-t3);flex:none}
+#page-money .pp-mini b{color:var(--u-t1)!important;font-weight:500!important;font-size:18px!important;font-variant-numeric:tabular-nums;margin-top:4px;display:flex!important;flex-direction:row!important;align-items:baseline;white-space:nowrap!important}
+#page-money .pp-mini b .u-cur{vertical-align:baseline}
+#page-money .v224-in .pp-mini>div:nth-child(1) >span::before{background:var(--u-blue)}
+#page-money .v224-in .pp-mini>div:nth-child(2) >span::before{background:var(--u-acc)}
+#page-money .v224-in .pp-mini>div:nth-child(3) >span::before{background:var(--u-pos)}
+#page-money .pp-hero:not(.v224-in) .pp-mini>div:nth-child(1) >span::before{background:var(--u-neg)}
+#page-money .pp-hero:not(.v224-in) .pp-mini>div:nth-child(2) >span::before{background:var(--u-blue)}
+#page-money .pp-mini i,#page-money .pp-tap::after{color:var(--u-t3)!important}
+/* primary action */
+#page-money .pp-q{background:var(--u-raised)!important;color:var(--u-t1)!important;border:none!important;border-radius:10px!important;font-weight:500!important;font-size:15px!important;box-shadow:none!important;min-height:48px}
+#page-money .pp-q svg,#page-money .pp-q svg *{stroke:var(--u-t1)!important}
+#page-money .pp-qa{margin:12px 0 24px!important}
+/* cards and section heads */
+#page-money .pp-card,#page-money .v221-card,#page-money .sx-card{background:var(--u-card)!important;border:1px solid var(--u-line)!important;border-radius:16px!important;box-shadow:none!important}
+#page-money .pp-ch,#page-money .v221-h span,#page-money .sx-h2{color:var(--u-t1)!important;font-weight:500!important;font-size:16px!important}
 #page-money .pp-ch>span,#page-money .v221-h>i{display:none!important}
-/* 5. Payment count is quiet meta text, not a money colour */
-#page-money .pp-g{color:#B7AEC2!important;font-weight:500!important}
-/* 6. Calmer weights so the big amount stands out */
-#page-money .pp-brand b{font-weight:700!important}
-#page-money .pp-ch,#page-money .v221-h span{font-weight:600!important}
-#page-money .pp-q,#page-money .pp-tabs button,#page-money .v223-perb{font-weight:600!important}
-#page-money .pp-leg span{font-weight:500!important}
+#page-money .pp-donut>div,#page-money .v225-d>div{background:var(--u-card)!important}
+#page-money .pp-donut small,#page-money .v225-d small{text-transform:none!important;color:var(--u-t3)!important;font-weight:400!important;font-size:12px!important}
+#page-money .pp-donut b,#page-money .v225-d b{font-weight:500!important;color:var(--u-t1)!important;font-variant-numeric:tabular-nums}
+#page-money .pp-leg span,#page-money .v225-l span{color:var(--u-t2)!important;font-weight:400!important;font-size:14px!important}
+#page-money .pp-leg p,#page-money .v225-l b{color:var(--u-t1)!important;font-weight:500!important;font-variant-numeric:tabular-nums}
+/* rows */
+#page-money .sx-ic,#page-money .v221-bub{background:var(--u-raised)!important;border-radius:10px!important}
+#page-money .sx-ic svg,#page-money .sx-ic svg *,#page-money .v221-bub svg,#page-money .v221-bub svg *{stroke:var(--u-t2)!important;color:var(--u-t2)!important}
+#page-money .sx-tx .n div,#page-money .v221-tm b{color:var(--u-t1)!important;font-weight:500!important;font-size:15px!important}
+#page-money .sx-tx small,#page-money .v221-tm small{color:var(--u-t3)!important;font-size:13px!important;font-weight:400!important}
+#page-money .sx-in,#page-money .sx-tx .a{color:var(--u-pos)!important;font-weight:500!important;font-variant-numeric:tabular-nums}
+#page-money .v221-amt{color:var(--u-t1)!important;font-weight:500!important;font-variant-numeric:tabular-nums}
+#page-money .v221-dh span{color:var(--u-t3)!important;font-weight:400!important;font-size:13px!important}
+#page-money .v221-f{background:var(--u-card)!important;border:1px solid var(--u-line)!important;border-radius:10px!important;padding:2px!important}
+#page-money .v221-f button{border-radius:8px!important;color:var(--u-t2)!important;font-weight:500!important;background:transparent!important}
+#page-money .v221-f button.on{background:var(--u-raised)!important;color:var(--u-t1)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.10)!important}
+#page-money .v221-clear{border:1px solid var(--u-line)!important;border-radius:10px!important;color:var(--u-t2)!important;background:transparent!important;font-weight:500!important}
+#page-money .v221-clear svg,#page-money .v221-clear svg *{stroke:var(--u-t3)!important}
+/* bottom bar: quiet, violet only on the active tab */
+body:has(#page-money.active) .bottom-nav{background:#0f0f10!important;border-top:1px solid var(--u-line)!important;box-shadow:none!important}
+body:has(#page-money.active) .bottom-nav .nav-btn{color:var(--u-t3)!important;font-family:'InterU',system-ui,sans-serif!important;font-weight:500!important}
+body:has(#page-money.active) .bottom-nav .nav-btn.active{color:var(--u-acc)!important}
+#page-money *{transition-property:color,background-color,border-color,opacity,transform!important;transition-timing-function:cubic-bezier(.22,1,.36,1)!important}
 </style>
-</body>
+<script>
+// unslop full (v24.0): quiet GH₵ before the big figures on the Money tab. Look only.
+(function(){function wrap(){var pg=document.getElementById('page-money');if(!pg)return;try{(function(){var h=document.querySelector('#page-money .pp-hero');if(!h)return;var c=getComputedStyle(h).getPropertyValue('--u-amt').trim();var e=h.querySelector('.pp-v');if(c&&e&&e.style.color!==c)e.style.setProperty('color',c,'important');var q=document.querySelector('#page-money .pp-q');var qb=getComputedStyle(h).getPropertyValue('--u-qbg').trim(),qc=getComputedStyle(h).getPropertyValue('--u-qc').trim();if(q&&qb){q.style.setProperty('background',qb,'important');q.style.setProperty('color',qc,'important');q.querySelectorAll('svg,svg *').forEach(function(s){s.style.setProperty('stroke',qc,'important')});}})();}catch(e){}
+pg.querySelectorAll('.pp-mini>div').forEach(function(d){d.style.setProperty('background','var(--u-box,var(--u-bg))','important');d.style.setProperty('border','var(--u-boxb,1px solid var(--u-line))','important');d.style.setProperty('box-shadow','none','important');});
+pg.querySelectorAll('.pp-mini>div>span').forEach(function(sp){var t=sp.textContent;if(t&&t===t.toUpperCase()&&/[A-Z]/.test(t))sp.textContent=t.charAt(0)+t.slice(1).toLowerCase();});
+pg.querySelectorAll('.pp-v,.pp-mini b').forEach(function(el){if(el.querySelector('.u-cur'))return;var t=el.textContent;var m=t.match(/^([+−-]?)GH₵\s*(.*)$/);if(!m)return;el.innerHTML=m[1]+'<span class="u-cur">GH₵</span>'+m[2].replace(/[<>&]/g,'');});}
+var mo=new MutationObserver(function(){mo.disconnect();try{wrap();}catch(e){}obs();});function obs(){var pg=document.getElementById('page-money');if(pg)mo.observe(pg,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['style']});}
+document.addEventListener('DOMContentLoaded',function(){wrap();obs();});try{wrap();obs();}catch(e){}})();
+</script>
+<style id="v240-style-c">/* v24.0 style C Video tiles */
+#page-money .pp-hero{--u-amt:#ffffff;--u-qbg:linear-gradient(90deg,#8b3dff,#c23ea0);--u-qc:#ffffff;background:radial-gradient(120% 70% at 50% -20%,#c23ea0 0%,#6a2bd0 35%,#24163a 62%,#19191b 88%)!important}
+#page-money .pp-mini{gap:8px!important}#page-money .pp-mini>div{padding:12px!important;border-radius:14px!important}
+#page-money .pp-mini>div:nth-child(1){--u-box:linear-gradient(160deg,#2f6bff,#173a99);--u-boxb:0}#page-money .pp-mini>div:nth-child(2){--u-box:linear-gradient(160deg,#a259ff,#5a2399);--u-boxb:0}#page-money .pp-mini>div:nth-child(3){--u-box:linear-gradient(160deg,#ff8a3d,#c2370f);--u-boxb:0}
+#page-money .pp-mini>div>span{color:rgba(255,255,255,.85)!important}#page-money .pp-mini>div>span::before{background:#fff!important}#page-money .pp-mini b,#page-money .pp-mini .u-cur{color:#fff!important}
+#page-money .pp-q{background:linear-gradient(90deg,#8b3dff,#c23ea0)!important;border:0!important}
+html body #page-money .pp-qa .pp-q{background:linear-gradient(90deg,#8b3dff,#c23ea0)!important;color:#fff!important;border:0!important}
+html body #page-money .pp-qa .pp-q svg,html body #page-money .pp-qa .pp-q svg *{stroke:#fff!important}
+#page-money .pp-hero:not(.v224-in){--u-amt:#ff5a63}
+#page-money .pp-hero:not(.v224-in) .pp-mini>div:nth-child(1){--u-box:linear-gradient(160deg,#ff4d5e,#a3162a)}
+#page-money .pp-hero:not(.v224-in) .pp-mini>div:nth-child(2){--u-box:linear-gradient(160deg,#2f6bff,#173a99)}
+</style></body>
 </html>
